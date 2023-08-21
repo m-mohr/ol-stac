@@ -40,4 +40,4 @@ Check out the [hosted examples](https://m-mohr.github.io/ol-stac/en/latest/examp
 
 Please use the [GitHub issue tracker](https://github.com/m-mohr/ol-stac/issues) for all bugs and feature requests. Before creating a new issue, do a quick search to see if the problem has been reported already.
 
-![Test Status](https://github.com/openlayers/openlayers/workflows/Test/badge.svg)
+![Test Status](https://github.com/m-mohr/ol-stac/workflows/Test/badge.svg)

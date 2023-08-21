@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
-    <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="/ol-stac/theme/site.css">
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -24,20 +24,20 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
-              <a class="dropdown-item" href="/doc/">Docs</a>
+              <a class="dropdown-item" href="/ol-stac/doc/">Docs</a>
               <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
-                <a class="dropdown-item" href="/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
-                <a class="dropdown-item" href="/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/ol-stac/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/ol-stac/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/ol-stac/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
             </div>
           </li>
-          <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
-          <li class="nav-item"><a class="nav-link" href="../apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ol-stac/examples/">Examples</a></li>
+          <li class="nav-item"><a class="nav-link" href="/ol-stac/apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
               <a class="dropdown-item" href="https://github.com/m-mohr/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
-              <a class="dropdown-item" href="/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+              <a class="dropdown-item" href="/ol-stac/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
             </div>
           </li>
         </ul>
@@ -258,7 +258,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         });
     </script>
     <script>
-      const releaseUrl = 'https://cdn.jsdelivr.net/npm/ol/package.json';
+      const releaseUrl = 'https://cdn.jsdelivr.net/npm/ol-stac/package.json';
       fetch(releaseUrl).then(function(response) {
         return response.json();
       }).then(function(json) {
