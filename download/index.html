@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OL STAC - Get the Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
+    <link rel="stylesheet" type="text/css" href="/theme/site.css">
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/">OL STAC</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v0.0.0 (latest)</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/m-mohr/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="container mt-4 pt-4">
+  <div class="row">
+    <h3 class="col-sm-12">The <code>ol</code> package</h3>
+    <div class="col-sm-12">
+      <p>
+        The recommended way to use OpenLayers is to work with the <a href="https://www.npmjs.com/package/ol"><code>ol</code> package</a>.
+      </p>
+      <p>
+        To add OpenLayers to an existing project, install the latest with <code>npm</code>:
+        <pre><code class="language-shell-session">npm install ol</code></pre>
+      </p>
+      <p>
+        If you are starting a new project from scratch, see the <a href="../doc/quickstart.html">quick start docs</a> for more information.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <h3 class="col-sm-12">Hosted build for development</h3>
+    <div class="col-sm-12">
+      <p>
+        If you want to try out OpenLayers without downloading anything (<b>not recommended for production</b>), include the following in the head of your html page:
+<pre><code class="language-html">&lt;script src="https://cdn.jsdelivr.net/npm/geotiff"&gt;&lt;/script&
+&lt;script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/ol-stac@v0.0.0/dist/ol-stac.js"&gt;&lt;/script&gt;</code></pre>
+      </p>
+      <p>
+        The full build of the library does not include all dependencies: the <code>geotiff</code> package is omitted.  If you use these, you'll need to add additional script tags.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <h3 class="col-sm-12">Downloads for the v0.0.0 release</h3>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <table class="table table-hover">
+        <tbody>
+          <tr><th>Archive</th><th>Description</th></tr>
+          <tr>
+            <td><a href="https://github.com/m-mohr/ol-stac/releases/download/v0.0.0/v0.0.0-site.zip">v0.0.0-site.zip</a></td>
+            <td>Includes examples and documentation.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/m-mohr/ol-stac/releases/download/v0.0.0/v0.0.0-package.zip">v0.0.0-package.zip</a></td>
+            <td>Includes sources and the full build of the library.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        See the <a href="https://github.com/m-mohr/ol-stac/releases/tag/v0.0.0">v0.0.0 release page</a> for a changelog and any special upgrade notes.
+      </p>
+      <p>
+        For archives of previous releases, see the <a href="https://github.com/m-mohr/ol-stac/releases/">complete list of releases</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='https://www.tldrlegal.com/license/apache-license-2-0-apache-2-0'>Apache 2.0</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
