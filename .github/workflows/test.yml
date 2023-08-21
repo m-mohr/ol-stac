@@ -80,6 +80,3 @@ jobs:
 
       - name: Build the Package
         run: npm run build-package
-
-      - name: Generate the Full Build
-        run: "npm run build-full"

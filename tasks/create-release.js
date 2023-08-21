@@ -12,7 +12,7 @@ import {readFile, stat} from 'node:fs/promises';
  * @property {boolean} draft Create a draft release.
  * @property {boolean} notes Generate release notes.
  * @property {string} site Path to zip archive with site contents.
- * @property {string} package Path to zip archive with source and full build.
+ * @property {string} package Path to zip archive with sources.
  */
 
 const owner = 'm-mohr';

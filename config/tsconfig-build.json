@@ -19,7 +19,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "../build/ol/**/*.js"
+    "../src/ol/**/*.js"
   ],
   "exclude": []
 }

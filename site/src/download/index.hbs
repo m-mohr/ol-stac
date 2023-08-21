@@ -19,21 +19,6 @@ layout: default.hbs
     </div>
   </div>
   <div class="row">
-    <h3 class="col-sm-12">Hosted build for development</h3>
-    <div class="col-sm-12">
-      <p>
-        If you want to try out OpenLayers without downloading anything (<b>not recommended for production</b>), include the following in the head of your html page:
-<pre><code class="language-html">&lt;script src="https://cdn.jsdelivr.net/npm/geotiff"&gt;&lt;/script&
-&lt;script src="https://cdn.jsdelivr.net/npm/ol/dist/ol.js"&gt;&lt;/script&gt;
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol/ol.css"&gt;
-&lt;script src="https://cdn.jsdelivr.net/npm/ol-stac@{{ version }}/dist/ol-stac.js"&gt;&lt;/script&gt;</code></pre>
-      </p>
-      <p>
-        The full build of the library does not include all dependencies: the <code>geotiff</code> package is omitted.  If you use these, you'll need to add additional script tags.
-      </p>
-    </div>
-  </div>
-  <div class="row">
     <h3 class="col-sm-12">Downloads for the {{ version }} release</h3>
   </div>
   <div class="row">
@@ -47,7 +32,7 @@ layout: default.hbs
           </tr>
           <tr>
             <td><a href="https://github.com/m-mohr/ol-stac/releases/download/{{ version }}/{{ version }}-package.zip">{{ version }}-package.zip</a></td>
-            <td>Includes sources and the full build of the library.</td>
+            <td>Includes sources of the library.</td>
           </tr>
         </tbody>
       </table>
