@@ -17,8 +17,6 @@
  * A source for working with GeoTIFF data.
  *
  * Available for backward compatibility with ol <= 7.5.1
- *
- * @api
  */
 export default class GeoTIFF2 extends GeoTIFF {
     /**

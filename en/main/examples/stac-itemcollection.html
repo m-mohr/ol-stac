@@ -158,11 +158,11 @@
         <h5 class="source-heading">main.js</h5>
         <pre><code id="example-js-source" class="language-js">import Map from &#x27;ol/Map.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
-import STAC from &#x27;ol/layer/STAC.js&#x27;;
+import STAC from ol-stac;
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import View from &#x27;ol/View.js&#x27;;
 import proj4 from &#x27;proj4&#x27;;
-import {getStacObjectsForEvent} from &#x27;ol/layer/stacUtil.js&#x27;;
+import {getStacObjectsForEvent} from &#x27;ol-stac/util.js&#x27;;
 import {register} from &#x27;ol/proj/proj4.js&#x27;;
 
 register(proj4); // required to support source reprojection
@@ -227,7 +227,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-itemcollection&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol&quot;: &quot;1.0.0-beta.1&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0-beta.1&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {

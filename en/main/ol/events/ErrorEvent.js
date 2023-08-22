@@ -6,6 +6,7 @@ import EventType from 'ol/events/EventType.js';
 /**
  * @classdesc
  * Event emitted on configuration or loading error.
+ * @api
  */
 class ErrorEvent extends BaseEvent {
     /**

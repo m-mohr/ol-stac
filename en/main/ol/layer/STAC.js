@@ -17,7 +17,7 @@ import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
 import create, { Asset, STAC } from 'stac-js';
-import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from './stacUtil.js';
+import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
 import { toGeoJSON } from 'stac-js/src/geo.js';
 import { transformExtent } from 'ol/proj.js';
 /**

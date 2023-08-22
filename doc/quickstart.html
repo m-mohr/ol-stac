@@ -58,7 +58,31 @@
 
     <div class="container">
       <h1 id="quick-start">Quick Start</h1>
-<p>tbd</p>
+<p>To use OL STAC in your application, the simplest way is to add it as a dependency to it:</p>
+<pre><code class="language-bash">npm install ol-stac
+</code></pre>
+<p>Afterwards, you can import the STAC Layer (Group) into your application code:</p>
+<pre><code class="language-js">import STACLayer from &#39;ol-stac&#39;;
+</code></pre>
+<p>Then create the layer with either a URL (option <code>url</code> as in th example) or inline JSON data (option <code>data</code>):</p>
+<pre><code class="language-js">const stac = new STAC({
+  url: &#39;https://example.com/path/to/stac/item.json&#39;,
+});
+</code></pre>
+<p>Now you can add the STAC layer to your map.
+I&#39;m assuming your OpenLayers map variable is named <code>map</code>.</p>
+<pre><code class="language-js">map.addLayer(stac);
+</code></pre>
+<p>To center the map on the STAC bounds, you should add the following:</p>
+<pre><code class="language-js">stac.on(&#39;sourceready&#39;, () =&gt; {
+  map.getView().fit(stac.getExtent());
+});
+</code></pre>
+<p>If you need support for reprojection, you also need to make proj4 available:</p>
+<pre><code class="language-js">import proj4 from &#39;proj4&#39;;
+import {register} from &#39;ol/proj/proj4.js&#39;;
+register(proj4);
+</code></pre>
 
     </div>
     <footer>

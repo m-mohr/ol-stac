@@ -58,7 +58,39 @@
 
     <div class="container">
       <h1 id="frequently-asked-questions-faq">Frequently Asked Questions (FAQ)</h1>
-<p>tbd</p>
+<h2 id="what-stac-elements-can-i-show">What STAC elements can I show?</h2>
+<ul>
+<li>STAC Collections</li>
+<li>STAC Items</li>
+<li>STAC ItemCollection / STAC API Items (response of <code>GET /collections/{id}/items</code>)</li>
+<li>STAC API Collections (response of <code>GET /collections</code>)</li>
+<li>STAC Asset</li>
+</ul>
+<p>In principle you can also pass in STAC Catalogs, but unless there&#39;s a link to a web map included, it won&#39;t show anything.</p>
+<h2 id="what-stac-extensions-are-supported">What STAC extensions are supported?</h2>
+<p>The web-map-links extension is supported to show links for:</p>
+<ul>
+<li><p>TileJSON</p>
+</li>
+<li><p>WMS (tiled only)</p>
+</li>
+<li><p>WMTS</p>
+</li>
+<li><p>XYZ</p>
+</li>
+<li><p>For GeoTiff rendering the extension (through the stac-js library) makes use of:</p>
+<ul>
+<li>classification</li>
+<li>eo</li>
+<li>file</li>
+<li>projection</li>
+<li>raster</li>
+</ul>
+</li>
+</ul>
+<h2 id="is-there-an-alternative-for-other-mapping-libraries">Is there an alternative for other mapping libraries?</h2>
+<p>Yes, there is a similar library for Leaflet: <a href="https://github.com/stac-utils/stac-layer">stac-layer</a>
+I&#39;m not aware of similar libraries for other web mapping libraries.</p>
 
     </div>
     <footer>

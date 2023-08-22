@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>OL STAC v1.0.0-beta.1 API - Module: ol/util</title>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="styles/prettify-tomorrow.css">
+    <link rel="stylesheet" type="text/css" href="styles/jaguar.css">
+    <link rel="stylesheet" type="text/css" href="styles/carbon.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
+    <link rel="stylesheet" type="text/css" href="/ol-stac/theme/site.css">
+  </head>
+  <body>
+    <header class="navbar navbar-expand-sm navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/ol-stac/">OL STAC</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/ol-stac/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/ol-stac/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/ol-stac/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/ol-stac/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
+          <li class="nav-item active"><a class="nav-link" href="../apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/m-mohr/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/ol-stac/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container-fluid">
+      <div id="wrap" class="row">
+        <div class="navigation col-md-4 col-lg-3">
+          <div class="search-wrapper">
+            <div class="search">
+              <input id="search" type="text" autocomplete="off" class="form-control input-sm" placeholder="Search Documentation">
+            </div>
+          </div>
+          <div class="navigation-list-wrapper">
+            <ul class="navigation-list search-empty">
+<li class="item item-module toggle-manual toggle-manual-show" data-longname="module:ol/util" data-name="ol/util">
+    <span class="title toggle">
+        <span class="fa fa-plus me-2 mt-1"></span>
+        <span><a href="module-ol_util.html">ol​/util</a></span>
+    </span>
+    <div class="member-list" data-type="members">
+        <span class="subtitle">Members</span>
+        <ul>
+            <li data-name="defaultboundsstyle"><a href="module-ol_util.html#.defaultBoundsStyle">defaultBoundsStyle</a>
+            <li data-name="defaultcollectionstyle"><a href="module-ol_util.html#.defaultCollectionStyle">defaultCollectionStyle</a>
+        </ul>
+    </div>
+    <div class="member-list" data-type="methods">
+        <span class="subtitle">Methods</span>
+        <ul>
+            <li data-name="getboundsstyle"><a href="module-ol_util.html#.getBoundsStyle">getBoundsStyle</a>
+            <li data-name="getgeotiffsourceinfofromasset"><a href="module-ol_util.html#.getGeoTiffSourceInfoFromAsset">getGeoTiffSourceInfoFromAsset</a>
+            <li data-name="getstacobjectsforevent"><a href="module-ol_util.html#.getStacObjectsForEvent">getStacObjectsForEvent</a>
+        </ul>
+    </div>
+              <li class="loading">Loading …
+            </ul>
+          </div>
+        </div>
+
+        <div class="main col-md-8 col-lg-9">
+          <h1 class="page-title" data-filename="module-ol_util.html">Module: ol/util</h1>
+          <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+            <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            This documentation is for OL STAC v<span id="package-version">1.0.0-beta.1</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+          </div>
+          
+
+
+
+<section class="content">
+
+<header>
+    <h2 class="my-3">ol/util
+    </h2>
+    <br>
+    
+      
+      
+        <pre class="prettyprint source"><code>import * as olUtil from 'ol/util';</code></pre>
+      
+    
+    <div class="row p-3 ">
+    
+    </div>
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id=".defaultBoundsStyle">
+        </div>
+        <h4 class="name">
+            module:ol/util.defaultBoundsStyle<span class="type-signature type style">{Style}</span> 
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>The default style for rendering bounds of the STAC main entities.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id=".defaultCollectionStyle">
+        </div>
+        <h4 class="name">
+            module:ol/util.defaultCollectionStyle<span class="type-signature type style">{Style}</span> 
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>The default style for rendering collection list children.</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Functions</h3>
+
+        <dl>
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id=".getBoundsStyle">
+        </div>
+        <h4 class="name">
+            getBoundsStyle<span class="signature">(<span class="optional">originalStyle</span>, <span class="optional">layerGroup</span>)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Style}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js">util.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js#L141">line 141</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+    
+    <pre class="prettyprint source"><code>import {getBoundsStyle} from 'ol/util';</code></pre>
+
+
+    
+    <div class="description">
+        <p>Returns the style for the footprint.
+Removes the fill if anything is meant to be shown in the bounds.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>originalStyle</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">Style</span>
+
+ | undefined
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The original style for the footprint.</p></td>
+        </tr>
+
+	
+
+        <tr class="">
+            
+                <td class="name"><code>layerGroup</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-ol_layer_STAC-STACLayer.html">STACLayer</a></span>
+
+ | undefined
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The associated STAC layergroup to check.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The adapted style for the footprint.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id=".getGeoTiffSourceInfoFromAsset">
+        </div>
+        <h4 class="name">
+            getGeoTiffSourceInfoFromAsset<span class="signature">(asset, bands)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{SourceInfo}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js">util.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js#L75">line 75</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+    
+    <pre class="prettyprint source"><code>import {getGeoTiffSourceInfoFromAsset} from 'ol/util';</code></pre>
+
+
+    
+    <div class="description">
+        <p>Get the source info for the GeoTiff from the asset.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>asset</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">module:stac-js~Asset</span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The asset to read the information from.</p></td>
+        </tr>
+
+	
+
+        <tr class="">
+            
+                <td class="name"><code>bands</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;number></span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The (one-based) bands to show.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The source info for the GeoTiff asset
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id=".getStacObjectsForEvent">
+        </div>
+        <h4 class="name">
+            getStacObjectsForEvent<span class="signature">(event)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Promise.&lt;Array.&lt;STAC>>}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js">util.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/util.js#L47">line 47</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+    
+    <pre class="prettyprint source"><code>import {getStacObjectsForEvent} from 'ol/util';</code></pre>
+
+
+    
+    <div class="description">
+        <p>Get the STAC objects associated with this event, if any. Excludes API Collections.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>event</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">js</span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The asset to read the information from.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+A list of STAC objects
+<br />
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+        </div>
+      </div>
+    </div>
+    <script>prettyPrint();</script>
+    <script src="scripts/linenumber.js"></script>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

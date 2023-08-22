@@ -2,6 +2,7 @@ export default ErrorEvent;
 /**
  * @classdesc
  * Event emitted on configuration or loading error.
+ * @api
  */
 declare class ErrorEvent extends BaseEvent {
     /**

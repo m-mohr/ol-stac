@@ -16,10 +16,10 @@
     "ol": "^7.0.0",
     "stac-js": "0.0.8"
   },
+  "main": "index.js",
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "main": "index.js"
+  ]
 }
