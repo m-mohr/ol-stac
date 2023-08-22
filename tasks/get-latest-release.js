@@ -5,7 +5,7 @@ import {Octokit} from '@octokit/rest';
 export async function getLatestRelease() {
   const client = new Octokit();
 
-  let latest = '0.0.0';
+  let latest = '0.0.1';
   await client.paginate(
     client.rest.repos.listReleases,
     {

@@ -20,11 +20,6 @@ async function main(options) {
     return false;
   }
 
-  const parsed = semver.parse(version);
-  if (parsed.prerelease.length) {
-    return false;
-  }
-
   const latest = await getLatestRelease();
   return semver.gte(version, latest);
 }
