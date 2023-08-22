@@ -126,7 +126,7 @@ class STACLayer extends LayerGroup {
             'maxResolution',
             'minZoom',
             'maxZoom',
-            'properties'
+            'properties',
         ].forEach((key) => (superOptions[key] = options[key]));
         super(superOptions);
         /**
