@@ -21,8 +21,8 @@ Explore the examples to get started with some code:
 ol-stac appreciates contributions of all kinds.
 
 The development of this package was financially supported by:
-- Planet Labs PBC
-- EOX IT Services GmbH
+- [Planet Labs PBC](https://planet.com)
+- [EOX IT Services GmbH](https://eox.at)
 
 Many thanks also to OpenLayers and its contributors.
 
