@@ -6,13 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.4] - 2023-08-22
+
+- Fix the default entry point (you can now really use `import STAC from 'ol-stac';`)
+
 ## [1.0.0-beta.3] - 2023-08-22
 
 - Pass `properties` option to the LayerGroup.
 
 ## [1.0.0-beta.2] - 2023-08-22
 
-- Move the `stacUtils.js` from `ol/layer` to `ol/utils.js`
+- Move the `stacUtils.js` from `ol/layer` to `ol-stac/utils.js`
 - Provide a default entry point (you can now use `import STAC from 'ol-stac';`)
 - Documentation improvements
 
@@ -20,7 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.3...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.4...HEAD>
+[1.0.0-beta.4]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.3...v1.0.0-beta.4>
 [1.0.0-beta.3]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.2...v1.0.0-beta.3>
 [1.0.0-beta.2]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.1...v1.0.0-beta.2>
 [1.0.0-beta.1]: <https://github.com/stac-extensions/contacts/tree/v1.0.0-beta.1>

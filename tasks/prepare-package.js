@@ -10,7 +10,7 @@ async function main() {
   const pkg = await fse.readJSON(path.resolve(baseDir, '../package.json'));
 
   // write out simplified package.json
-  pkg.main = 'index.js';
+  pkg.main = 'layer/STAC.js';
   delete pkg.scripts;
   delete pkg.devDependencies;
   delete pkg.style;
