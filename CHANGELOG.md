@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Pass `properties` option to the LayerGroup.
+
 ## [1.0.0-beta.2] - 2023-08-22
 
 - Move the `stacUtils.js` from `ol/layer` to `ol/utils.js`
