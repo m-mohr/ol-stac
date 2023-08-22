@@ -137,14 +137,6 @@
     <?js } ?>
 
     <?js
-        if (doc.observables && doc.observables.length) {
-    ?>
-        <h3 class="subsection-title">Observable Properties</h3>
-        <dl><?js= self.partial('observables.tmpl', doc.observables) ?></dl>
-
-    <?js } ?>
-
-    <?js
         var members = self.find({kind: 'member', memberof: title === 'Global' ? {isUndefined: true} : doc.longname});
         if (members && members.length && members.forEach) {
     ?>

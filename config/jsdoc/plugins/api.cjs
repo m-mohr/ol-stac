@@ -28,12 +28,9 @@ const types = {};
 const modules = {};
 
 function includeAugments(doclet) {
-  // Make sure that `observables` and `fires` are taken from an already processed `class` doclet.
+  // Make sure that `fires` are taken from an already processed `class` doclet.
   // This is necessary because JSDoc generates multiple doclets with the same longname.
   const cls = classes[doclet.longname];
-  if (cls.observables && !doclet.observables) {
-    doclet.observables = cls.observables;
-  }
   if (doclet.fires && cls.fires) {
     for (let i = 0, ii = cls.fires.length; i < ii; ++i) {
       const fires = cls.fires[i];
@@ -60,16 +57,6 @@ function includeAugments(doclet) {
           cls.fires.forEach(function (f) {
             if (!doclet.fires.includes(f)) {
               doclet.fires.push(f);
-            }
-          });
-        }
-        if (cls.observables) {
-          if (!doclet.observables) {
-            doclet.observables = [];
-          }
-          cls.observables.forEach(function (f) {
-            if (!doclet.observables.includes(f)) {
-              doclet.observables.push(f);
             }
           });
         }
@@ -108,11 +95,6 @@ function sortOtherMembers(doclet) {
   if (doclet.fires) {
     doclet.fires.sort(function (a, b) {
       return a.split(/#?event:/)[1] < b.split(/#?event:/)[1] ? -1 : 1;
-    });
-  }
-  if (doclet.observables) {
-    doclet.observables.sort(function (a, b) {
-      return a.name < b.name ? -1 : 1;
     });
   }
 }

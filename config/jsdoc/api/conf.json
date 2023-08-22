@@ -19,7 +19,6 @@
     "jsdoc-plugin-typescript",
     "config/jsdoc/plugins/inline-options.cjs",
     "config/jsdoc/plugins/events.cjs",
-    "config/jsdoc/plugins/observable.cjs",
     "config/jsdoc/plugins/api.cjs",
     "config/jsdoc/plugins/default-export.cjs"
   ],
