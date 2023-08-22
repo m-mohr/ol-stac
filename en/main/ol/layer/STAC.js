@@ -98,6 +98,7 @@ import { transformExtent } from 'ol/proj.js';
  * visible.
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
+ * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
  */
 /**
  * @classdesc
@@ -125,6 +126,7 @@ class STACLayer extends LayerGroup {
             'maxResolution',
             'minZoom',
             'maxZoom',
+            'properties'
         ].forEach((key) => (superOptions[key] = options[key]));
         super(superOptions);
         /**

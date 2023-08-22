@@ -131,6 +131,12 @@ export type Options = {
      * be visible.
      */
     maxZoom?: number | undefined;
+    /**
+     * Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
+     */
+    properties?: {
+        [x: string]: any;
+    } | undefined;
 };
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
@@ -210,6 +216,7 @@ export type Options = {
  * visible.
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
+ * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
  */
 /**
  * @classdesc
