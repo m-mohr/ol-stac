@@ -18,7 +18,7 @@
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
-      <a class="navbar-brand" href="/">OL STAC</a>
+      <a class="navbar-brand" href="/ol-stac/">OL STAC</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -42,7 +42,7 @@
               <i class="fa fa-sitemap me-1"></i>API
             </a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
-              <a class="dropdown-item" href="/ol-stac/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v0.0.1 (latest)</a>
+              <a class="dropdown-item" href="/ol-stac/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v0.0.0 (latest)</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -58,88 +58,7 @@
 
     <div class="container">
       <h1 id="quick-start">Quick Start</h1>
-<p>This primer shows you how to put a map on a web page.  The development setup uses <a href="https://nodejs.org/">Node</a> (14 or higher) and requires that you have <a href="https://github.com/git-guides/install-git"><code>git</code></a> installed.</p>
-<h2 id="set-up-a-new-project">Set up a new project</h2>
-<p>The easiest way to start building a project with OpenLayers is to run <code>npm create ol-app</code>:</p>
-<pre><code class="language-bash">npm create ol-app my-app
-cd my-app
-npm start
-</code></pre>
-<p>The first command will create a directory called <code>my-app</code> (you can use a different name if you wish), install OpenLayers and a development server, and set up a basic app with <code>index.html</code>, <code>main.js</code>, and <code>style.css</code> files.</p>
-<p>The second command (<code>cd my-app</code>) changes the working directory to your new <code>my-app</code> project so you can start working with it.</p>
-<p>The third command (<code>npm start</code>) starts a development server so you can view your application in a browser while working on it.  After running <code>npm start</code>, you&#39;ll see output that tells you the URL to open.  Open <a href="http://localhost:5173/">http://localhost:5173/</a> (or whatever URL is displayed) to see your new application.</p>
-<h2 id="exploring-the-parts">Exploring the parts</h2>
-<p>An OpenLayers application is composed of three basic parts:</p>
-<ul>
-<li>The HTML markup with an element to contain the map (<code>index.html</code>)</li>
-<li>The JavaScript that initializes the map (<code>main.js</code>)</li>
-<li>The CSS styles that determine the map size and any other customizations (<code>style.css</code>)</li>
-</ul>
-<h3 id="the-markup">The markup</h3>
-<p>Open the <code>index.html</code> file in a text editor.  It should look something like this:</p>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-  &lt;head&gt;
-    &lt;meta charset=&quot;UTF-8&quot; /&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
-    &lt;title&gt;Quick Start&lt;/title&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;script type=&quot;module&quot; src=&quot;./main.js&quot;&gt;&lt;/script&gt;
-  &lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<p>The two important parts in the markup are the <code>&lt;div&gt;</code> element to contain the map and the <code>&lt;script&gt;</code> tag to pull in the JavaScript.  The map container or target should be a block level element (like a <code>&lt;div&gt;</code>) and it must appear in the document before the <code>&lt;script&gt;</code> tag that initializes the map.</p>
-<h2 id="the-script">The script</h2>
-<p>Open the <code>main.js</code> file in a text editor.  It should look something like this:</p>
-<pre><code class="language-js">import &#39;./style.css&#39;;
-import Map from &#39;ol/Map.js&#39;;
-import OSM from &#39;ol/source/OSM.js&#39;;
-import TileLayer from &#39;ol/layer/Tile.js&#39;;
-import View from &#39;ol/View.js&#39;;
-
-const map = new Map({
-  target: &#39;map&#39;,
-  layers: [
-    new TileLayer({
-      source: new OSM(),
-    }),
-  ],
-  view: new View({
-    center: [0, 0],
-    zoom: 2,
-  }),
-});
-</code></pre>
-<p>OpenLayers is packaged as a collection of <a href="https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/">ES modules</a>.  The <code>import</code> lines are used to pull in the modules that your application needs.  Take a look through the <a href="/en/latest/examples/">examples</a> and <a href="/en/latest/apidoc/">API docs</a> to understand which modules you might want to use.</p>
-<p>The <code>import &#39;./style.css&#39;;</code> line might be a bit unexpected.  In this example, we&#39;re using <a href="https://vitejs.dev/">Vite</a> as a development server.  Vite allows CSS to be imported from JavaScript modules.  If you were using a different development server, you might include the <code>style.css</code> in a <code>&lt;link&gt;</code> tag in the <code>index.html</code> instead.</p>
-<p>The <code>main.js</code> module serves as an entry point for your application.  It initializes a new map, giving it a single layer with an OSM source and a view describing the center and zoom level.  Read through the <a href="./tutorials/concepts.html">Basic Concepts tutorial</a> to learn more about <code>Map</code>, <code>View</code>, <code>Layer</code>, and <code>Source</code> components.</p>
-<h2 id="the-style">The style</h2>
-<p>Open the <code>style.css</code> file in a text editor.  It should look something like this:</p>
-<pre><code class="language-css">@import &quot;node_modules/ol/ol.css&quot;;
-
-html,
-body {
-  margin: 0;
-  height: 100%;
-}
-
-#map {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-}
-</code></pre>
-<p>The first line imports the <code>ol.css</code> file that comes with the <code>ol</code> package (OpenLayers is published as the <a href="https://www.npmjs.com/package/ol"><code>ol</code> package</a> in the npm registry).  The <code>ol</code> package was installed in the <code>npm create ol-app</code> step above.  If you were starting with an existing application instead of using <code>npm create ol-app</code>, you would install the package with <code>npm install ol</code>.  The <code>ol.css</code> stylesheet includes styles for the elements that OpenLayers creates – things like buttons for zooming in and out.</p>
-<p>The remaining rules in the <code>style.css</code> file make it so the <code>&lt;div id=&quot;map&quot;&gt;</code> element that contains the map fills the entire page.</p>
-<h2 id="deploying-your-app">Deploying your app</h2>
-<p>You can make edits to the <code>index.html</code>, <code>main.js</code>, or <code>style.css</code> files and see the resulting change in your browser while running the development server (with <code>npm start</code>).  After you have finished making edits, it is time to bundle or build your application so that it can be deployed as a static website (without needing to run a development server like Vite).</p>
-<p>To build your application, run the following:</p>
-<pre><code class="language-bash">npm run build
-</code></pre>
-<p>This will create a <code>dist</code> directory with a new <code>index.html</code> and assets that make up your application.  These <code>dist</code> files can be deployed with your production website.</p>
+<p>tbd</p>
 
     </div>
     <footer>
