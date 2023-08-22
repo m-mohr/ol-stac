@@ -225,6 +225,7 @@ export type Options = {
 declare class STACLayer extends LayerGroup {
     /**
      * @param {Options} options Layer options.
+     * @api
      */
     constructor(options: Options);
     /**
@@ -309,6 +310,7 @@ declare class STACLayer extends LayerGroup {
     /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
+     * @api
      */
     getBoundsLayer(): VectorLayer<any> | null;
     /**
@@ -357,6 +359,7 @@ declare class STACLayer extends LayerGroup {
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
      * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @api
      */
     addLayerForLink(link: any): Promise<Array<TileLayer<any>> | undefined>;
     /**
@@ -390,29 +393,34 @@ declare class STACLayer extends LayerGroup {
     /**
      * Indicates whether the LayerGroup shows only the bounds layer (i.e. no imagery/tile layers).
      * @return {boolean} `true` if only the bounds layer is shown, `false` otherwise.
+     * @api
      */
     hasOnlyBounds(): boolean;
     /**
      * Returns all potential web map links based on the given value for `displayWebMapLink`.
      * @return {Array<Link>} An array of links.
+     * @api
      */
     getWebMapLinks(): Array<Link>;
     /**
      * Update the assets to be rendered.
      * @param {Array<string|Asset>|null} assets The assets to show.
      * @return {Promise} Resolves when all assets are rendered.
+     * @api
      */
     setAssets(assets: Array<string | Asset> | null): Promise<any>;
     /**
      * Get the STAC object.
      *
      * @return {STAC|Asset} The STAC object.
+     * @api
      */
     getData(): STAC | Asset;
     /**
      * Get the STAC assets shown.
      *
      * @return {Array<Asset>} The STAC assets.
+     * @api
      */
     getAssets(): Array<Asset>;
 }

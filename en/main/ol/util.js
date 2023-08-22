@@ -60,7 +60,6 @@ export async function getStacObjectsForEvent(event) {
  * @param {import('stac-js').Asset} asset The asset to read the information from.
  * @param {Array<number>} bands The (one-based) bands to show.
  * @return {import('ol/source/GeoTIFF.js').SourceInfo} The source info for the GeoTiff asset
- * @api
  */
 export function getGeoTiffSourceInfoFromAsset(asset, bands) {
     const sourceInfo = {

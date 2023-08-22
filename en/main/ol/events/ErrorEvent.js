@@ -11,11 +11,13 @@ import EventType from 'ol/events/EventType.js';
 class ErrorEvent extends BaseEvent {
     /**
      * @param {Error} error error object.
+     * @api
      */
     constructor(error) {
         super(EventType.ERROR);
         /**
          * @type {Error}
+         * @api
          */
         this.error = error;
     }

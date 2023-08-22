@@ -7,10 +7,12 @@ export default ErrorEvent;
 declare class ErrorEvent extends BaseEvent {
     /**
      * @param {Error} error error object.
+     * @api
      */
     constructor(error: Error);
     /**
      * @type {Error}
+     * @api
      */
     error: Error;
 }

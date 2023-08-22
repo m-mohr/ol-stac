@@ -113,6 +113,7 @@ import { transformExtent } from 'ol/proj.js';
 class STACLayer extends LayerGroup {
     /**
      * @param {Options} options Layer options.
+     * @api
      */
     constructor(options) {
         const superOptions = {};
@@ -225,6 +226,7 @@ class STACLayer extends LayerGroup {
     /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
+     * @api
      */
     getBoundsLayer() {
         return this.boundsLayer_;
@@ -392,6 +394,7 @@ class STACLayer extends LayerGroup {
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
      * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @api
      */
     async addLayerForLink(link) {
         // Replace any occurances of {s} if possible, otherwise return
@@ -605,6 +608,7 @@ class STACLayer extends LayerGroup {
     /**
      * Indicates whether the LayerGroup shows only the bounds layer (i.e. no imagery/tile layers).
      * @return {boolean} `true` if only the bounds layer is shown, `false` otherwise.
+     * @api
      */
     hasOnlyBounds() {
         const boundsLayer = this.getBoundsLayer();
@@ -614,6 +618,7 @@ class STACLayer extends LayerGroup {
     /**
      * Returns all potential web map links based on the given value for `displayWebMapLink`.
      * @return {Array<Link>} An array of links.
+     * @api
      */
     getWebMapLinks() {
         let types = ['xyz', 'tilejson', 'wmts', 'wms']; // This also defines the priority
@@ -632,6 +637,7 @@ class STACLayer extends LayerGroup {
      * Update the assets to be rendered.
      * @param {Array<string|Asset>|null} assets The assets to show.
      * @return {Promise} Resolves when all assets are rendered.
+     * @api
      */
     async setAssets(assets) {
         if (Array.isArray(assets)) {
@@ -654,6 +660,7 @@ class STACLayer extends LayerGroup {
      * Get the STAC object.
      *
      * @return {STAC|Asset} The STAC object.
+     * @api
      */
     getData() {
         return this.data_;
@@ -662,6 +669,7 @@ class STACLayer extends LayerGroup {
      * Get the STAC assets shown.
      *
      * @return {Array<Asset>} The STAC assets.
+     * @api
      */
     getAssets() {
         return this.assets_;
@@ -670,6 +678,7 @@ class STACLayer extends LayerGroup {
      * Get the extent of the layer.
      *
      * @return {Extent|undefined} The layer extent.
+     * @api
      */
     getExtent() {
         const data = this.getData();

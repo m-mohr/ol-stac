@@ -65,6 +65,19 @@
         <span class="fa fa-chevron-right me-2 mt-1"></span>
         <span><a href="module-ol_layer_STAC-STACLayer.html">ol​/layer​/STAC</a></span>
     </span>
+    <div class="member-list" data-type="methods">
+        <span class="subtitle">Methods</span>
+        <ul>
+            <li data-name="addlayerforlink"><a href="module-ol_layer_STAC-STACLayer.html#addLayerForLink">addLayerForLink</a>
+            <li data-name="getassets"><a href="module-ol_layer_STAC-STACLayer.html#getAssets">getAssets</a>
+            <li data-name="getboundslayer"><a href="module-ol_layer_STAC-STACLayer.html#getBoundsLayer">getBoundsLayer</a>
+            <li data-name="getdata"><a href="module-ol_layer_STAC-STACLayer.html#getData">getData</a>
+            <li data-name="getextent"><a href="module-ol_layer_STAC-STACLayer.html#getExtent">getExtent</a>
+            <li data-name="getwebmaplinks"><a href="module-ol_layer_STAC-STACLayer.html#getWebMapLinks">getWebMapLinks</a>
+            <li data-name="hasonlybounds"><a href="module-ol_layer_STAC-STACLayer.html#hasOnlyBounds">hasOnlyBounds</a>
+            <li data-name="setassets"><a href="module-ol_layer_STAC-STACLayer.html#setAssets">setAssets</a>
+        </ul>
+    </div>
     <div class="member-list" data-type="fires">
         <span class="subtitle">Fires</span>
         <ul>
@@ -916,6 +929,831 @@ be visible.</p></td>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="addLayerForLink">
+        </div>
+        <h4 class="name">
+            addLayerForLink<span class="signature">(link)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Promise.&lt;(Array.&lt;TileLayer>|undefined)>}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L450">line 450</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Adds a layer for a link that implements the web-map-links extension.
+Supports: TileJSON, WMS, WMTS, XYZ</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>link</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="module-ol_layer_STAC.html#~Link">Link</a></span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>A web map link</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://github.com/stac-extensions/web-map-links">https://github.com/stac-extensions/web-map-links</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+Resolves with a list of layers or undefined when complete.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="getAssets">
+        </div>
+        <h4 class="name">
+            getAssets<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Array.&lt;Asset>}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L751">line 751</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Get the STAC assets shown.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The STAC assets.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="getBoundsLayer">
+        </div>
+        <h4 class="name">
+            getBoundsLayer<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{VectorLayer | null}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L269">line 269</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Returns the vector layer that visualizes the bounds / footprint.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The vector layer for the bounds
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="getData">
+        </div>
+        <h4 class="name">
+            getData<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{STAC | Asset}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L741">line 741</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Get the STAC object.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The STAC object.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="getExtent">
+        </div>
+        <h4 class="name">
+            getExtent<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{<a href="module-ol_layer_STAC.html#~Extent">Extent</a> | undefined}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L761">line 761</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Get the extent of the layer.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+The layer extent.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="getWebMapLinks">
+        </div>
+        <h4 class="name">
+            getWebMapLinks<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Array&lt;<a href="module-ol_layer_STAC.html#~Link">Link</a>>}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L698">line 698</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Returns all potential web map links based on the given value for <code>displayWebMapLink</code>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+An array of links.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="hasOnlyBounds">
+        </div>
+        <h4 class="name">
+            hasOnlyBounds<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{boolean}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L685">line 685</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Indicates whether the LayerGroup shows only the bounds layer (i.e. no imagery/tile layers).</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+<code>true</code> if only the bounds layer is shown, <code>false</code> otherwise.
+<br />
+
+    
+
+    
+</dd>
+
+        
+            
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="setAssets">
+        </div>
+        <h4 class="name">
+            setAssets<span class="signature">(assets)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Promise}</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.1/src/ol/layer/STAC.js#L718">line 718</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Update the assets to be rendered.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>assets</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;(string|Asset)></span>
+|
+
+<span class="param-type">null</span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The assets to show.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+
+
+<h5>Returns:</h5>
+Resolves when all assets are rendered.
+<br />
+
+    
+
+    
+</dd>
+
+        </dl>
     
 
     
