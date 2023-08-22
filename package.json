@@ -31,6 +31,7 @@
     "ol": "^7.0.0",
     "stac-js": "0.0.8"
   },
+  "main": "src/ol/layer/STAC.js",
   "devDependencies": {
     "@metalsmith/in-place": "^5.0.0",
     "@metalsmith/layouts": "^2.5.1",

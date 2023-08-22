@@ -4,7 +4,7 @@ import STAC from '../src/ol/layer/STAC.js';
 import TileLayer from 'ol/layer/WebGLTile.js';
 import View from 'ol/View.js';
 import proj4 from 'proj4';
-import {getStacObjectsForEvent} from '../src/ol/layer/stacUtil.js';
+import {getStacObjectsForEvent} from '../src/ol/util.js';
 import {register} from 'ol/proj/proj4.js';
 
 register(proj4); // required to support source reprojection

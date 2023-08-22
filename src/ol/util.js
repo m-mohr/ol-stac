@@ -1,3 +1,7 @@
+/**
+ * @module ol/util
+ */
+
 import VectorLayer from 'ol/layer/Vector.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {STAC} from 'stac-js';
@@ -7,6 +11,11 @@ import {
   isRegistered as isProj4Registered,
 } from 'ol/proj/proj4.js';
 
+/**
+ * The default style for rendering bounds of the STAC main entities.
+ * @type {Style}
+ * @api
+ */
 export const defaultBoundsStyle = new Style({
   fill: new Fill({
     color: 'rgba(255,255,255,0.4)',
@@ -17,6 +26,11 @@ export const defaultBoundsStyle = new Style({
   }),
 });
 
+/**
+ * The default style for rendering collection list children.
+ * @type {Style}
+ * @api
+ */
 export const defaultCollectionStyle = new Style({
   stroke: new Stroke({
     color: '#ff9933',
@@ -28,6 +42,7 @@ export const defaultCollectionStyle = new Style({
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
  * @return {Promise<Array<STAC>>} A list of STAC objects
+ * @api
  */
 export async function getStacObjectsForEvent(event) {
   const objects = event.map
@@ -118,8 +133,9 @@ export async function getProjection(reference, defaultProjection = undefined) {
  * Removes the fill if anything is meant to be shown in the bounds.
  *
  * @param {Style} [originalStyle] The original style for the footprint.
- * @param {import('./STAC.js').default} [layerGroup] The associated STAC layergroup to check.
+ * @param {import('./layer/STAC.js').default} [layerGroup] The associated STAC layergroup to check.
  * @return {Style} The adapted style for the footprint.
+ * @api
  */
 export function getBoundsStyle(originalStyle, layerGroup) {
   const style = originalStyle.clone();
@@ -132,7 +148,7 @@ export function getBoundsStyle(originalStyle, layerGroup) {
 /**
  * Get a URL from a web-map-link that is specific enough, i.e.
  * replaces any occurances of {s} if possible, otherwise returns null.
- * @param {import('./STAC.js').Link} link The web map link.
+ * @param {import('./layer/STAC.js').Link} link The web map link.
  * @return {string|null} Specific URL
  */
 export function getSpecificWebMapUrl(link) {

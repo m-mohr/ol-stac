@@ -129,13 +129,13 @@ function createWordIndex(exampleData) {
  */
 function getDependencies(jsSource, pkg) {
   const dependencies = {
-    ol: pkg.version,
+    'ol-stac': pkg.version,
   };
 
   let importMatch;
   while ((importMatch = importRegEx.exec(jsSource))) {
     const imp = importMatch[1];
-    if (!imp.startsWith('ol/') && imp != 'ol') {
+    if (!imp.startsWith('ol/') && imp != 'ol-stac') {
       const parts = imp.split('/');
       const dep = imp.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
       if (dep in pkg.devDependencies) {
@@ -281,8 +281,9 @@ export default class ExampleBuilder {
   transformJsSource(source) {
     return (
       source
+        .replace(`'../src/ol/layer/STAC.js'`, `'ol-stac'`)
         // remove "../src/" prefix to have the same import syntax as the documentation
-        .replace(/'\.\.\/src\//g, "'")
+        .replace(/'\.\.\/src\/ol\//g, `'ol-stac/`)
     );
   }
 
