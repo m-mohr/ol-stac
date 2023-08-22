@@ -18,17 +18,17 @@ In principle you can also pass in STAC Catalogs, but unless there's a link to a 
 ## What STAC extensions are supported?
 
 The web-map-links extension is supported to show links for:
-  - TileJSON
-  - WMS (tiled only)
-  - WMTS
-  - XYZ
+- TileJSON
+- WMS (tiled only)
+- WMTS
+- XYZ
 
-- For GeoTiff rendering the extension (through the stac-js library) makes use of:
-  - classification
-  - eo
-  - file
-  - projection
-  - raster
+For GeoTiff rendering the extension (through the [stac-js library](https://github.com/m-mohr/stac-js)) makes use of:
+- classification
+- eo
+- file
+- projection
+- raster
 
 ## Is there an alternative for other mapping libraries?
 
