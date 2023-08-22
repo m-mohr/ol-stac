@@ -34,7 +34,7 @@ The [ol-stac package](https://npmjs.com/package/ol-stac) includes auto-generated
 
 ## Documentation
 
-Check out the [hosted examples](https://m-mohr.github.io/ol-stac/en/latest/examples/), the [workshop](https://m-mohr.github.io/ol-stac/workshop/) or the [API documentation](https://m-mohr.github.io/ol-stac/en/latest/apidoc/).
+Check out the [hosted examples](https://m-mohr.github.io/ol-stac/en/latest/examples/) or the [API documentation](https://m-mohr.github.io/ol-stac/en/latest/apidoc/).
 
 ## Bugs
 

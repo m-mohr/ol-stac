@@ -9,8 +9,6 @@ If you're eager to get your first OpenLayers map on a page, dive into the [quick
 
 For a more in-depth overview of OpenLayers core concepts, check out the [tutorials](./tutorials/).
 
-Make sure to also check out the [OpenLayers workshop](/workshop/).
-
 Find additional reference material in the [API docs](/en/latest/apidoc/) and [examples](/en/latest/examples/).
 
 # Frequently Asked Questions (FAQ)
