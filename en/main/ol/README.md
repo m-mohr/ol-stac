@@ -6,15 +6,14 @@ An "automagical" STAC LayerGroup for OpenLayers released under the [Apache 2.0 l
 
 ## Getting Started
 
-Install the [`ol-stac` package](https://www.npmjs.com/package/ol-stac):
+Please read the Quick Start first:
+<https://m-mohr.github.io/ol-stac/doc/quickstart.html>
 
-```
-npm install ol-stac
-```
-
-Explore the examples to get started with some code:
+Explore the examples to get started with some more code:
 <https://m-mohr.github.io/ol-stac/en/latest/examples/>
 
+Dig into the API documentation for all details:
+<https://m-mohr.github.io/ol-stac/en/latest/apidoc/>
 
 ## Sponsors
 
@@ -25,6 +24,8 @@ The development of this package was financially supported by:
 - [EOX IT Services GmbH](https://eox.at)
 
 Many thanks also to OpenLayers and its contributors.
+
+[If you need any help, please contact me.](https://mohr.ws)
 
 ## TypeScript support
 
