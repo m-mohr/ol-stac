@@ -1,0 +1,25 @@
+{
+  "name": "ol-stac",
+  "version": "0.0.1",
+  "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
+  "homepage": "https://mohr.ws",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/m-mohr/ol-stac.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/m-mohr/ol-stac/issues"
+  },
+  "dependencies": {
+    "ol": "^7.0.0",
+    "stac-js": "0.0.8"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "main": "index.js"
+}
