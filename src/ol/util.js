@@ -95,8 +95,6 @@ export function getGeoTiffSourceInfoFromAsset(asset, bands) {
   const nodata = asset.getNoDataValues(band);
   if (nodata.length > 0) {
     sourceInfo.nodata = nodata[0];
-  } else {
-    sourceInfo.nodata = NaN; // NaN is usually a reasonable default if nothing is provided
   }
 
   if (bands.length > 0) {

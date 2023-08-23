@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Don't enforce the nodata value to be `NaN` if not present in STAC metadata
+
 ## [1.0.0-beta.4] - 2023-08-22
 
 - Fix the default entry point (you can now really use `import STAC from 'ol-stac';`)
