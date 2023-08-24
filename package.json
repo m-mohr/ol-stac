@@ -29,6 +29,7 @@
     "apidoc": "shx rm -rf build/apidoc && jsdoc --readme config/jsdoc/api/index.md --configure config/jsdoc/api/conf.json --package package.json --destination build/apidoc"
   },
   "dependencies": {
+    "ol-pmtiles": "^0.2.0",
     "stac-js": "0.0.8"
   },
   "peerDependencies": {

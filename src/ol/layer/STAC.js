@@ -1,6 +1,7 @@
 /**
  * @module ol/layer/STAC
  */
+import * as pmtiles from 'pmtiles';
 import ErrorEvent from '../events/ErrorEvent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import GeoTIFF from '../source/GeoTIFF2.js';
@@ -12,11 +13,14 @@ import TileJSON from 'ol/source/TileJSON.js';
 import TileLayer from 'ol/layer/Tile.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
+import VectorTileLayer from 'ol/layer/VectorTile.js';
+import VectorTileSource from 'ol/source/VectorTile.js';
 import WMS from 'ol/source/TileWMS.js';
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
 import create, {Asset, STAC} from 'stac-js';
+import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
 import {
   defaultBoundsStyle,
   defaultCollectionStyle,
@@ -84,7 +88,7 @@ import {transformExtent} from 'ol/proj.js';
  * usually the assets with role `overview` or `visual`.
  * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
  * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
  * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
@@ -432,7 +436,7 @@ class STACLayer extends LayerGroup {
 
   /**
    * Adds a layer for the web map links available in the STAC links.
-   * @return {Promise<Array<TileLayer>|undefined>} Resolves with a Layer or undefined when complete.
+   * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.
    */
   async addWebMapLinks_() {
     const links = this.getWebMapLinks();
@@ -443,10 +447,10 @@ class STACLayer extends LayerGroup {
 
   /**
    * Adds a layer for a link that implements the web-map-links extension.
-   * Supports: TileJSON, WMS, WMTS, XYZ
+   * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ
    * @see https://github.com/stac-extensions/web-map-links
    * @param {Link} link A web map link
-   * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+   * @return {Promise<Array<Layer>|undefined>} Resolves with a list of layers or undefined when complete.
    * @api
    */
   async addLayerForLink(link) {
@@ -466,6 +470,25 @@ class STACLayer extends LayerGroup {
 
     const sources = [];
     switch (link.rel) {
+      case 'pmtiles':
+        const p = new pmtiles.PMTiles(link.href);
+        const headers = await p.getHeader();
+        let source;
+        switch (headers.tileType) {
+          case pmtiles.TileType.Mvt:
+            source = new PMTilesVectorSource(options);
+            break;
+          case pmtiles.TileType.Avif:
+          case pmtiles.TileType.Jpeg:
+          case pmtiles.TileType.Png:
+          case pmtiles.TileType.Webp:
+            source = new PMTilesRasterSource(options);
+            break;
+          default:
+            return; // Unsupported
+        }
+        sources.push(source);
+        break;
       case 'tilejson':
         sources.push(new TileJSON(options));
         break;
@@ -509,9 +532,17 @@ class STACLayer extends LayerGroup {
     }
 
     return sources.map((source) => {
-      const layer = new TileLayer({
-        source,
-      });
+      let layer;
+      if (source instanceof VectorTileSource) {
+        layer = new VectorTileLayer({
+          source,
+          declutter: true,
+        });
+      } else if (source instanceof PMTilesRasterSource) {
+        layer = new WebGLTileLayer({source});
+      } else {
+        layer = new TileLayer({source});
+      }
       this.addLayer_(layer, link);
       return layer;
     });
@@ -698,7 +729,7 @@ class STACLayer extends LayerGroup {
    * @api
    */
   getWebMapLinks() {
-    let types = ['xyz', 'tilejson', 'wmts', 'wms']; // This also defines the priority
+    let types = ['xyz', 'tilejson', 'pmtiles', 'wmts', 'wms']; // This also defines the priority
     if (typeof this.displayWebMapLink_ === 'string') {
       types = [this.displayWebMapLink_];
     }

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - OpenLayers is now a peer dependency
+- Add support for PMTiles (via Web Map Links extension)
 
 ## [1.0.0-beta.5] - 2023-08-23
 
