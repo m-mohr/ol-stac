@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- OpenLayers is now a peer dependency
+
 ## [1.0.0-beta.5] - 2023-08-23
 
 - Don't enforce the nodata value to be `NaN` if not present in STAC metadata

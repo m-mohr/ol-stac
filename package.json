@@ -3,6 +3,16 @@
   "version": "1.0.0-beta.5",
   "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
   "homepage": "https://mohr.ws",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "src/ol/layer/STAC.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/m-mohr/ol-stac.git"
+  },
+  "bugs": {
+    "url": "https://github.com/m-mohr/ol-stac/issues"
+  },
   "scripts": {
     "lint": "eslint tasks test src/ol examples config",
     "pretest": "npm run lint && npm run typecheck",
@@ -18,20 +28,12 @@
     "apidoc-debug": "shx rm -rf build/apidoc && node --inspect-brk=9229 ./node_modules/jsdoc/jsdoc.js --readme config/jsdoc/api/index.md --configure config/jsdoc/api/conf.json --package package.json --destination build/apidoc",
     "apidoc": "shx rm -rf build/apidoc && jsdoc --readme config/jsdoc/api/index.md --configure config/jsdoc/api/conf.json --package package.json --destination build/apidoc"
   },
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/m-mohr/ol-stac.git"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/m-mohr/ol-stac/issues"
-  },
   "dependencies": {
-    "ol": "^7.0.0",
     "stac-js": "0.0.8"
   },
-  "main": "src/ol/layer/STAC.js",
+  "peerDependencies": {
+    "ol": ">=7.0.0"
+  },
   "devDependencies": {
     "@metalsmith/in-place": "^5.0.0",
     "@metalsmith/layouts": "^2.5.1",
