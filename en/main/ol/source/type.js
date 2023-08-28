@@ -25,6 +25,7 @@
 /**
  * @classdesc
  * The source type for `getSourceOptions`.
+ * @api
  */
 class SourceType {
     constructor(name) {
