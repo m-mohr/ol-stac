@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>OL STAC v1.0.0-beta.6 API - Module: ol/source/type</title>
+    <title>OL STAC v1.0.0-beta.6 API - Class: SourceType</title>
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
@@ -60,21 +60,28 @@
           </div>
           <div class="navigation-list-wrapper">
             <ul class="navigation-list search-empty">
-<li class="item item-module toggle-manual toggle-manual-show" data-longname="module:ol/source/type" data-name="ol/source/type">
+<li class="item item-class toggle-manual toggle-manual-show" data-longname="module:ol/source/type~SourceType" data-name="ol/source/type">
     <span class="title toggle">
-        <span class="fa fa-plus me-2 mt-1"></span>
-        <span><a href="module-ol_source_type.html">ol​/source​/type</a></span>
+        <span class="fa fa-chevron-right me-2 mt-1"></span>
+        <span><a href="module-ol_source_type-SourceType.html">ol​/source​/type</a></span>
     </span>
-    <div class="member-list" data-type="typedefs">
-        <span class="subtitle">Typedefs</span>
+    <div class="member-list" data-type="members">
+        <span class="subtitle">Members</span>
         <ul>
-            <li data-name="geotiffsourceoptions"><a href="module-ol_source_type.html#~GeoTIFFSourceOptions">GeoTIFFSourceOptions</a>
-            <li data-name="imagestaticsourceoptions"><a href="module-ol_source_type.html#~ImageStaticSourceOptions">ImageStaticSourceOptions</a>
-            <li data-name="sourceoptions"><a href="module-ol_source_type.html#~SourceOptions">SourceOptions</a>
-            <li data-name="tilejsonsourceoptions"><a href="module-ol_source_type.html#~TileJSONSourceOptions">TileJSONSourceOptions</a>
-            <li data-name="tilewmssourceoptions"><a href="module-ol_source_type.html#~TileWMSSourceOptions">TileWMSSourceOptions</a>
-            <li data-name="wmtssourceoptions"><a href="module-ol_source_type.html#~WMTSSourceOptions">WMTSSourceOptions</a>
-            <li data-name="xyzsourceoptions"><a href="module-ol_source_type.html#~XYZSourceOptions">XYZSourceOptions</a>
+            <li data-name="geotiff"><a href="module-ol_source_type-SourceType.html#GeoTIFF">GeoTIFF</a>
+            <li data-name="imagestatic"><a href="module-ol_source_type-SourceType.html#ImageStatic">ImageStatic</a>
+            <li data-name="pmtilesraster"><a href="module-ol_source_type-SourceType.html#PMTilesRaster">PMTilesRaster</a>
+            <li data-name="pmtilesvector"><a href="module-ol_source_type-SourceType.html#PMTilesVector">PMTilesVector</a>
+            <li data-name="tilejson"><a href="module-ol_source_type-SourceType.html#TileJSON">TileJSON</a>
+            <li data-name="tilewms"><a href="module-ol_source_type-SourceType.html#TileWMS">TileWMS</a>
+            <li data-name="wmts"><a href="module-ol_source_type-SourceType.html#WMTS">WMTS</a>
+            <li data-name="xyz"><a href="module-ol_source_type-SourceType.html#XYZ">XYZ</a>
+        </ul>
+    </div>
+    <div class="member-list" data-type="methods">
+        <span class="subtitle">Methods</span>
+        <ul>
+            <li data-name="tostring"><a href="module-ol_source_type-SourceType.html#toString">toString</a>
         </ul>
     </div>
               <li class="loading">Loading …
@@ -83,7 +90,7 @@
         </div>
 
         <div class="main col-md-8 col-lg-9">
-          <h1 class="page-title" data-filename="module-ol_source_type.html">Module: ol/source/type</h1>
+          <h1 class="page-title" data-filename="module-ol_source_type-SourceType.html">Class: SourceType</h1>
           <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
             <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             This documentation is for OL STAC v<span id="package-version">1.0.0-beta.6</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
@@ -95,14 +102,19 @@
 <section class="content">
 
 <header>
-    <h2 class="my-3">ol/source/type
+    <h2 class="my-3">
+        <span class="ancestors"><a href="module-ol_source_type.html">ol/source/type</a>~</span>SourceType
     </h2>
     <br>
     
       
       
+        <pre class="prettyprint source"><code>import SourceType from '<a href="module-ol_source_type.html">ol/source/type</a>.js';</code></pre>
+      
     
     <div class="row p-3 ">
+    
+      <div class="class-description col-lg-7 align-self-center ps-0"><p>The source type for <code>getSourceOptions</code>.</p></div>
     
     </div>
 </header>
@@ -112,9 +124,93 @@
     
 
     
+        <dl>
+            
+<dt class="">
+    
+    <div class="nameContainer">
+        <div class="anchor" id="SourceType">
+        </div>
+        <h4 class="name">
+            new SourceType<span class="signature">(name)</span>
+            
+            
+
+        </h4>
+        
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.6/src/ol/source/type.js">source/type.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.6/src/ol/source/type.js#L38">line 38</a>
+        </div>
+        
+    </div>
+    
+    
+</dt>
+<dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Creates a new SourceType.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
         
 
-        
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr class="">
+            
+                <td class="name"><code>name</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>The internal string identifier.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+    
+    
+
+    
 <dl class="details">
     
         
@@ -140,7 +236,20 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
     
     </div>
 
@@ -153,144 +262,514 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
 
         <dl>
-            <dt><a href="module-ol_source_type-SourceType.html">SourceType</a></dt>
-            <dd></dd>
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="GeoTIFF">
+        </div>
+        <h4 class="name">
+            GeoTIFF
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>GeoTiff</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_GeoTIFF.html">https://openlayers.org/en/latest/apidoc/module-ol_source_GeoTIFF.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="ImageStatic">
+        </div>
+        <h4 class="name">
+            ImageStatic
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>Static Image (<code>ImageStatic</code>)</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_ImageStatic.html">https://openlayers.org/en/latest/apidoc/module-ol_source_ImageStatic.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="PMTilesRaster">
+        </div>
+        <h4 class="name">
+            PMTilesRaster
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>PMTilesRaster</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://protomaps.com/docs/pmtiles/">https://protomaps.com/docs/pmtiles/</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="PMTilesVector">
+        </div>
+        <h4 class="name">
+            PMTilesVector
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>GeoTiff</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://protomaps.com/docs/pmtiles/">https://protomaps.com/docs/pmtiles/</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="TileJSON">
+        </div>
+        <h4 class="name">
+            TileJSON
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>TileJSON</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_TileJSON.html">https://openlayers.org/en/latest/apidoc/module-ol_source_TileJSON.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="TileWMS">
+        </div>
+        <h4 class="name">
+            TileWMS
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>WMS (<code>TileWMS</code>)</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS.html">https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="WMTS">
+        </div>
+        <h4 class="name">
+            WMTS
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>WMTS</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS.html">https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="">
+    <div class="nameContainer">
+        <div class="anchor" id="XYZ">
+        </div>
+        <h4 class="name">
+            XYZ
+            
+
+        </h4>
+    </div>
+    
+</dt>
+<dd class="">
+    
+    <div class="description">
+        <p>XYZ</p>
+    </div>
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ.html">https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ.html</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+
+    
+</dd>
+
         </dl>
     
 
     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Type Definitions</h3>
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-                
+            
+            
 <dt class="">
+    
     <div class="nameContainer">
-        <div class="anchor" id="~GeoTIFFSourceOptions">
+        <div class="anchor" id="toString">
         </div>
         <h4 class="name">
-            GeoTIFFSourceOptions<span class="type-signature type module:ol/source/geotiff2~options2">{<a href="module-ol_source_GeoTIFF2.html#~Options2">Options2</a>}</span> 
+            toString<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{string}</span>
+            
             
 
         </h4>
-    </div>
-    
-</dt>
-<dd class="">
-    
-
-    
-<dl class="details">
-    
         
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_GeoTIFF-GeoTIFFSource.html">https://openlayers.org/en/latest/apidoc/module-ol_source_GeoTIFF-GeoTIFFSource.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~ImageStaticSourceOptions">
+        <div class="tag-source">
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.6/src/ol/source/type.js">source/type.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.6/src/ol/source/type.js#L103">line 103</a>
         </div>
-        <h4 class="name">
-            ImageStaticSourceOptions<span class="type-signature type module:ol/source/imagestatic.js~options">{Options}</span> 
-            
-
-        </h4>
-    </div>
-    
-</dt>
-<dd class="">
-    
-
-    
-<dl class="details">
-    
         
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_ImageStatic-Static.html">https://openlayers.org/en/latest/apidoc/module-ol_source_ImageStatic-Static.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~SourceOptions">
-        </div>
-        <h4 class="name">
-            SourceOptions<span class="type-signature type module:ol/source/type~geotiffsourceoptions">{<a href="module-ol_source_type.html#~GeoTIFFSourceOptions">GeoTIFFSourceOptions</a>}</span> <span class="type-signature type module:ol/source/type~imagestaticsourceoptions">{<a href="module-ol_source_type.html#~ImageStaticSourceOptions">ImageStaticSourceOptions</a>}</span> <span class="type-signature type module:ol/source/type~tilejsonsourceoptions">{<a href="module-ol_source_type.html#~TileJSONSourceOptions">TileJSONSourceOptions</a>}</span> <span class="type-signature type module:ol/source/type~tilewmssourceoptions">{<a href="module-ol_source_type.html#~TileWMSSourceOptions">TileWMSSourceOptions</a>}</span> <span class="type-signature type module:ol/source/type~wmtssourceoptions">{<a href="module-ol_source_type.html#~WMTSSourceOptions">WMTSSourceOptions</a>}</span> <span class="type-signature type module:ol/source/type~xyzsourceoptions">{<a href="module-ol_source_type.html#~XYZSourceOptions">XYZSourceOptions</a>}</span> <span class="type-signature type object.<string, *>">{Object.&lt;string, *>}</span> 
-            
-
-        </h4>
     </div>
+    
     
 </dt>
 <dd class="">
+
+
+
+    
+    <div class="description">
+        <p>Converts to a string.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
     
 
     
@@ -320,221 +799,30 @@
 
 
     
-</dd>
 
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~TileJSONSourceOptions">
-        </div>
-        <h4 class="name">
-            TileJSONSourceOptions<span class="type-signature type module:ol/source/tilejson.js~options">{Options}</span> 
-            
-
-        </h4>
-    </div>
-    
-</dt>
-<dd class="">
     
 
     
-<dl class="details">
-    
-        
-    
-    
+
     
 
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_TileJSON-TileJSON.html">https://openlayers.org/en/latest/apidoc/module-ol_source_TileJSON-TileJSON.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
 
+
+<h5>Returns:</h5>
+The internal string identifier.
+<br />
+
+    
 
     
 </dd>
 
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~TileWMSSourceOptions">
-        </div>
-        <h4 class="name">
-            TileWMSSourceOptions<span class="type-signature type module:ol/source/tilewms.js~options">{Options}</span> 
-            
-
-        </h4>
-    </div>
-    
-</dt>
-<dd class="">
+        </dl>
     
 
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html">https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~WMTSSourceOptions">
-        </div>
-        <h4 class="name">
-            WMTSSourceOptions<span class="type-signature type module:ol/source/wmts.js~options">{Options}</span> 
-            
-
-        </h4>
-    </div>
-    
-</dt>
-<dd class="">
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html">https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-
-    
-</dd>
-
-            
-                
-<dt class="">
-    <div class="nameContainer">
-        <div class="anchor" id="~XYZSourceOptions">
-        </div>
-        <h4 class="name">
-            XYZSourceOptions<span class="type-signature type module:ol/source/xyz.js~options">{Options}</span> 
-            
-
-        </h4>
-    </div>
-    
-</dt>
-<dd class="">
-    
-
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html">https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html</a></li>
-        </ul>
-    </dd>
-    
-    
-    
-</dl>
-
-
-    
-</dd>
-
-            </dl>
     
 
     
