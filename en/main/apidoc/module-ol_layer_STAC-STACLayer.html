@@ -143,7 +143,7 @@ The layers created by this LayerGroup all have a 'stac' value that can be retrie
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L125">line 125</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L115">line 115</a>
         </div>
         
     </div>
@@ -298,7 +298,7 @@ null shows the default asset, an empty array shows no asset.</p></td>
 
         <tr class="">
             
-                <td class="name"><code>getGeoTIFFSourceOptions</code></td>
+                <td class="name"><code>getSourceOptions</code></td>
             
 
             
@@ -316,63 +316,11 @@ null shows the default asset, an empty array shows no asset.</p></td>
 
             <td  class="description last">
                 
-                <p>Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
+                <p>Optional function that can be used to configure the underlying sources. The function can do any additional work
 and return the completed options or a promise for the same. The function will be called with the current source options
-and the STAC Asset.</p></td>
-        </tr>
-
-	
-
-        <tr class="">
-            
-                <td class="name"><code>getImageStaticSourceOptions</code></td>
-            
-
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
- | undefined
-                
-            
-            </td>
-
-            
-
-            <td  class="description last">
-                
-                <p>Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
-and return the completed options or a promise for the same. The function will be called with the current source options
-and the STAC Asset or Link.</p></td>
-        </tr>
-
-	
-
-        <tr class="">
-            
-                <td class="name"><code>getXYZSourceOptions</code></td>
-            
-
-            
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
- | undefined
-                
-            
-            </td>
-
-            
-
-            <td  class="description last">
-                
-                <p>Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
-additional work and return the completed options or a promise for the same. The function will be called with the current
-source options and the STAC Asset or Link.</p></td>
+and the STAC Asset or Link.
+This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+Please be aware that sending HTTP headers may not be supported by all sources.</p></td>
         </tr>
 
 	
@@ -490,7 +438,7 @@ usually the assets with role <code>overview</code> or <code>visual</code>.</p></
                 
                 <p>Allow to display a layer based on the information provided through the
 web map links extension. It is only used if no other data is shown. You can set a specific type of
-web map link (<code>tilejson</code>, <code>wms</code>, <code>wmts</code>, <code>xyz</code>), let OpenLayers choose (<code>true</code>) or disable the functionality (<code>false</code>).</p></td>
+web map link (<code>pmtiles</code>, <code>tilejson</code>, <code>wms</code>, <code>wmts</code>, <code>xyz</code>), let OpenLayers choose (<code>true</code>) or disable the functionality (<code>false</code>).</p></td>
         </tr>
 
 	
@@ -966,7 +914,7 @@ be visible.</p></td>
         <div class="anchor" id="addLayerForLink">
         </div>
         <h4 class="name">
-            addLayerForLink<span class="signature">(link)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Promise.&lt;(Array.&lt;TileLayer>|undefined)>}</span>
+            addLayerForLink<span class="signature">(link)</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Promise.&lt;(Array.&lt;Layer>|undefined)>}</span>
             
             
 
@@ -974,7 +922,7 @@ be visible.</p></td>
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L452">line 452</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L434">line 434</a>
         </div>
         
     </div>
@@ -988,7 +936,7 @@ be visible.</p></td>
     
     <div class="description">
         <p>Adds a layer for a link that implements the web-map-links extension.
-Supports: TileJSON, WMS, WMTS, XYZ</p>
+Supports: PMTiles, TileJSON, WMS, WMTS, XYZ</p>
     </div>
     
 
@@ -1117,7 +1065,7 @@ Resolves with a list of layers or undefined when complete.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L753">line 753</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L785">line 785</a>
         </div>
         
     </div>
@@ -1207,7 +1155,7 @@ The STAC assets.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L271">line 271</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L249">line 249</a>
         </div>
         
     </div>
@@ -1297,7 +1245,7 @@ The vector layer for the bounds
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L743">line 743</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L775">line 775</a>
         </div>
         
     </div>
@@ -1387,7 +1335,7 @@ The STAC object.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L763">line 763</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L795">line 795</a>
         </div>
         
     </div>
@@ -1477,7 +1425,7 @@ The layer extent.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L700">line 700</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L732">line 732</a>
         </div>
         
     </div>
@@ -1567,7 +1515,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L687">line 687</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L719">line 719</a>
         </div>
         
     </div>
@@ -1657,7 +1605,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L720">line 720</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.5/src/ol/layer/STAC.js#L752">line 752</a>
         </div>
         
     </div>

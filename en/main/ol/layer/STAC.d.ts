@@ -1,11 +1,8 @@
 export default STACLayer;
 export type Extent = import("ol/extent.js").Extent;
-export type GeoTIFFSourceOptions = import("../source/GeoTIFF2.js").Options2;
-export type ImageStaticSourceOptions = import("ol/source/ImageStatic.js").Options;
 export type Link = any;
-export type STACObject = any;
 export type Style = import('ol/style.js').Style;
-export type XYZSourceOptions = import("ol/source/XYZ.js").Options;
+export type SourceOptions = import('../source/type.js').SourceOptions;
 export type Options = {
     /**
      * The STAC URL. Any of `url` and `data` must be provided.
@@ -29,23 +26,13 @@ export type Options = {
      */
     bands?: number[] | undefined;
     /**
-     * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
-     * and return the completed options or a promise for the same. The function will be called with the current source options
-     * and the STAC Asset.
-     */
-    getGeoTIFFSourceOptions?: ((arg0: GeoTIFFSourceOptions, arg1: Asset) => (GeoTIFFSourceOptions | Promise<GeoTIFFSourceOptions>)) | undefined;
-    /**
-     * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+     * Optional function that can be used to configure the underlying sources. The function can do any additional work
      * and return the completed options or a promise for the same. The function will be called with the current source options
      * and the STAC Asset or Link.
+     * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+     * Please be aware that sending HTTP headers may not be supported by all sources.
      */
-    getImageStaticSourceOptions?: ((arg0: ImageStaticSourceOptions, arg1: (Asset | Link)) => (ImageStaticSourceOptions | Promise<ImageStaticSourceOptions>)) | undefined;
-    /**
-     * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
-     * additional work and return the completed options or a promise for the same. The function will be called with the current
-     * source options and the STAC Asset or Link.
-     */
-    getXYZSourceOptions?: ((arg0: XYZSourceOptions, arg1: (Asset | Link)) => (XYZSourceOptions | Promise<XYZSourceOptions>)) | undefined;
+    getSourceOptions?: ((arg0: SourceType, arg1: SourceOptions, arg2: (Asset | Link)) => (SourceOptions | Promise<SourceOptions>)) | undefined;
     /**
      * Allow to choose non-cloud-optimized GeoTiffs as default image to show,
      * which might not work well for larger files or larger amounts of files.
@@ -66,7 +53,7 @@ export type Options = {
     /**
      * Allow to display a layer based on the information provided through the
      * web map links extension. It is only used if no other data is shown. You can set a specific type of
-     * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+     * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
      */
     displayWebMapLink?: string | boolean | undefined;
     /**
@@ -142,22 +129,13 @@ export type Options = {
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("../source/GeoTIFF2.js").Options2} GeoTIFFSourceOptions
- */
-/**
- * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticSourceOptions
- */
-/**
  * @typedef {import("stac-js").Link} Link
- */
-/**
- * @typedef {import("stac-js").STACObject} STACObject
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
  */
 /**
- * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
+ * @typedef {import('../source/type.js').SourceOptions} SourceOptions
  */
 /**
  * @typedef {Object} Options
@@ -170,18 +148,12 @@ export type Options = {
  * This can be an array of strings corresponding to asset keys or Asset objects.
  * null shows the default asset, an empty array shows no asset.
  * @property {Array<number>} [bands] The (one-based) bands to show.
- * @property {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)} [getGeoTIFFSourceOptions]
- * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
- * and return the completed options or a promise for the same. The function will be called with the current source options
- * and the STAC Asset.
- * @property {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)} [getImageStaticSourceOptions]
- * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+ * @property {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)} [getSourceOptions]
+ * Optional function that can be used to configure the underlying sources. The function can do any additional work
  * and return the completed options or a promise for the same. The function will be called with the current source options
  * and the STAC Asset or Link.
- * @property {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)} [getXYZSourceOptions]
- * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
- * additional work and return the completed options or a promise for the same. The function will be called with the current
- * source options and the STAC Asset or Link.
+ * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+ * Please be aware that sending HTTP headers may not be supported by all sources.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
  * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
@@ -192,7 +164,7 @@ export type Options = {
  * usually the assets with role `overview` or `visual`.
  * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
  * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
  * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
@@ -236,20 +208,10 @@ declare class STACLayer extends LayerGroup {
      */
     constructor(options: Options);
     /**
-     * @type {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
+     * @type {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)}
      * @private
      */
-    private getGeoTIFFSourceOptions_;
-    /**
-     * @type {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)}
-     * @private
-     */
-    private getImageStaticSourceOptions_;
-    /**
-     * @type {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)}
-     * @private
-     */
-    private getXYZSourceOptions_;
+    private getSourceOptions_;
     /**
      * @type {STAC|Asset}
      * @private
@@ -357,18 +319,18 @@ declare class STACLayer extends LayerGroup {
     private addThumbnail_;
     /**
      * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a Layer or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.
      */
-    addWebMapLinks_(): Promise<Array<TileLayer<any>> | undefined>;
+    addWebMapLinks_(): Promise<Array<Layer> | undefined>;
     /**
      * Adds a layer for a link that implements the web-map-links extension.
-     * Supports: TileJSON, WMS, WMTS, XYZ
+     * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a list of layers or undefined when complete.
      * @api
      */
-    addLayerForLink(link: any): Promise<Array<TileLayer<any>> | undefined>;
+    addLayerForLink(link: any): Promise<Array<Layer> | undefined>;
     /**
      * @private
      * @param {Asset} [asset] A STAC Asset
@@ -383,7 +345,7 @@ declare class STACLayer extends LayerGroup {
     private addTileLayerForImagery_;
     /**
      * @param {Layer|LayerGroup} [layer] A Layer to add to the LayerGroup
-     * @param {STACObject} [data] The STAC object, can be any class exposed by stac-js
+     * @param {import("stac-js").STACObject} [data] The STAC object, can be any class exposed by stac-js
      * @param {number} [zIndex=0] The z-index for the layer
      * @private
      */
@@ -431,7 +393,8 @@ declare class STACLayer extends LayerGroup {
      */
     getAssets(): Array<Asset>;
 }
+import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';
 import VectorLayer from 'ol/layer/Vector.js';
-import TileLayer from 'ol/layer/Tile.js';
+import Layer from 'ol/layer/Layer.js';
 //# sourceMappingURL=STAC.d.ts.map

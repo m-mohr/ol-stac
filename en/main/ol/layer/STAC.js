@@ -1,22 +1,27 @@
 /**
  * @module ol/layer/STAC
  */
+import * as pmtiles from 'pmtiles';
 import ErrorEvent from '../events/ErrorEvent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import GeoTIFF from '../source/GeoTIFF2.js';
 import ImageLayer from 'ol/layer/Image.js';
 import Layer from 'ol/layer/Layer.js';
 import LayerGroup from 'ol/layer/Group.js';
+import SourceType from '../source/type.js';
 import StaticImage from 'ol/source/ImageStatic.js';
 import TileJSON from 'ol/source/TileJSON.js';
 import TileLayer from 'ol/layer/Tile.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
+import VectorTileLayer from 'ol/layer/VectorTile.js';
+import VectorTileSource from 'ol/source/VectorTile.js';
 import WMS from 'ol/source/TileWMS.js';
 import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
 import create, { Asset, STAC } from 'stac-js';
+import { PMTilesRasterSource, PMTilesVectorSource } from 'ol-pmtiles';
 import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
 import { toGeoJSON } from 'stac-js/src/geo.js';
 import { transformExtent } from 'ol/proj.js';
@@ -24,22 +29,13 @@ import { transformExtent } from 'ol/proj.js';
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("../source/GeoTIFF2.js").Options2} GeoTIFFSourceOptions
- */
-/**
- * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticSourceOptions
- */
-/**
  * @typedef {import("stac-js").Link} Link
- */
-/**
- * @typedef {import("stac-js").STACObject} STACObject
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
  */
 /**
- * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
+ * @typedef {import('../source/type.js').SourceOptions} SourceOptions
  */
 /**
  * @typedef {Object} Options
@@ -52,18 +48,12 @@ import { transformExtent } from 'ol/proj.js';
  * This can be an array of strings corresponding to asset keys or Asset objects.
  * null shows the default asset, an empty array shows no asset.
  * @property {Array<number>} [bands] The (one-based) bands to show.
- * @property {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)} [getGeoTIFFSourceOptions]
- * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
- * and return the completed options or a promise for the same. The function will be called with the current source options
- * and the STAC Asset.
- * @property {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)} [getImageStaticSourceOptions]
- * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+ * @property {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)} [getSourceOptions]
+ * Optional function that can be used to configure the underlying sources. The function can do any additional work
  * and return the completed options or a promise for the same. The function will be called with the current source options
  * and the STAC Asset or Link.
- * @property {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)} [getXYZSourceOptions]
- * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
- * additional work and return the completed options or a promise for the same. The function will be called with the current
- * source options and the STAC Asset or Link.
+ * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+ * Please be aware that sending HTTP headers may not be supported by all sources.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
  * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
@@ -74,7 +64,7 @@ import { transformExtent } from 'ol/proj.js';
  * usually the assets with role `overview` or `visual`.
  * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
  * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
  * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
@@ -130,20 +120,10 @@ class STACLayer extends LayerGroup {
         ].forEach((key) => (superOptions[key] = options[key]));
         super(superOptions);
         /**
-         * @type {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
+         * @type {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)}
          * @private
          */
-        this.getGeoTIFFSourceOptions_ = options.getGeoTIFFSourceOptions;
-        /**
-         * @type {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)}
-         * @private
-         */
-        this.getImageStaticSourceOptions_ = options.getImageStaticSourceOptions;
-        /**
-         * @type {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)}
-         * @private
-         */
-        this.getXYZSourceOptions_ = options.getXYZSourceOptions;
+        this.getSourceOptions_ = options.getSourceOptions;
         /**
          * @type {STAC|Asset}
          * @private
@@ -363,7 +343,7 @@ class STACLayer extends LayerGroup {
             return;
         }
         /**
-         * @type {ImageStaticSourceOptions}
+         * @type {import("ol/source/ImageStatic.js").Options}
          */
         let options = {
             url: thumbnail.getAbsoluteUrl(),
@@ -371,8 +351,8 @@ class STACLayer extends LayerGroup {
             imageExtent: thumbnail.getContext().getBoundingBox(),
             crossOrigin: this.crossOrigin_,
         };
-        if (this.getImageStaticSourceOptions_) {
-            options = await this.getImageStaticSourceOptions_(options, thumbnail);
+        if (this.getSourceOptions_) {
+            options = await this.getSourceOptions_(SourceType.ImageStatic, options, thumbnail);
         }
         const layer = new ImageLayer({
             source: new StaticImage(options),
@@ -382,7 +362,7 @@ class STACLayer extends LayerGroup {
     }
     /**
      * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a Layer or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.
      */
     async addWebMapLinks_() {
         const links = this.getWebMapLinks();
@@ -392,10 +372,10 @@ class STACLayer extends LayerGroup {
     }
     /**
      * Adds a layer for a link that implements the web-map-links extension.
-     * Supports: TileJSON, WMS, WMTS, XYZ
+     * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a list of layers or undefined when complete.
      * @api
      */
     async addLayerForLink(link) {
@@ -410,10 +390,35 @@ class STACLayer extends LayerGroup {
             crossOrigin: this.crossOrigin_,
             url,
         };
+        const updateOptions = async (type, options) => {
+            if (this.getSourceOptions_) {
+                options = await this.getSourceOptions_(type, options, link);
+            }
+            return options;
+        };
         const sources = [];
         switch (link.rel) {
+            case 'pmtiles':
+                const p = new pmtiles.PMTiles(options.url);
+                const headers = await p.getHeader();
+                let source;
+                switch (headers.tileType) {
+                    case pmtiles.TileType.Mvt:
+                        source = new PMTilesVectorSource(await updateOptions(SourceType.PMTilesVector, options));
+                        break;
+                    case pmtiles.TileType.Avif:
+                    case pmtiles.TileType.Jpeg:
+                    case pmtiles.TileType.Png:
+                    case pmtiles.TileType.Webp:
+                        source = new PMTilesRasterSource(await updateOptions(SourceType.PMTilesRaster, options));
+                        break;
+                    default:
+                        return; // Unsupported
+                }
+                sources.push(source);
+                break;
             case 'tilejson':
-                sources.push(new TileJSON(options));
+                sources.push(new TileJSON(await updateOptions(SourceType.TileJSON, options)));
                 break;
             case 'wms':
                 if (!Array.isArray(link['wms:layers'])) {
@@ -425,7 +430,7 @@ class STACLayer extends LayerGroup {
                         LAYERS: layer,
                         STYLES: styles,
                     }, link['wms:dimensions']);
-                    const wmsOptions = Object.assign({}, options, { params });
+                    const wmsOptions = await updateOptions(SourceType.TileWMS, Object.assign({}, options, { params }));
                     sources.push(new WMS(wmsOptions));
                 }
                 break;
@@ -438,20 +443,30 @@ class STACLayer extends LayerGroup {
                     ? link['wmts:layer']
                     : [link['wmts:layer']];
                 for (const layer of layers) {
-                    const wmtsOptions = Object.assign({}, options, { layer });
+                    const wmtsOptions = await updateOptions(SourceType.WMTS, Object.assign({}, options, { layer }));
                     sources.push(new WMTS(optionsFromCapabilities(wmtsCapabilities, wmtsOptions)));
                 }
                 break;
             case 'xyz':
-                sources.push(new XYZ(options));
+                sources.push(new XYZ(await updateOptions(SourceType.XYZ, options)));
                 break;
             default:
                 return;
         }
         return sources.map((source) => {
-            const layer = new TileLayer({
-                source,
-            });
+            let layer;
+            if (source instanceof VectorTileSource) {
+                layer = new VectorTileLayer({
+                    source,
+                    declutter: true,
+                });
+            }
+            else if (source instanceof PMTilesRasterSource) {
+                layer = new WebGLTileLayer({ source });
+            }
+            else {
+                layer = new TileLayer({ source });
+            }
             this.addLayer_(layer, link);
             return layer;
         });
@@ -470,7 +485,7 @@ class STACLayer extends LayerGroup {
         }
         const sourceInfo = getGeoTiffSourceInfoFromAsset(asset, this.bands_);
         /**
-         * @type {GeoTIFFSourceOptions}
+         * @type {import("../source/GeoTIFF2.js").Options2}
          */
         let options = {
             sources: [sourceInfo],
@@ -479,8 +494,8 @@ class STACLayer extends LayerGroup {
         if (projection) {
             options.projection = projection;
         }
-        if (this.getGeoTIFFSourceOptions_) {
-            options = await this.getGeoTIFFSourceOptions_(options, asset);
+        if (this.getSourceOptions_) {
+            options = await this.getSourceOptions_(SourceType.GeoTIFF, options, asset);
         }
         const tileserverFallback = async (asset, layer) => {
             if (layer) {
@@ -522,14 +537,14 @@ class STACLayer extends LayerGroup {
      */
     async addTileLayerForImagery_(data) {
         /**
-         * @type {XYZSourceOptions}
+         * @type {import("ol/source/XYZ.js").Options}
          */
         let options = {
             crossOrigin: this.crossOrigin_,
             url: this.buildTileUrlTemplate_(data),
         };
-        if (this.getXYZSourceOptions_) {
-            options = await this.getXYZSourceOptions_(options, data);
+        if (this.getSourceOptions_) {
+            options = await this.getSourceOptions_(SourceType.XYZ, options, data);
         }
         const layer = new TileLayer({
             source: new XYZ(options),
@@ -539,7 +554,7 @@ class STACLayer extends LayerGroup {
     }
     /**
      * @param {Layer|LayerGroup} [layer] A Layer to add to the LayerGroup
-     * @param {STACObject} [data] The STAC object, can be any class exposed by stac-js
+     * @param {import("stac-js").STACObject} [data] The STAC object, can be any class exposed by stac-js
      * @param {number} [zIndex=0] The z-index for the layer
      * @private
      */
@@ -623,7 +638,7 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getWebMapLinks() {
-        let types = ['xyz', 'tilejson', 'wmts', 'wms']; // This also defines the priority
+        let types = ['xyz', 'tilejson', 'pmtiles', 'wmts', 'wms']; // This also defines the priority
         if (typeof this.displayWebMapLink_ === 'string') {
             types = [this.displayWebMapLink_];
         }

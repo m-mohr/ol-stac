@@ -68,14 +68,16 @@
                 data-title="stac"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-webmaplinks.html&quot;&gt;STAC Collection with Web Map Links&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-raster.html&quot;&gt;STAC Collection with PMTiles (Raster)&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-vector.html&quot;&gt;STAC Collection with PMTiles (Vector)&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-wms.html&quot;&gt;STAC Collection with WMS&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >6</a>
+                >8</a>
             </span>
             <span class="badge-group">
               <a
@@ -128,6 +130,20 @@
                 tabindex="0"
                 >4</a>
             </span>
+            <span class="badge-group">
+              <a
+                href="./index.html?q=signedurl" class="badge badge-info">signedurl</a
+              ><a
+                class="badge badge-info tag-modal-toggle"
+                data-bs-toggle="modal"
+                data-bs-target="#tag-example-list"
+                data-title="signedurl"
+                data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
+                  &lt;/ul&gt;"
+                tabindex="0"
+                >1</a>
+            </span>
           </p>
           <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -153,7 +169,7 @@
       <div class="row-fluid">
         <div class="span12">
           <p id="shortdesc">Rendering a STAC Item from Planetary Computer.</p>
-          <div id="docs"><p>This example uses the STAC layer to render an item from Planetary Computer. Planetary Computer requres that asset URLs are signed with a token.  The example uses the <code>getGeoTIFFSourceOptions</code> callback to sign the asset URL.</p>
+          <div id="docs"><p>This example uses the STAC layer to render an item from Planetary Computer. Planetary Computer requres that asset URLs are signed with a token.  The example uses the <code>getSourceOptions</code> callback to sign the asset URL.</p>
 </div>
         </div>
       </div>
@@ -163,6 +179,7 @@
         <pre><code id="example-js-source" class="language-js">import Map from &#x27;ol/Map.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import STAC from &#x27;ol-stac&#x27;;
+import SourceType from &#x27;ol-stac/source/type.js&#x27;;
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import View from &#x27;ol/View.js&#x27;;
 import proj4 from &#x27;proj4&#x27;;
@@ -188,9 +205,11 @@ async function sign(href) {
 const layer &#x3D; new STAC({
   url: &#x27;https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a/items/S2B_MSIL2A_20220909T185929_R013_T10TES_20220910T222807&#x27;,
   assets: [&#x27;visual&#x27;],
-  async getGeoTIFFSourceOptions(options) {
-    for (const source of options.sources) {
-      source.url &#x3D; await sign(source.url);
+  async getSourceOptions(type, options) {
+    if (type &#x3D;&#x3D;&#x3D; SourceType.GeoTIFF) {
+      for (const source of options.sources) {
+        source.url &#x3D; await sign(source.url);
+      }
     }
     return options;
   },

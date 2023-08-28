@@ -14,6 +14,7 @@
     "url": "https://github.com/m-mohr/ol-stac/issues"
   },
   "dependencies": {
+    "ol-pmtiles": "^0.2.0",
     "stac-js": "0.0.8"
   },
   "peerDependencies": {
