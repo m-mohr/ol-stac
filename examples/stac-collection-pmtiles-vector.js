@@ -13,7 +13,7 @@ const layer = new STAC({
   data: {
     'stac_version': '1.0.0',
     'stac_extensions': [
-      'https://stac-extensions.github.io/web-map-links/v1.1.0/schema.json',
+      'https://stac-extensions.github.io/web-map-links/v1.2.0/schema.json',
     ],
     'type': 'Collection',
     'id': 'Firenze',

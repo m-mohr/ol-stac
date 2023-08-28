@@ -8,6 +8,7 @@ import GeoTIFF from '../source/GeoTIFF2.js';
 import ImageLayer from 'ol/layer/Image.js';
 import Layer from 'ol/layer/Layer.js';
 import LayerGroup from 'ol/layer/Group.js';
+import SourceType from '../source/type.js';
 import StaticImage from 'ol/source/ImageStatic.js';
 import TileJSON from 'ol/source/TileJSON.js';
 import TileLayer from 'ol/layer/Tile.js';
@@ -54,6 +55,9 @@ import {transformExtent} from 'ol/proj.js';
 /**
  * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
  */
+/**
+ * @typedef {GeoTIFFSourceOptions|ImageStaticSourceOptions|XYZSourceOptions} SourceOptions
+ */
 
 /**
  * @typedef {Object} Options
@@ -66,18 +70,12 @@ import {transformExtent} from 'ol/proj.js';
  * This can be an array of strings corresponding to asset keys or Asset objects.
  * null shows the default asset, an empty array shows no asset.
  * @property {Array<number>} [bands] The (one-based) bands to show.
- * @property {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)} [getGeoTIFFSourceOptions]
- * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
- * and return the completed options or a promise for the same. The function will be called with the current source options
- * and the STAC Asset.
- * @property {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)} [getImageStaticSourceOptions]
- * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+ * @property {function(SourceType, SourceOptions, Asset|Link):(SourceOptions|Promise<SourceOptions>)} [getSourceOptions]
+ * Optional function that can be used to configure the underlying sources. The function can do any additional work
  * and return the completed options or a promise for the same. The function will be called with the current source options
  * and the STAC Asset or Link.
- * @property {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)} [getXYZSourceOptions]
- * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
- * additional work and return the completed options or a promise for the same. The function will be called with the current
- * source options and the STAC Asset or Link.
+ * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+ * Please be aware that sending HTTP headers may not be supported by all sources.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
  * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
@@ -147,22 +145,10 @@ class STACLayer extends LayerGroup {
     super(superOptions);
 
     /**
-     * @type {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
+     * @type {function(SourceType, SourceOptions, Asset|Link):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
      * @private
      */
-    this.getGeoTIFFSourceOptions_ = options.getGeoTIFFSourceOptions;
-
-    /**
-     * @type {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)}
-     * @private
-     */
-    this.getImageStaticSourceOptions_ = options.getImageStaticSourceOptions;
-
-    /**
-     * @type {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)}
-     * @private
-     */
-    this.getXYZSourceOptions_ = options.getXYZSourceOptions;
+    this.getSourceOptions_ = options.getSourceOptions;
 
     /**
      * @type {STAC|Asset}
@@ -424,8 +410,12 @@ class STACLayer extends LayerGroup {
       imageExtent: thumbnail.getContext().getBoundingBox(),
       crossOrigin: this.crossOrigin_,
     };
-    if (this.getImageStaticSourceOptions_) {
-      options = await this.getImageStaticSourceOptions_(options, thumbnail);
+    if (this.getSourceOptions_) {
+      options = await this.getSourceOptions_(
+        SourceType.ImageStatic,
+        options,
+        thumbnail
+      );
     }
     const layer = new ImageLayer({
       source: new StaticImage(options),
@@ -468,21 +458,32 @@ class STACLayer extends LayerGroup {
       url,
     };
 
+    const updateOptions = async (type, options) => {
+      if (this.getSourceOptions_) {
+        options = await this.getSourceOptions_(type, options, link);
+      }
+      return options;
+    };
+
     const sources = [];
     switch (link.rel) {
       case 'pmtiles':
-        const p = new pmtiles.PMTiles(link.href);
+        const p = new pmtiles.PMTiles(options.url);
         const headers = await p.getHeader();
         let source;
         switch (headers.tileType) {
           case pmtiles.TileType.Mvt:
-            source = new PMTilesVectorSource(options);
+            source = new PMTilesVectorSource(
+              await updateOptions(SourceType.PMTilesVector, options)
+            );
             break;
           case pmtiles.TileType.Avif:
           case pmtiles.TileType.Jpeg:
           case pmtiles.TileType.Png:
           case pmtiles.TileType.Webp:
-            source = new PMTilesRasterSource(options);
+            source = new PMTilesRasterSource(
+              await updateOptions(SourceType.PMTilesRaster, options)
+            );
             break;
           default:
             return; // Unsupported
@@ -490,7 +491,9 @@ class STACLayer extends LayerGroup {
         sources.push(source);
         break;
       case 'tilejson':
-        sources.push(new TileJSON(options));
+        sources.push(
+          new TileJSON(await updateOptions(SourceType.TileJSON, options))
+        );
         break;
       case 'wms':
         if (!Array.isArray(link['wms:layers'])) {
@@ -505,7 +508,10 @@ class STACLayer extends LayerGroup {
             },
             link['wms:dimensions']
           );
-          const wmsOptions = Object.assign({}, options, {params});
+          const wmsOptions = await updateOptions(
+            SourceType.TileWMS,
+            Object.assign({}, options, {params})
+          );
           sources.push(new WMS(wmsOptions));
         }
         break;
@@ -518,14 +524,17 @@ class STACLayer extends LayerGroup {
           ? link['wmts:layer']
           : [link['wmts:layer']];
         for (const layer of layers) {
-          const wmtsOptions = Object.assign({}, options, {layer});
+          const wmtsOptions = await updateOptions(
+            SourceType.WMTS,
+            Object.assign({}, options, {layer})
+          );
           sources.push(
             new WMTS(optionsFromCapabilities(wmtsCapabilities, wmtsOptions))
           );
         }
         break;
       case 'xyz':
-        sources.push(new XYZ(options));
+        sources.push(new XYZ(await updateOptions(SourceType.XYZ, options)));
         break;
       default:
         return;
@@ -576,8 +585,12 @@ class STACLayer extends LayerGroup {
       options.projection = projection;
     }
 
-    if (this.getGeoTIFFSourceOptions_) {
-      options = await this.getGeoTIFFSourceOptions_(options, asset);
+    if (this.getSourceOptions_) {
+      options = await this.getSourceOptions_(
+        SourceType.GeoTIFF,
+        options,
+        asset
+      );
     }
 
     const tileserverFallback = async (asset, layer) => {
@@ -626,8 +639,8 @@ class STACLayer extends LayerGroup {
       crossOrigin: this.crossOrigin_,
       url: this.buildTileUrlTemplate_(data),
     };
-    if (this.getXYZSourceOptions_) {
-      options = await this.getXYZSourceOptions_(options, data);
+    if (this.getSourceOptions_) {
+      options = await this.getSourceOptions_(SourceType.XYZ, options, data);
     }
     const layer = new TileLayer({
       source: new XYZ(options),
