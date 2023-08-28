@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - OpenLayers is now a peer dependency
 - Add support for PMTiles (via Web Map Links extension)
+- New general purpose option `getSourceOptions(type, options, ref)` to customize source options.
+   It also applies to all web-map-link source options now.
+   It replaces:
+   - `getGeoTIFFSourceOptions(options, ref)`
+   - `getImageStaticSourceOptions(options, ref)`
+   - `getXYZSourceOptions(options, ref)`
+- Added `SourceType` enum for `getSourceOptions`
 
 ## [1.0.0-beta.5] - 2023-08-23
 
