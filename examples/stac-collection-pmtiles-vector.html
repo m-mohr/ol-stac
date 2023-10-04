@@ -9,3 +9,53 @@ docs: >
 tags: "stac, stac collection, pmtiles, vector, web map links"
 ---
 <div id="map" class="map"></div>
+
+<style>
+#filter main {
+  display: flex;
+}
+#filter main section {
+  width: 25%;
+}
+#filter .hidden {
+  display: none;
+}
+</style>
+
+<form id="filter" action="#">
+  <header>
+    <h3>Filter</h3>
+  </header>
+  <main>
+    <section>
+      <h4>Layer</h4>
+      <p>
+        <select id="layer">
+          <option value="">All</option>
+          <option value="boundaries">Boundaries</option>
+          <option value="buildings">Buildings</option>
+          <option value="earth">Earth</option>
+          <option value="landuse">Landuse</option>
+          <option value="mask">Mask</option>
+          <option value="natural">Natural</option>
+          <option value="places">Places</option>
+          <option value="roads">Roads</option>
+          <option value="transit">Transit</option>
+          <option value="water">Water</option>
+        </select>
+      </p>
+    </section>
+    <section>
+      <h4>Properties</h4>
+      <p>
+        Property: <input id="key" /><br />
+        equals to<br />
+        Value: <input id="value" />
+      </p>
+    </section>
+  </main>
+  <footer>
+    <input type="submit" value="Filter" />
+    <input type="reset" value="Reset" />
+  </footer>
+</form>

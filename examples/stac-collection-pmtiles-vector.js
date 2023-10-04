@@ -1,12 +1,37 @@
 import Map from 'ol/Map.js';
 import OSM from 'ol/source/OSM.js';
 import STAC from '../src/ol/layer/STAC.js';
+import Style, { createDefaultStyle } from 'ol/style/Style.js'
 import TileLayer from 'ol/layer/WebGLTile.js';
 import View from 'ol/View.js';
 import proj4 from 'proj4';
 import {register} from 'ol/proj/proj4.js';
 
 register(proj4); // required to support source reprojection
+
+const layerProperties = {
+  'roads': {
+    'type': {
+      'title': 'Street Type',
+      'type': 'string',
+      'enum': ['trunk', 'primary', 'secondary'],
+    },
+    'lanes': {
+      'title': 'Number of Lanes',
+      'type': 'integer',
+      'minimum': 1,
+      'maximum': 10,
+    },
+    'name': {
+      'title': 'Street Name',
+      'type': 'string',
+    },
+    'sidewalks': {
+      'title': 'Has Sidewalks',
+      'type': 'boolean',
+    },
+  },
+};
 
 const layer = new STAC({
   displayWebMapLink: 'pmtiles',
@@ -34,8 +59,8 @@ const layer = new STAC({
           'https://protomaps.github.io/PMTiles/protomaps(vector)ODbL_firenze.pmtiles',
         'rel': 'pmtiles',
         'type': 'application/vnd.pmtiles',
-        'title': 'Firenze Preview',
-        'pmtiles:layers': ['buildings', 'natural', 'roads', 'transit', 'water'],
+        'title': 'Firenze Roads Preview',
+        'pmtiles:layer_properties': layerProperties,
       },
     ],
   },
@@ -55,3 +80,32 @@ const map = new Map({
 });
 const view = map.getView();
 view.fit(layer.getExtent());
+
+const form = document.getElementById('filter');
+form.addEventListener('submit', (event) => {
+  const layerName = document.getElementById('layer').value;
+  const propName = document.getElementById('key').value;
+  const propValue = document.getElementById('value').value;
+  console.log({layerName, propName, propValue});
+
+  layer.setPmTilesStyle((feature, resolution) => {
+    // console.log(feature);
+    let show = true;
+    if (show && layerName) {
+      show = Boolean(feature.get('layer') === layerName);
+    }
+    if (show && propName && propValue) {
+      show = Boolean(feature.get(propName) === propValue);
+    }
+    if (show) {
+      return createDefaultStyle(feature, resolution);
+    }
+    return new Style({});
+  });
+
+  event.preventDefault();
+});
+form.addEventListener('reset', (event) => {
+  layer.setPmTilesStyle(createDefaultStyle);
+  event.preventDefault();
+});

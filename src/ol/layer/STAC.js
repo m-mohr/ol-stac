@@ -41,9 +41,6 @@ import {transformExtent} from 'ol/proj.js';
  * @typedef {import("stac-js").Link} Link
  */
 /**
- * @typedef {import('ol/style.js').Style} Style
- */
-/**
  * @typedef {import('../source/type.js').SourceOptions} SourceOptions
  */
 
@@ -438,7 +435,7 @@ class STACLayer extends LayerGroup {
       return;
     }
 
-    const options = {
+    let options = {
       attributions:
         link.getMetadata('attribution') ||
         this.data_.getMetadata('attribution'),
@@ -461,9 +458,9 @@ class STACLayer extends LayerGroup {
         let source;
         switch (headers.tileType) {
           case pmtiles.TileType.Mvt:
-            source = new PMTilesVectorSource(
-              await updateOptions(SourceType.PMTilesVector, options)
-            );
+            // @todo pmtiles:layer is not supported yet
+            options = await updateOptions(SourceType.PMTilesVector, options);
+            source = new PMTilesVectorSource(options);
             break;
           case pmtiles.TileType.Avif:
           case pmtiles.TileType.Jpeg:
@@ -535,6 +532,7 @@ class STACLayer extends LayerGroup {
           source,
           declutter: true,
         });
+        this.pmTilesVectorLayer = layer;
       } else if (source instanceof PMTilesRasterSource) {
         layer = new WebGLTileLayer({source});
       } else {
@@ -543,6 +541,12 @@ class STACLayer extends LayerGroup {
       this.addLayer_(layer, link);
       return layer;
     });
+  }
+
+  setPmTilesStyle(style = null) {
+    if (this.pmTilesVectorLayer) {
+      this.pmTilesVectorLayer.setStyle(style);
+    }
   }
 
   /**
