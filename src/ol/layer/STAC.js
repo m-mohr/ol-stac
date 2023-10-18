@@ -496,6 +496,12 @@ class STACLayer extends LayerGroup {
             },
             link['wms:dimensions']
           );
+          if (
+            typeof link['type'] === 'string' &&
+            link['type'].startsWith('image/')
+          ) {
+            params.format = link['type'];
+          }
           const wmsOptions = await updateOptions(
             SourceType.TileWMS,
             Object.assign({}, options, {params})
@@ -512,10 +518,14 @@ class STACLayer extends LayerGroup {
           ? link['wmts:layer']
           : [link['wmts:layer']];
         for (const layer of layers) {
-          const wmtsOptions = await updateOptions(
-            SourceType.WMTS,
-            Object.assign({}, options, {layer})
-          );
+          let wmtsOptions = Object.assign({}, options, {layer});
+          if (
+            typeof link['type'] === 'string' &&
+            link['type'].startsWith('image/')
+          ) {
+            wmtsOptions.format = link['type'];
+          }
+          wmtsOptions = await updateOptions(SourceType.WMTS, wmtsOptions);
           sources.push(
             new WMTS(optionsFromCapabilities(wmtsCapabilities, wmtsOptions))
           );

@@ -33,6 +33,7 @@ const layer = new STAC({
       {
         'href': 'https://eccharts.ecmwf.int/wms/?token=public',
         'rel': 'wms',
+        'type': 'image/png',
         'wms:layers': ['composition_europe_pm10_analysis_surface'],
       },
     ],
