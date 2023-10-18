@@ -42,4 +42,4 @@ import {register} from 'ol/proj/proj4.js';
 register(proj4);
 ```
 
-For full code examples, please see the **[examples](/en/latest/examples/)**.
+For full code examples, please see the **[examples](/ol-stac/en/latest/examples/)**.
