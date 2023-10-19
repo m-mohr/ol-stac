@@ -422,17 +422,25 @@ class STACLayer extends LayerGroup {
                 break;
             case 'wms':
                 if (!Array.isArray(link['wms:layers'])) {
-                    return;
+                    break;
                 }
-                const styles = link['wms:styles'] || '';
-                for (const layer of link['wms:layers']) {
+                for (const i in link['wms:layers']) {
+                    const layers = link['wms:layers'][i];
+                    let styles;
+                    if (Array.isArray(link['wms:styles']) &&
+                        typeof link['wms:styles'][i] === 'string') {
+                        styles = link['wms:styles'][i];
+                    }
                     const params = Object.assign({
-                        LAYERS: layer,
+                        LAYERS: layers,
                         STYLES: styles,
                     }, link['wms:dimensions']);
+                    if (typeof link['wms:transparent'] === 'boolean') {
+                        params.TRANSPARENT = String(link['wms:transparent']);
+                    }
                     if (typeof link['type'] === 'string' &&
                         link['type'].startsWith('image/')) {
-                        params.format = link['type'];
+                        params.FORMAT = link['type'];
                     }
                     const wmsOptions = await updateOptions(SourceType.TileWMS, Object.assign({}, options, { params }));
                     sources.push(new WMS(wmsOptions));
