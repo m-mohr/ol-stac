@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added support for image formats in WMS and WMTS
+- Expose `SourceType` as public API
+- Removed note about Firefox issues in the examples
+
 ## [1.0.0-beta.6] - 2023-08-28
 
 - OpenLayers is now a peer dependency
