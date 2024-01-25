@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Added an option to hide footprints (geometry/bounding box) by default
 - Added support for image formats in WMS and WMTS
 - Expose `SourceType` as public API
 - Removed note about Firefox issues in the examples

@@ -6,7 +6,6 @@ import ErrorEvent from '../events/ErrorEvent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import GeoTIFF from '../source/GeoTIFF2.js';
 import ImageLayer from 'ol/layer/Image.js';
-import Layer from 'ol/layer/Layer.js';
 import LayerGroup from 'ol/layer/Group.js';
 import SourceType from '../source/type.js';
 import StaticImage from 'ol/source/ImageStatic.js';
@@ -38,6 +37,9 @@ import {transformExtent} from 'ol/proj.js';
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
+ * @typedef {import("ol/layer.js").Layer} Layer
+ */
+/**
  * @typedef {import("stac-js").Link} Link
  */
 /**
@@ -64,6 +66,8 @@ import {transformExtent} from 'ol/proj.js';
  * and the STAC Asset or Link.
  * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
  * Please be aware that sending HTTP headers may not be supported by all sources.
+ * @property {boolean} [displayFootprint=true] Allows to hide the footprints (bounding box/geometry) of the STAC object
+ * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
  * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
@@ -161,6 +165,12 @@ class STACLayer extends LayerGroup {
      * @private
      */
     this.crossOrigin_ = options.crossOrigin || null;
+
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.displayFootprint_ = options.displayFootprint === false ? false : true;
 
     /**
      * @type {boolean}
@@ -328,6 +338,7 @@ class STACLayer extends LayerGroup {
           displayGeoTiffByDefault: this.displayGeoTiffByDefault_,
           displayOverview: this.displayOverview_,
           displayPreview: this.displayPreview_,
+          displayFootprint: this.displayFootprint_,
         });
         this.addLayer_(subgroup);
         return subgroup;
@@ -699,6 +710,7 @@ class STACLayer extends LayerGroup {
       const vectorLayer = new VectorLayer({
         source,
         style: getBoundsStyle(this.boundsStyle_, this),
+        visible: this.displayFootprint_,
       });
       vectorLayer.set('bounds', true);
       this.addLayer_(vectorLayer, data, 1);
@@ -811,28 +823,30 @@ class STACLayer extends LayerGroup {
 
   /**
    * Get the extent of the layer.
+   * If `displayFootprint` is set to `false`, the extent is always returned in
+   * EPSG:4326 instead of the map projection. Make sure to transform it with the
+   * ol.proj.transformExtent function if needed.
    *
    * @return {Extent|undefined} The layer extent.
    * @api
    */
   getExtent() {
-    const data = this.getData();
-    if (!data) {
+    if (!this.boundsLayer_) {
       return;
     }
 
-    const layer = this.getLayers().item(0);
-    if (!layer || !(layer instanceof Layer)) {
-      return;
-    }
-
-    const map = layer.getMapInternal();
+    const map = this.boundsLayer_.getMapInternal();
     if (!map) {
       return;
     }
 
     const view = map.getView();
     if (!view) {
+      return;
+    }
+
+    const data = this.getData();
+    if (!data) {
       return;
     }
 

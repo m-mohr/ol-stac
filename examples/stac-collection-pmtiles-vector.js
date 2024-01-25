@@ -10,6 +10,7 @@ register(proj4); // required to support source reprojection
 
 const layer = new STAC({
   displayWebMapLink: 'pmtiles',
+  displayFootprint: false,
   data: {
     'stac_version': '1.0.0',
     'stac_extensions': [
