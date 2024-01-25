@@ -601,6 +601,9 @@ class STACLayer extends LayerGroup {
                     const features = format.readFeatures(geojson, {
                         featureProjection: projection,
                     });
+                    // An issue in OL 8.2.0 makes this line fail in linting, disable it for now
+                    // https://github.com/openlayers/openlayers/pull/15338
+                    // @ts-ignore
                     source.addFeatures(features);
                 },
             });
