@@ -1,5 +1,6 @@
 export default STACLayer;
 export type Extent = import("ol/extent.js").Extent;
+export type Layer = import("ol/layer.js").Layer;
 export type Link = any;
 export type Style = import('ol/style.js').Style;
 export type SourceOptions = import('../source/type.js').SourceOptions;
@@ -33,6 +34,11 @@ export type Options = {
      * Please be aware that sending HTTP headers may not be supported by all sources.
      */
     getSourceOptions?: ((arg0: SourceType, arg1: SourceOptions, arg2: (Asset | Link)) => (SourceOptions | Promise<SourceOptions>)) | undefined;
+    /**
+     * Allows to hide the footprints (bounding box/geometry) of the STAC object
+     * by default.
+     */
+    displayFootprint?: boolean | undefined;
     /**
      * Allow to choose non-cloud-optimized GeoTiffs as default image to show,
      * which might not work well for larger files or larger amounts of files.
@@ -129,6 +135,9 @@ export type Options = {
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
+ * @typedef {import("ol/layer.js").Layer} Layer
+ */
+/**
  * @typedef {import("stac-js").Link} Link
  */
 /**
@@ -154,6 +163,8 @@ export type Options = {
  * and the STAC Asset or Link.
  * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
  * Please be aware that sending HTTP headers may not be supported by all sources.
+ * @property {boolean} [displayFootprint=true] Allows to hide the footprints (bounding box/geometry) of the STAC object
+ * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
  * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
@@ -232,6 +243,11 @@ declare class STACLayer extends LayerGroup {
      * @private
      */
     private crossOrigin_;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    private displayFootprint_;
     /**
      * @type {boolean}
      * @private
@@ -396,5 +412,4 @@ declare class STACLayer extends LayerGroup {
 import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';
 import VectorLayer from 'ol/layer/Vector.js';
-import Layer from 'ol/layer/Layer.js';
 //# sourceMappingURL=STAC.d.ts.map
