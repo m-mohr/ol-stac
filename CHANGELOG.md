@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.8] - 2024-01-30
+
+- Fixes the broken 1.0.0-beta.7 release
+
 ## [1.0.0-beta.7] - 2024-01-26
 
 - Added an option to hide footprints (geometry/bounding box) by default
@@ -47,8 +51,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.7...HEAD>
-[1.0.0-beta.6]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.6...v1.0.0-beta.7>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.8...HEAD>
+[1.0.0-beta.8]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.7...v1.0.0-beta.8>
+[1.0.0-beta.7]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.6...v1.0.0-beta.7>
 [1.0.0-beta.6]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.5...v1.0.0-beta.6>
 [1.0.0-beta.5]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.4...v1.0.0-beta.5>
 [1.0.0-beta.4]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.3...v1.0.0-beta.4>
