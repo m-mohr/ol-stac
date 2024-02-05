@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "ol-pmtiles": "^0.2.0",
-    "stac-js": "0.0.8"
+    "stac-js": "0.0.9"
   },
   "peerDependencies": {
     "ol": ">=7.0.0"
