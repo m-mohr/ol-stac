@@ -76,9 +76,12 @@ import {transformExtent} from 'ol/proj.js';
  * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
  * usually the assets with role `overview` or `visual`.
- * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
- * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
+ * based on the information provided through the web map links extension.
+ * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+ * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+ * it lets this library choose a web map link to show, but only if no other data is shown.
+ * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
  * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
@@ -191,7 +194,7 @@ class STACLayer extends LayerGroup {
     this.displayOverview_ = options.displayOverview === false ? false : true;
 
     /**
-     * @type {string|boolean}
+     * @type {string|boolean|Array<Link|string>}
      */
     this.displayWebMapLink_ = options.displayWebMapLink || false;
 
@@ -741,7 +744,10 @@ class STACLayer extends LayerGroup {
     } else if (data.isItem() || data.isCollection()) {
       await this.addStacAssets_();
     }
-    if (this.displayWebMapLink_ && this.hasOnlyBounds()) {
+    if (
+      this.displayWebMapLink_ &&
+      (Array.isArray(this.displayWebMapLink_) || this.hasOnlyBounds())
+    ) {
       await this.addWebMapLinks_();
     }
   }
@@ -769,13 +775,29 @@ class STACLayer extends LayerGroup {
     if (typeof this.displayWebMapLink_ === 'string') {
       types = [this.displayWebMapLink_];
     }
-    const links = this.data_.getLinksWithRels(types);
-    links.sort((a, b) => {
-      const prioA = types.indexOf(a.rel);
-      const prioB = types.indexOf(b.rel);
-      return prioA - prioB;
-    });
-    return links;
+    let mapLinks = this.data_.getLinksWithRels(types);
+
+    if (Array.isArray(this.displayWebMapLink_)) {
+      mapLinks = this.displayWebMapLink_
+        .map((link) => {
+          if (typeof link === 'string') {
+            const match = mapLinks.find((candidate) => candidate.id === link);
+            if (match) {
+              return match;
+            }
+            return null;
+          }
+          return link;
+        })
+        .filter((link) => !!link);
+    } else {
+      mapLinks.sort((a, b) => {
+        const prioA = types.indexOf(a.rel);
+        const prioB = types.indexOf(b.rel);
+        return prioA - prioB;
+      });
+    }
+    return mapLinks;
   }
 
   /**
