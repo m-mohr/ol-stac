@@ -13,6 +13,10 @@
   "bugs": {
     "url": "https://github.com/m-mohr/ol-stac/issues"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/m-mohr"
+  },
   "dependencies": {
     "ol-pmtiles": "^0.2.0",
     "stac-js": "0.0.9"
