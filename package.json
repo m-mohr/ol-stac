@@ -13,6 +13,10 @@
   "bugs": {
     "url": "https://github.com/m-mohr/ol-stac/issues"
   },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/m-mohr"
+  },
   "scripts": {
     "lint": "eslint tasks test src/ol examples config",
     "pretest": "npm run lint && npm run typecheck",
