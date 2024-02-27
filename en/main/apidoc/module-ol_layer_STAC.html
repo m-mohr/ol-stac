@@ -601,6 +601,9 @@ usually the assets with role <code>overview</code> or <code>visual</code>.</p>
 |
 
 <span class="param-type">boolean</span>
+|
+
+<span class="param-type">Array.&lt;(<a href="module-ol_layer_STAC.html#~Link">module:ol/layer/STAC~Link</a>|string)></span>
 
 
                 
@@ -610,9 +613,12 @@ usually the assets with role <code>overview</code> or <code>visual</code>.</p>
             </td>
 
             <td class="description last">
-                <p>Allow to display a layer based on the information provided through the
-web map links extension. It is only used if no other data is shown. You can set a specific type of
-web map link (<code>pmtiles</code>, <code>tilejson</code>, <code>wms</code>, <code>wmts</code>, <code>xyz</code>), let OpenLayers choose (<code>true</code>) or disable the functionality (<code>false</code>).</p>
+                <p>Allow to display a layer
+based on the information provided through the web map links extension.
+If an array of links or link ids (property <code>id</code> in a Link Object) is provided, all corresponding layers will be shown.
+If set to true or to a specific type of web map link (<code>pmtiles</code>, <code>tilejson</code>, <code>wms</code>, <code>wmts</code>, <code>xyz</code>),
+it lets this library choose a web map link to show, but only if no other data is shown.
+To disable the functionality set this to <code>false</code>.</p>
                 
             </td>
         </tr>

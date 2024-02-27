@@ -57,11 +57,14 @@ export type Options = {
      */
     displayOverview?: boolean | undefined;
     /**
-     * Allow to display a layer based on the information provided through the
-     * web map links extension. It is only used if no other data is shown. You can set a specific type of
-     * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+     * Allow to display a layer
+     * based on the information provided through the web map links extension.
+     * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+     * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+     * it lets this library choose a web map link to show, but only if no other data is shown.
+     * To disable the functionality set this to `false`.
      */
-    displayWebMapLink?: string | boolean | undefined;
+    displayWebMapLink?: string | boolean | any[] | undefined;
     /**
      * The style for the overall bounds / footprint.
      */
@@ -173,9 +176,12 @@ export type Options = {
  * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
  * usually the assets with role `overview` or `visual`.
- * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
- * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
+ * based on the information provided through the web map links extension.
+ * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+ * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+ * it lets this library choose a web map link to show, but only if no other data is shown.
+ * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
  * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
@@ -264,9 +270,9 @@ declare class STACLayer extends LayerGroup {
      */
     private displayOverview_;
     /**
-     * @type {string|boolean}
+     * @type {string|boolean|Array<Link|string>}
      */
-    displayWebMapLink_: string | boolean;
+    displayWebMapLink_: string | boolean | Array<Link | string>;
     /**
      * @type {function(Asset):string|null}
      * @private
