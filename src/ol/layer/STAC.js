@@ -4,7 +4,7 @@
 import * as pmtiles from 'pmtiles';
 import ErrorEvent from '../events/ErrorEvent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
-import GeoTIFF from '../source/GeoTIFF2.js';
+import GeoTIFF from 'ol/source/GeoTIFF.js';
 import ImageLayer from 'ol/layer/Image.js';
 import LayerGroup from 'ol/layer/Group.js';
 import SourceType from '../source/type.js';
@@ -413,6 +413,7 @@ class STACLayer extends LayerGroup {
       crossOrigin: this.crossOrigin_,
     };
     if (this.getSourceOptions_) {
+      // @ts-ignore
       options = await this.getSourceOptions_(
         SourceType.ImageStatic,
         options,
@@ -596,7 +597,7 @@ class STACLayer extends LayerGroup {
     const sourceInfo = getGeoTiffSourceInfoFromAsset(asset, this.bands_);
 
     /**
-     * @type {import("../source/GeoTIFF2.js").Options2}
+     * @type {import("ol/source/GeoTIFF.js").Options}
      */
     let options = {
       sources: [sourceInfo],
@@ -608,6 +609,7 @@ class STACLayer extends LayerGroup {
     }
 
     if (this.getSourceOptions_) {
+      // @ts-ignore
       options = await this.getSourceOptions_(
         SourceType.GeoTIFF,
         options,
@@ -704,9 +706,6 @@ class STACLayer extends LayerGroup {
           const features = format.readFeatures(geojson, {
             featureProjection: projection,
           });
-          // An issue in OL 8.2.0 makes this line fail in linting, disable it for now
-          // https://github.com/openlayers/openlayers/pull/15338
-          // @ts-ignore
           source.addFeatures(features);
         },
       });

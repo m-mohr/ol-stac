@@ -3,31 +3,31 @@
  */
 
 /**
- * @typedef {import("./GeoTIFF2.js").Options2} GeoTIFFSourceOptions
+ * @typedef {import("ol/source/GeoTIFF.js").Options} GeoTIFFOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_GeoTIFF-GeoTIFFSource.html}
  */
 /**
- * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticSourceOptions
+ * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_ImageStatic-Static.html}
  */
 /**
- * @typedef {import("ol/source/TileJSON.js").Options} TileJSONSourceOptions
+ * @typedef {import("ol/source/TileJSON.js").Options} TileJSONOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_TileJSON-TileJSON.html}
  */
 /**
- * @typedef {import("ol/source/TileWMS.js").Options} TileWMSSourceOptions
+ * @typedef {import("ol/source/TileWMS.js").Options} TileWMSOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_TileWMS-TileWMS.html}
  */
 /**
- * @typedef {import("ol/source/WMTS.js").Options} WMTSSourceOptions
+ * @typedef {import("ol/source/WMTS.js").Options} WMTSOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_WMTS-WMTS.html}
  */
 /**
- * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
+ * @typedef {import("ol/source/XYZ.js").Options} XYZOptions
  * @see {@link https://openlayers.org/en/latest/apidoc/module-ol_source_XYZ-XYZ.html}
  */
 /**
- * @typedef {GeoTIFFSourceOptions|ImageStaticSourceOptions|TileJSONSourceOptions|TileWMSSourceOptions|WMTSSourceOptions|XYZSourceOptions|Object<string, *>} SourceOptions
+ * @typedef {GeoTIFFOptions|ImageStaticOptions|TileJSONOptions|TileWMSOptions|WMTSOptions|XYZOptions|Object<string, *>} SourceOptions
  */
 
 /**
