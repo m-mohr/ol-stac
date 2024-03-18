@@ -1,0 +1,16 @@
+---
+layout: example.html
+title: Custom STAC provided via URL
+shortdesc: Rendering a STAC entity as a layer.
+docs: >
+  Provide your own STAC entity and see it rendered as a layer on the map.
+tags: "stac"
+---
+<section style="display: flex; margin: 1em 0; gap: 0.5em">
+  <label for="id">URL to a STAC JSON:</label>
+  <input id="url-input" type="text" value="https://s3.us-west-2.amazonaws.com/sentinel-cogs/sentinel-s2-l2a-cogs/10/T/ES/2022/7/S2A_10TES_20220726_0_L2A/S2A_10TES_20220726_0_L2A.json" style="flex: 1">
+  <button id="load-btn">Load</button>
+  <button id="reset-btn">Reset</button>
+</section>
+<div id="map" class="map"></div>
+
