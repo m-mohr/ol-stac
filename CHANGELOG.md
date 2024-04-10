@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.10] - 2024-04-10
+
+- Correctly create WMS links if styles and/or layers are not provided
+
 ## [1.0.0-beta.9] - 2024-03-08
 
 - Allow a list of web map links to be shown through the `displayWebMapLink` option,
