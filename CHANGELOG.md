@@ -62,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.9...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...HEAD>
+[1.0.0-beta.10]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.9...v1.0.0-beta.10>
 [1.0.0-beta.9]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.8...v1.0.0-beta.9>
 [1.0.0-beta.8]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.7...v1.0.0-beta.8>
 [1.0.0-beta.7]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.6...v1.0.0-beta.7>
