@@ -504,7 +504,7 @@ class STACLayer extends LayerGroup {
         }
         for (const i in link['wms:layers']) {
           const layers = link['wms:layers'][i];
-          let styles;
+          let styles = [''];
           if (
             Array.isArray(link['wms:styles']) &&
             typeof link['wms:styles'][i] === 'string'
