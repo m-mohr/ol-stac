@@ -321,7 +321,9 @@ class STACLayer extends LayerGroup {
             }
             else {
                 // This may return Links or Assets
-                const thumbnails = this.getData().getThumbnails();
+                const thumbnails = this.getData()
+                    .getThumbnails()
+                    .filter((t) => !Array.isArray(t.roles) || !t.roles.includes('example'));
                 if (thumbnails.length > 0) {
                     assets.push(thumbnails[0]);
                 }
@@ -439,8 +441,8 @@ class STACLayer extends LayerGroup {
                     break;
                 }
                 for (const i in link['wms:layers']) {
-                    const layers = link['wms:layers'][i];
-                    let styles;
+                    const layers = link['wms:layers'][i] || '';
+                    let styles = '';
                     if (Array.isArray(link['wms:styles']) &&
                         typeof link['wms:styles'][i] === 'string') {
                         styles = link['wms:styles'][i];
