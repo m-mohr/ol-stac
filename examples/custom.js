@@ -48,6 +48,7 @@ function showUrl() {
     layer = new STAC({
       displayWebMapLink: true,
       url,
+      displayGeoTiffByDefault: true,
     });
 
     layer.on('sourceready', () => {
