@@ -37,7 +37,7 @@
     "stac-js": "0.0.9"
   },
   "peerDependencies": {
-    "ol": ">=7.5.2"
+    "ol": "*"
   },
   "devDependencies": {
     "@metalsmith/in-place": "^5.0.0",
