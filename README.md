@@ -15,6 +15,8 @@ Explore the examples to get started with some more code:
 Dig into the API documentation for all details:
 <https://m-mohr.github.io/ol-stac/en/latest/apidoc/>
 
+**ol-stac requires OpenLayers version >=7.5.2**
+
 ## Sponsors
 
 ol-stac appreciates contributions of all kinds.

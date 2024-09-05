@@ -38,3 +38,7 @@ I'm not aware of similar libraries for other web mapping libraries.
 ## Is TypeScript supported?
 
 Yes, the library exports (auto-generated) TypeScript bindings.
+
+## What versions of OpenLayers are supported?
+
+Ol-Stac is supporting OpenLayers version >=7.5.2.
