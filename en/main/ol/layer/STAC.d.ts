@@ -303,7 +303,7 @@ declare class STACLayer extends LayerGroup {
      * @return {VectorLayer|null} The vector layer for the bounds
      * @api
      */
-    getBoundsLayer(): VectorLayer<any> | null;
+    getBoundsLayer(): VectorLayer | null;
     /**
      * @private
      * @param {Error} error The error.
