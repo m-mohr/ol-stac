@@ -1,14 +1,22 @@
 /* eslint-disable import/no-commonjs */
 
 const path = require('path');
+const puppeteer = require('puppeteer');
+
+process.env.CHROME_BIN = puppeteer.executablePath();
+
+const flags = ['--headless=new'];
+if (process.env.CI) {
+  flags.push('--no-sandbox');
+}
 
 module.exports = function (karma) {
   karma.set({
-    browsers: ['ChromeHeadlessLauncher'],
+    browsers: ['ChromeHeadless'],
     customLaunchers: {
-      ChromeHeadlessLauncher: {
+      ChromeHeadless: {
         base: 'Chrome',
-        flags: ['--headless=new'],
+        flags,
       },
     },
     browserDisconnectTolerance: 2,
