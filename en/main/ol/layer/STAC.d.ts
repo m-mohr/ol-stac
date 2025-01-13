@@ -16,6 +16,11 @@ export type Options = {
      */
     data?: STAC | Asset | any;
     /**
+     * For STAC Catalogs and Collections, any child entites
+     * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+     */
+    children?: ItemCollection | any | Array<STAC> | string | null;
+    /**
      * The selector for the assets to be rendered,
      * only for STAC Items and Collections.
      * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -155,6 +160,8 @@ export type Options = {
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
+ * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -235,7 +242,12 @@ declare class STACLayer extends LayerGroup {
      */
     private data_;
     /**
-     * @type {Array<Asset> | null}
+     * @type {Array<STAC>|null}
+     * @private
+     */
+    private children_;
+    /**
+     * @type {Array<Asset>|null}
      * @private
      */
     private assets_;
@@ -245,7 +257,7 @@ declare class STACLayer extends LayerGroup {
      */
     private bands_;
     /**
-     * @type {string | null}
+     * @type {string|null}
      * @private
      */
     private crossOrigin_;
@@ -313,15 +325,17 @@ declare class STACLayer extends LayerGroup {
      * @private
      * @param {STAC|Asset|Object} data The STAC data.
      * @param {string} url The url to the data.
-     * @param {Array<Asset|string> | null} assets The assets to show.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
+     * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
      */
     private configure_;
     /**
      * @private
+     * @param {Array<STAC>} collection The list of STAC entities to show.
      * @return {Promise} Resolves when complete.
      */
-    private addApiCollection_;
+    private addChildren_;
     /**
      * @private
      * @return {Promise} Resolves when complete.
@@ -401,12 +415,26 @@ declare class STACLayer extends LayerGroup {
      */
     setAssets(assets: Array<string | Asset> | null): Promise<any>;
     /**
+     * Updates the children STAC entities to be rendered.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     * @return {Promise} Resolves when all items are rendered.
+     * @api
+     */
+    setChildren(childs: ItemCollection | any | Array<STAC> | string | null): Promise<any>;
+    /**
      * Get the STAC object.
      *
      * @return {STAC|Asset} The STAC object.
      * @api
      */
     getData(): STAC | Asset;
+    /**
+     * Get the children STAC entities.
+     *
+     * @return {STAC} The STAC child entities.
+     * @api
+     */
+    getChildren(): STAC;
     /**
      * Get the STAC assets shown.
      *

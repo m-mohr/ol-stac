@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>STAC Item from an object</title>
+    <title>STAC Collection with child items</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -56,7 +56,7 @@
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
         <div class="span12">
-          <h4 id="title">STAC Item from an object</h4>
+          <h4 id="title">STAC Collection with child items</h4>
           <p class="tags">
             <span class="badge-group">
               <a
@@ -69,13 +69,13 @@
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom.html&quot;&gt;Custom STAC provided via URL&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-raster.html&quot;&gt;STAC Collection with PMTiles (Raster)&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-vector.html&quot;&gt;STAC Collection with PMTiles (Vector)&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-wms.html&quot;&gt;STAC Collection with WMS&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
@@ -83,54 +83,33 @@
             </span>
             <span class="badge-group">
               <a
-                href="./index.html?q=stacitem" class="badge badge-info">stacitem</a
+                href="./index.html?q=stacapi" class="badge badge-info">stacapi</a
               ><a
                 class="badge badge-info tag-modal-toggle"
                 data-bs-toggle="modal"
                 data-bs-target="#tag-example-list"
-                data-title="stacitem"
+                data-title="stacapi"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >4</a>
+                >2</a>
             </span>
             <span class="badge-group">
               <a
-                href="./index.html?q=geotiff" class="badge badge-info">geotiff</a
+                href="./index.html?q=staticimage" class="badge badge-info">staticimage</a
               ><a
                 class="badge badge-info tag-modal-toggle"
                 data-bs-toggle="modal"
                 data-bs-target="#tag-example-list"
-                data-title="geotiff"
+                data-title="staticimage"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >4</a>
-            </span>
-            <span class="badge-group">
-              <a
-                href="./index.html?q=cog" class="badge badge-info">cog</a
-              ><a
-                class="badge badge-info tag-modal-toggle"
-                data-bs-toggle="modal"
-                data-bs-target="#tag-example-list"
-                data-title="cog"
-                data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
-                  &lt;/ul&gt;"
-                tabindex="0"
-                >4</a>
+                >2</a>
             </span>
           </p>
           <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -147,6 +126,7 @@
             </div>
           </div>
           <div id="map" class="map"></div>
+<div><strong>Selected Product Identifier:</strong> <span id="ids"></span></div>
 
         </div>
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
@@ -156,8 +136,8 @@
 
       <div class="row-fluid">
         <div class="span12">
-          <p id="shortdesc">Rendering a STAC Item as a layer that is provided as a JS object.</p>
-          <div id="docs"><p>Geometry and Assets from SpatioTemporal Asset Catalog (STAC) Items can be rendered as layer group.</p>
+          <p id="shortdesc">Rendering a STAC Collection with its child items</p>
+          <div id="docs"><p>Geometries and Thumbnails for various SpatioTemporal Asset Catalog (STAC) Items in an ItemCollection can be rendered as part of its parent collection. Adds a click event to select individual items.</p>
 </div>
         </div>
       </div>
@@ -168,93 +148,19 @@
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import STAC from &#x27;ol-stac&#x27;;
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
+import View from &#x27;ol/View.js&#x27;;
 import proj4 from &#x27;proj4&#x27;;
+import {getStacObjectsForEvent} from &#x27;ol-stac/util.js&#x27;;
 import {register} from &#x27;ol/proj/proj4.js&#x27;;
 
 register(proj4); // required to support source reprojection
 
 const layer &#x3D; new STAC({
-  url: &#x27;https://www.planet.com/data/stac/open-skysat-data/angkor-wat/dsm.json&#x27;,
-  data: {
-    &#x27;assets&#x27;: {
-      &#x27;dsm&#x27;: {
-        &#x27;href&#x27;:
-          &#x27;https://storage.googleapis.com/open-cogs/planet-stac/angkor-wat/3d-geofox.ai/angkor-wat-dsm.tif&#x27;,
-        &#x27;proj:epsg&#x27;: 32648,
-        &#x27;proj:shape&#x27;: [8675, 36244],
-        &#x27;proj:transform&#x27;: [
-          374283.8729316911, 0.699999988079071, 0, 1498553.1898692613, 0,
-          -0.699999988079071,
-        ],
-        &#x27;raster:bands&#x27;: [
-          {
-            &#x27;data_type&#x27;: &#x27;float32&#x27;,
-            &#x27;statistics&#x27;: {
-              &#x27;maximum&#x27;: 96.446,
-              &#x27;mean&#x27;: 26.839,
-              &#x27;minimum&#x27;: 2.095,
-              &#x27;stddev&#x27;: 10.117,
-            },
-            &#x27;nodata&#x27;: &#x27;nan&#x27;,
-          },
-        ],
-        &#x27;roles&#x27;: [&#x27;data&#x27;, &#x27;surface-model&#x27;],
-        &#x27;title&#x27;: &#x27;Digital Surface Model&#x27;,
-        &#x27;type&#x27;: &#x27;image/tiff; application&#x3D;geotiff; profile&#x3D;cloud-optimized&#x27;,
-      },
-    },
-    &#x27;bbox&#x27;: [103.8381461, 13.3233018, 103.8953104, 13.5529222],
-    &#x27;collection&#x27;: &#x27;angkor-wat&#x27;,
-    &#x27;geometry&#x27;: {
-      &#x27;coordinates&#x27;: [
-        [
-          [103.8381461, 13.5526676],
-          [103.83925, 13.3233018],
-          [103.8953104, 13.323552],
-          [103.8942598, 13.5529222],
-          [103.8381461, 13.5526676],
-        ],
-      ],
-      &#x27;type&#x27;: &#x27;Polygon&#x27;,
-    },
-    &#x27;id&#x27;: &#x27;angkor-wat-3d-dsm&#x27;,
-    &#x27;links&#x27;: [
-      {
-        &#x27;href&#x27;:
-          &#x27;https://www.planet.com/data/stac/open-skysat-data/angkor-wat/item.json&#x27;,
-        &#x27;rel&#x27;: &#x27;self&#x27;,
-        &#x27;type&#x27;: &#x27;application/json&#x27;,
-      },
-    ],
-    &#x27;properties&#x27;: {
-      &#x27;datetime&#x27;: null,
-      &#x27;description&#x27;:
-        &#x27;Digital Surface Model (DSM) of Angkor Wat, Cambodia, created from stereo images captured by a [Planet](https://planet.com) SkySat satellite. It is distributed as a single band Cloud-optimized GeoTiff, with each pixel representing the height at that location.&#x27;,
-      &#x27;end_datetime&#x27;: &#x27;2020-12-14T03:22:28.5Z&#x27;,
-      &#x27;providers&#x27;: [
-        {
-          &#x27;description&#x27;:
-            &#x27;Contact Planet at [planet.com/contact-sales](https://www.planet.com/contact-sales/)&#x27;,
-          &#x27;name&#x27;: &#x27;Planet Labs PBC&#x27;,
-          &#x27;roles&#x27;: [&#x27;producer&#x27;, &#x27;licensor&#x27;],
-          &#x27;url&#x27;: &#x27;https://www.planet.com&#x27;,
-        },
-        {
-          &#x27;name&#x27;: &#x27;Geofox.ai&#x27;,
-          &#x27;roles&#x27;: [&#x27;processor&#x27;],
-          &#x27;url&#x27;: &#x27;https://www.geofox.ai&#x27;,
-        },
-      ],
-      &#x27;start_datetime&#x27;: &#x27;2020-12-14T03:21:56.5Z&#x27;,
-      &#x27;title&#x27;: &#x27;Digital Surface Model&#x27;,
-    },
-    &#x27;stac_extensions&#x27;: [
-      &#x27;https://stac-extensions.github.io/projection/v1.1.0/schema.json&#x27;,
-      &#x27;https://stac-extensions.github.io/raster/v1.1.0/schema.json&#x27;,
-    ],
-    &#x27;stac_version&#x27;: &#x27;1.0.0&#x27;,
-    &#x27;type&#x27;: &#x27;Feature&#x27;,
-  },
+  url: &#x27;https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-cci-lc&#x27;,
+  children:
+    &#x27;https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-cci-lc/items?datetime&#x3D;2020-01-01T00%3A00%3A00.000Z%2F2020-12-31T00%3A00%3A00.000Z&amp;limit&#x3D;32&#x27;,
+  displayPreview: true,
+  displayGeoTiffByDefault: false,
 });
 
 const background &#x3D; new TileLayer({
@@ -264,8 +170,23 @@ const background &#x3D; new TileLayer({
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [background, layer],
+  view: new View({
+    center: [0, 0],
+    zoom: 0,
+    showFullExtent: true,
+  }),
 });
-map.getView().fit(layer.getExtent());
+map.on(&#x27;singleclick&#x27;, async (event) &#x3D;&gt; {
+  const objects &#x3D; await getStacObjectsForEvent(event, layer.getData());
+  if (objects.length &gt; 0) {
+    const ids &#x3D; objects.map((obj) &#x3D;&gt; obj.id);
+    document.getElementById(&#x27;ids&#x27;).innerText &#x3D; ids.join(&#x27;, &#x27;);
+  }
+});
+layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
+  const view &#x3D; map.getView();
+  view.fit(layer.getExtent());
+});
 </code></pre>
       </div>
 
@@ -275,7 +196,7 @@ map.getView().fit(layer.getExtent());
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;STAC Item from an object&lt;/title&gt;
+    &lt;title&gt;STAC Collection with child items&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -286,6 +207,7 @@ map.getView().fit(layer.getExtent());
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    &lt;div&gt;&lt;strong&gt;Selected Product Identifier:&lt;/strong&gt; &lt;span id&#x3D;&quot;ids&quot;&gt;&lt;/span&gt;&lt;/div&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;
@@ -295,7 +217,7 @@ map.getView().fit(layer.getExtent());
       <div class="row-fluid">
         <h5 class="source-heading">package.json</h5>
         <pre><code id="example-pkg-source" class="language-json">{
-  &quot;name&quot;: &quot;stac-item-from-object&quot;,
+  &quot;name&quot;: &quot;stac-collection-with-items&quot;,
   &quot;dependencies&quot;: {
     &quot;ol-stac&quot;: &quot;1.0.0-beta.10&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
@@ -313,7 +235,7 @@ map.getView().fit(layer.getExtent());
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="common.js"></script>
-    <script src="stac-item-from-object.js"></script>
+    <script src="stac-collection-with-items.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
