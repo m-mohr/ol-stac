@@ -34,17 +34,18 @@ export const defaultBoundsStyle = new Style({
 export const defaultCollectionStyle = new Style({
   stroke: new Stroke({
     color: '#ff9933',
-    width: 1,
+    width: 2,
   }),
 });
 
 /**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
+ * @param {STAC} [exclude=null] Excludes the given STAC entity from the list.
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export async function getStacObjectsForEvent(event) {
+export async function getStacObjectsForEvent(event, exclude = null) {
   const objects = event.map
     .getAllLayers()
     .filter((layer) => {
@@ -53,6 +54,12 @@ export async function getStacObjectsForEvent(event) {
         layer.get('bounds') === true &&
         layer.get('stac') instanceof STAC
       ) {
+        if (exclude) {
+          const stac = layer.get('stac');
+          if (stac.equals(exclude)) {
+            return false;
+          }
+        }
         const features = layer
           .getSource()
           .getFeaturesAtCoordinate(event.coordinate);

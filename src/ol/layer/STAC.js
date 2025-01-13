@@ -19,7 +19,7 @@ import WMS from 'ol/source/TileWMS.js';
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
-import create, {Asset, STAC} from 'stac-js';
+import create, {Asset, ItemCollection, STAC} from 'stac-js';
 import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
 import {
   defaultBoundsStyle,
@@ -55,6 +55,8 @@ import {transformExtent} from 'ol/proj.js';
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
+ * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -152,7 +154,13 @@ class STACLayer extends LayerGroup {
     this.data_;
 
     /**
-     * @type {Array<Asset> | null}
+     * @type {Array<STAC>|null}
+     * @private
+     */
+    this.children_ = null;
+
+    /**
+     * @type {Array<Asset>|null}
      * @private
      */
     this.assets_ = null;
@@ -164,7 +172,7 @@ class STACLayer extends LayerGroup {
     this.bands_ = [];
 
     /**
-     * @type {string | null}
+     * @type {string|null}
      * @private
      */
     this.crossOrigin_ = options.crossOrigin || null;
@@ -233,6 +241,7 @@ class STACLayer extends LayerGroup {
         this.configure_(
           options.data,
           options.url,
+          options.children,
           options.assets,
           options.bands
         );
@@ -249,7 +258,13 @@ class STACLayer extends LayerGroup {
     fetch(options.url)
       .then((response) => response.json())
       .then((data) =>
-        this.configure_(data, options.url, options.assets, options.bands)
+        this.configure_(
+          data,
+          options.url,
+          options.children,
+          options.assets,
+          options.bands
+        )
       )
       .catch((error) => this.handleError_(error));
   }
@@ -282,10 +297,11 @@ class STACLayer extends LayerGroup {
    * @private
    * @param {STAC|Asset|Object} data The STAC data.
    * @param {string} url The url to the data.
-   * @param {Array<Asset|string> | null} assets The assets to show.
+   * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
+   * @param {Array<Asset|string>|null} assets The assets to show.
    * @param {Array<number>} bands The (one-based) bands to show.
    */
-  configure_(data, url = null, assets = null, bands = []) {
+  configure_(data, url = null, children = [], assets = null, bands = []) {
     if (data instanceof Asset || data instanceof STAC) {
       this.data_ = data;
     } else {
@@ -304,6 +320,17 @@ class STACLayer extends LayerGroup {
     };
     this.getLayers().on('add', updateBoundsStyle);
     this.getLayers().on('remove', updateBoundsStyle);
+
+    this.setChildren(children)
+      .then(() => {
+        /**
+         * Invoked once the child STAC entites are loaded and shown on the map.
+         *
+         * @event childrenready
+         */
+        return this.dispatchEvent('childrenready');
+      })
+      .catch((error) => this.handleError_(error));
 
     this.setAssets(assets)
       .then(() => {
@@ -328,24 +355,23 @@ class STACLayer extends LayerGroup {
 
   /**
    * @private
+   * @param {Array<STAC>} collection The list of STAC entities to show.
    * @return {Promise} Resolves when complete.
    */
-  async addApiCollection_() {
-    const promises = this.getData()
-      .getAll()
-      .map((obj) => {
-        const subgroup = new STACLayer({
-          data: obj,
-          crossOrigin: this.crossOrigin_,
-          boundsStyle: this.collectionStyle_,
-          displayGeoTiffByDefault: this.displayGeoTiffByDefault_,
-          displayOverview: this.displayOverview_,
-          displayPreview: this.displayPreview_,
-          displayFootprint: this.displayFootprint_,
-        });
-        this.addLayer_(subgroup);
-        return subgroup;
+  async addChildren_(collection) {
+    const promises = collection.map((obj) => {
+      const subgroup = new STACLayer({
+        data: obj,
+        crossOrigin: this.crossOrigin_,
+        boundsStyle: this.collectionStyle_,
+        displayGeoTiffByDefault: this.displayGeoTiffByDefault_,
+        displayOverview: this.displayOverview_,
+        displayPreview: this.displayPreview_,
+        displayFootprint: this.displayFootprint_,
       });
+      this.addLayer_(subgroup);
+      return subgroup;
+    });
     return await Promise.all(promises);
   }
 
@@ -637,7 +663,7 @@ class STACLayer extends LayerGroup {
         // see https://github.com/openlayers/openlayers/issues/14926
         source.on('change', () => {
           if (source.getState() === 'error') {
-            tileserverFallback(asset, layer);
+            errorFn();
           }
         });
         layer.on('error', errorFn);
@@ -743,7 +769,7 @@ class STACLayer extends LayerGroup {
     // Add new layers
     const data = this.getData();
     if (data.isItemCollection() || data.isCollectionCollection()) {
-      await this.addApiCollection_();
+      await this.addChildren_(this.getData().getAll());
     } else if (data.isItem() || data.isCollection()) {
       await this.addStacAssets_();
     }
@@ -752,6 +778,10 @@ class STACLayer extends LayerGroup {
       (Array.isArray(this.displayWebMapLink_) || this.hasOnlyBounds())
     ) {
       await this.addWebMapLinks_();
+    }
+
+    if (this.children_) {
+      await this.addChildren_(this.children_);
     }
   }
 
@@ -827,6 +857,43 @@ class STACLayer extends LayerGroup {
   }
 
   /**
+   * Updates the children STAC entities to be rendered.
+   * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+   * @return {Promise} Resolves when all items are rendered.
+   * @api
+   */
+  async setChildren(childs) {
+    if (!childs) {
+      this.children_ = null;
+      return;
+    }
+    if (typeof childs === 'string') {
+      const response = await fetch(childs);
+      childs = await response.json();
+    }
+    if (typeof childs === 'object' && childs.type === 'FeatureCollection') {
+      childs = childs.features;
+    }
+    if (childs instanceof ItemCollection) {
+      this.children_ = childs.getAll();
+    } else if (Array.isArray(childs)) {
+      childs = childs.map((child) => {
+        if (child instanceof STAC) {
+          return child;
+        }
+        return create(child);
+      });
+      this.children_ = childs;
+    } else {
+      this.children_ = null; // Invalid input
+    }
+    if (this.children_ && this.children_.length === 0) {
+      this.children_ = null;
+    }
+    await this.updateLayers_();
+  }
+
+  /**
    * Get the STAC object.
    *
    * @return {STAC|Asset} The STAC object.
@@ -834,6 +901,16 @@ class STACLayer extends LayerGroup {
    */
   getData() {
     return this.data_;
+  }
+
+  /**
+   * Get the children STAC entities.
+   *
+   * @return {STAC} The STAC child entities.
+   * @api
+   */
+  getChildren() {
+    return this.children_;
   }
 
   /**

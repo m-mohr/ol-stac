@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.11] - 2025-01-15
+
+- Allow to pass in children that are visualized as part of the Catalog/Collection
+- Added parameter to `getStacObjectsForEvent` to exclude a STAC entity
+- Default stroke width for children is 2 instead of 1
+- Added methods `getChildren` and `setChildren`
+- Added example that shows a collection with its children
+
 ## [1.0.0-beta.10] - 2024-04-10
 
 - Correctly create WMS links if styles and/or layers are not provided
