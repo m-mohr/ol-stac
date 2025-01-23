@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -6,13 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.0-beta.11] - 2025-01-15
+## [1.0.0-beta.11] - 2025-01-23
 
 - Allow to pass in children that are visualized as part of the Catalog/Collection
 - Added parameter to `getStacObjectsForEvent` to exclude a STAC entity
 - Default stroke width for children is 2 instead of 1
 - Added methods `getChildren` and `setChildren`
 - Added example that shows a collection with its children
+- Add `getAttirbutions` to get attribution from STAC entity
 
 ## [1.0.0-beta.10] - 2024-04-10
 
@@ -70,7 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.11...HEAD>
+[1.0.0-beta.11]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...v1.0.0-beta.11>
 [1.0.0-beta.10]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.9...v1.0.0-beta.10>
 [1.0.0-beta.9]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.8...v1.0.0-beta.9>
 [1.0.0-beta.8]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.7...v1.0.0-beta.8>
