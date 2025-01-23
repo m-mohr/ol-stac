@@ -121,10 +121,13 @@ export async function getProjection(reference, defaultProjection = undefined) {
   let projection = defaultProjection;
   if (isProj4Registered()) {
     // TODO: It would be great to handle WKT2 and PROJJSON, but is not supported yet by proj4js.
-    const epsgCode = reference.getMetadata('proj:epsg');
-    if (epsgCode) {
+    const code = reference.getMetadata('proj:code');
+    if (code) {
       try {
-        projection = await fromEPSGCode(epsgCode);
+        if (code.startsWith('EPSG:')) {
+          const id = parseInt(code.replace('EPSG:', ''), 10);
+          projection = await fromEPSGCode(id);
+        }
       } catch (_) {
         // pass
       }
