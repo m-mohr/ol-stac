@@ -442,6 +442,13 @@ declare class STACLayer extends LayerGroup {
      * @api
      */
     getAssets(): Array<Asset>;
+    /**
+     * Get the attributions of the STAC entity assigned to this layer.
+     *
+     * @return {Array<string>} Attributions for this layer.
+     * @api
+     */
+    getAttributions(): Array<string>;
 }
 import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';
