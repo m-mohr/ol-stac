@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-beta.12] - 2025-01-24
+
+- STAC 1.1 support
+- Handling of default GeoTiff and previews improved
+- `displayPreview` and `displayOverview` have no influence on setting specific assets via `assets`
+- Fallback mechanism to tile servers improved
+- Doesn't filter previews with additional role `example` by default
+- Fix PMTiles CORS errors in examples
+
 ## [1.0.0-beta.11] - 2025-01-23
 
 - Allow to pass in children that are visualized as part of the Catalog/Collection
@@ -72,7 +81,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.11...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.12...HEAD>
+[1.0.0-beta.12]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.11...v1.0.0-beta.12>
 [1.0.0-beta.11]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...v1.0.0-beta.11>
 [1.0.0-beta.10]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.9...v1.0.0-beta.10>
 [1.0.0-beta.9]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.8...v1.0.0-beta.9>
