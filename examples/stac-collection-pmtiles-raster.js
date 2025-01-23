@@ -30,8 +30,7 @@ const layer = new STAC({
     },
     'links': [
       {
-        'href':
-          'https://protomaps.github.io/PMTiles/usgs-mt-whitney-8-15-webp-512.pmtiles',
+        'href': 'https://pmtiles.io/usgs-mt-whitney-8-15-webp-512.pmtiles',
         'rel': 'pmtiles',
         'type': 'application/vnd.pmtiles',
       },

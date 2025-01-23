@@ -31,8 +31,7 @@ const layer = new STAC({
     },
     'links': [
       {
-        'href':
-          'https://protomaps.github.io/PMTiles/protomaps(vector)ODbL_firenze.pmtiles',
+        'href': 'https://pmtiles.io/protomaps(vector)ODbL_firenze.pmtiles',
         'rel': 'pmtiles',
         'type': 'application/vnd.pmtiles',
         'title': 'Firenze Preview',
