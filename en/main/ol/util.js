@@ -72,13 +72,13 @@ export function getGeoTiffSourceInfoFromAsset(asset, bands) {
     const sourceInfo = {
         url: asset.getAbsoluteUrl(),
     };
-    let band = null;
+    let source = asset;
     // If there's just one band, we can also read the information from there.
     if (asset.getBands().length === 1) {
-        band = 0;
+        source = asset.getBand(0);
     }
     // TODO: It would be useful if OL would allow min/max values per band
-    const { minimum, maximum } = asset.getMinMaxValues(band);
+    const { minimum, maximum } = source.getMinMaxValues();
     if (typeof minimum === 'number') {
         sourceInfo.min = minimum;
     }
@@ -86,7 +86,7 @@ export function getGeoTiffSourceInfoFromAsset(asset, bands) {
         sourceInfo.max = maximum;
     }
     // TODO: It would be useful if OL would allow multiple no-data values
-    const nodata = asset.getNoDataValues(band);
+    const nodata = source.getNoDataValues();
     if (nodata.length > 0) {
         sourceInfo.nodata = nodata[0];
     }

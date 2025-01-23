@@ -1,6 +1,6 @@
 {
   "name": "ol-stac",
-  "version": "1.0.0-beta.12",
+  "version": "1.0.0-beta.11",
   "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
   "homepage": "https://mohr.ws",
   "license": "Apache-2.0",
