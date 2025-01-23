@@ -449,6 +449,11 @@ declare class STACLayer extends LayerGroup {
      * @api
      */
     getAttributions(): Array<string>;
+    /**
+     * Get the layer source.
+     * @return {SourceType|null} The layer source (or `null` if not yet set).
+     */
+    getSource(): SourceType | null;
 }
 import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';

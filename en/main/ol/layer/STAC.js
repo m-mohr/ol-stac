@@ -857,6 +857,13 @@ class STACLayer extends LayerGroup {
         }
         return attribution;
     }
+    /**
+     * Get the layer source.
+     * @return {SourceType|null} The layer source (or `null` if not yet set).
+     */
+    getSource() {
+        return null;
+    }
 }
 export default STACLayer;
 //# sourceMappingURL=STAC.js.map
