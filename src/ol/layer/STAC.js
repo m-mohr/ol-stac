@@ -957,6 +957,32 @@ class STACLayer extends LayerGroup {
       return transformExtent(bbox, 'EPSG:4326', view.getProjection());
     }
   }
+
+  /**
+   * Get the attributions of the STAC entity assigned to this layer.
+   *
+   * @return {Array<string>} Attributions for this layer.
+   * @api
+   */
+  getAttributions() {
+    const attribution = [];
+    const stac = this.getData();
+    if (stac) {
+      const attribution = stac.getMetadata('attribution');
+      if (attribution) {
+        attribution.push(attribution);
+      }
+    }
+    return attribution;
+  }
+
+  /**
+   * Get the layer source.
+   * @return {SourceType|null} The layer source (or `null` if not yet set).
+   */
+  getSource() {
+    return null;
+  }
 }
 
 export default STACLayer;
