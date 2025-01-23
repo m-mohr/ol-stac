@@ -50,15 +50,15 @@ export type Options = {
      */
     displayGeoTiffByDefault?: boolean | undefined;
     /**
-     * Allow to display images that a browser can display (e.g. PNG, JPEG),
-     * usually assets with role `thumbnail` or the link with relation type `preview`.
+     * Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+     * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
      * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
-     * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+     * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
      */
     displayPreview?: boolean | undefined;
     /**
      * Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
-     * usually the assets with role `overview` or `visual`.
+     * usually an asset with role `overview` or `visual`.
      */
     displayOverview?: boolean | undefined;
     /**
@@ -177,12 +177,12 @@ export type Options = {
  * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
- * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
- * usually assets with role `thumbnail` or the link with relation type `preview`.
+ * @property {boolean} [displayPreview=false] Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+ * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
  * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
- * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+ * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
- * usually the assets with role `overview` or `visual`.
+ * usually an asset with role `overview` or `visual`.
  * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
  * based on the information provided through the web map links extension.
  * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
@@ -343,16 +343,10 @@ declare class STACLayer extends LayerGroup {
     private addStacAssets_;
     /**
      * @private
-     * @param {Asset|Link} [ref] A STAC Link or Asset
-     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    private addImagery_;
-    /**
-     * @private
-     * @param {Asset|Link} [thumbnail] A STAC Link or Asset
+     * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
      */
-    private addThumbnail_;
+    private addPreviewImage_;
     /**
      * Adds a layer for the web map links available in the STAC links.
      * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.

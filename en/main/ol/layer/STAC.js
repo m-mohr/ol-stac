@@ -62,12 +62,12 @@ import { transformExtent } from 'ol/proj.js';
  * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
- * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
- * usually assets with role `thumbnail` or the link with relation type `preview`.
+ * @property {boolean} [displayPreview=false] Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+ * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
  * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
- * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+ * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
- * usually the assets with role `overview` or `visual`.
+ * usually an asset with role `overview` or `visual`.
  * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
  * based on the information provided through the web map links extension.
  * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
@@ -254,7 +254,7 @@ class STACLayer extends LayerGroup {
      * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
      */
-    configure_(data, url = null, children = [], assets = null, bands = []) {
+    configure_(data, url = null, children = null, assets = null, bands = []) {
         if (data instanceof Asset || data instanceof STAC) {
             this.data_ = data;
         }
@@ -329,68 +329,65 @@ class STACLayer extends LayerGroup {
      */
     async addStacAssets_() {
         let assets = this.getAssets();
+        // No assets provided by the user, guess a sensible default visualization
         if (assets === null) {
             assets = [];
             // No specific asset given by the user, visualize the default geotiff
             const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
-            if (geotiff) {
-                assets.push(geotiff);
+            let layer;
+            // Try to visualize the default GeoTIFF first
+            if (geotiff && this.displayOverview_) {
+                layer = await this.addGeoTiff_(geotiff);
             }
-            else {
+            // If no GeoTIFF is available or it can't be shown (e.g. error),
+            // try to visualize the default thumbnail
+            if (this.displayPreview_ && (!geotiff || !layer)) {
                 // This may return Links or Assets
-                const thumbnails = this.getData()
-                    .getThumbnails()
-                    .filter((t) => !Array.isArray(t.roles) || !t.roles.includes('example'));
+                const thumbnails = this.getData().getThumbnails(true, 'overview');
                 if (thumbnails.length > 0) {
-                    assets.push(thumbnails[0]);
+                    await this.addPreviewImage_(thumbnails[0]);
                 }
             }
         }
-        const promises = assets.map((asset) => this.addImagery_(asset));
+        // Show the assets provided by the user
+        const promises = assets.map(async (ref) => {
+            if (ref && ref.isGeoTIFF()) {
+                return await this.addGeoTiff_(ref);
+            }
+            if (ref && ref.canBrowserDisplayImage()) {
+                return await this.addPreviewImage_(ref);
+            }
+        });
         return await Promise.all(promises);
     }
     /**
      * @private
-     * @param {Asset|Link} [ref] A STAC Link or Asset
-     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    async addImagery_(ref) {
-        if (!ref) {
-            return;
-        }
-        if (ref.isGeoTIFF()) {
-            return await this.addGeoTiff_(ref);
-        }
-        if (ref.canBrowserDisplayImage()) {
-            return await this.addThumbnail_(ref);
-        }
-    }
-    /**
-     * @private
-     * @param {Asset|Link} [thumbnail] A STAC Link or Asset
+     * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
      */
-    async addThumbnail_(thumbnail) {
-        if (!this.displayPreview_) {
+    async addPreviewImage_(image) {
+        const projection = await getProjection(image, 'EPSG:4326');
+        const bbox = image.getContext().getBoundingBox();
+        if (!bbox) {
             return;
         }
         /**
          * @type {import("ol/source/ImageStatic.js").Options}
          */
         let options = {
-            url: thumbnail.getAbsoluteUrl(),
-            projection: await getProjection(thumbnail, 'EPSG:4326'),
-            imageExtent: thumbnail.getContext().getBoundingBox(),
+            url: image.getAbsoluteUrl(),
+            projection,
+            imageExtent: transformExtent(bbox, 'EPSG:4326', projection),
             crossOrigin: this.crossOrigin_,
         };
         if (this.getSourceOptions_) {
             // @ts-ignore
-            options = await this.getSourceOptions_(SourceType.ImageStatic, options, thumbnail);
+            options = await this.getSourceOptions_(SourceType.ImageStatic, options, image);
         }
         const layer = new ImageLayer({
             source: new StaticImage(options),
         });
-        this.addLayer_(layer, thumbnail);
+        this.addLayer_(layer, image);
         return layer;
     }
     /**
@@ -527,9 +524,6 @@ class STACLayer extends LayerGroup {
      * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
      */
     async addGeoTiff_(asset) {
-        if (!this.displayOverview_) {
-            return;
-        }
         if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
             return await this.addTileLayerForImagery_(asset);
         }
@@ -548,35 +542,28 @@ class STACLayer extends LayerGroup {
             // @ts-ignore
             options = await this.getSourceOptions_(SourceType.GeoTIFF, options, asset);
         }
-        const tileserverFallback = async (asset, layer) => {
-            if (layer) {
-                this.getLayers().remove(layer);
-            }
-            return await this.addTileLayerForImagery_(asset);
-        };
-        try {
-            const source = new GeoTIFF(options);
-            const layer = new WebGLTileLayer({ source });
-            if (this.useTileLayerAsFallback_) {
-                const errorFn = () => tileserverFallback(asset, layer);
-                source.on('error', errorFn);
-                source.on('tileloaderror', errorFn);
+        const source = new GeoTIFF(options);
+        const status = new Promise((resolve, reject) => {
+            source.on('error', reject);
+            source.on('change', () => {
                 // see https://github.com/openlayers/openlayers/issues/14926
-                source.on('change', () => {
-                    if (source.getState() === 'error') {
-                        errorFn();
-                    }
-                });
-                layer.on('error', errorFn);
-                // Call this to ensure we can load the GeoTIFF, otherwise try fallback
-                await source.getView();
-            }
+                if (source.getState() === 'error') {
+                    reject(source.getError());
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+        try {
+            await status;
+            const layer = new WebGLTileLayer({ source });
             this.addLayer_(layer, asset);
             return layer;
         }
         catch (error) {
             if (this.useTileLayerAsFallback_) {
-                return await tileserverFallback(asset, null);
+                return await this.addTileLayerForImagery_(asset);
             }
             this.handleError_(error);
         }

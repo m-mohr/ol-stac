@@ -168,9 +168,10 @@ function showUrl() {
 
   try {
     layer &#x3D; new STAC({
-      displayWebMapLink: true,
       url,
+      displayPreview: true,
       displayGeoTiffByDefault: true,
+      displayWebMapLink: true,
     });
 
     layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {

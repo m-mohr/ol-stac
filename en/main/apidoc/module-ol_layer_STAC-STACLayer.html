@@ -446,10 +446,10 @@ which might not work well for larger files or larger amounts of files.</p></td>
 
             <td  class="description last">
                 
-                <p>Allow to display images that a browser can display (e.g. PNG, JPEG),
-usually assets with role <code>thumbnail</code> or the link with relation type <code>preview</code>.
+                <p>Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+i.e. assets with any of the roles <code>thumbnail</code>, <code>overview</code>, or a link with relation type <code>preview</code>.
 The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
-For performance reasons, it is recommended to enable this option if you pass in STAC API Items.</p></td>
+For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of <code>displayOverview</code>.</p></td>
         </tr>
 
 	
@@ -477,7 +477,7 @@ For performance reasons, it is recommended to enable this option if you pass in 
             <td  class="description last">
                 
                 <p>Allow to display COGs and, if <code>displayGeoTiffByDefault</code> is enabled, GeoTiffs,
-usually the assets with role <code>overview</code> or <code>visual</code>.</p></td>
+usually an asset with role <code>overview</code> or <code>visual</code>.</p></td>
         </tr>
 
 	
@@ -999,7 +999,7 @@ be visible.</p></td>
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L479">line 479</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L475">line 475</a>
         </div>
         
     </div>
@@ -1142,7 +1142,7 @@ Resolves with a list of layers or undefined when complete.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L922">line 922</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L906">line 906</a>
         </div>
         
     </div>
@@ -1232,7 +1232,7 @@ The STAC assets.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L967">line 967</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L951">line 951</a>
         </div>
         
     </div>
@@ -1412,7 +1412,7 @@ The vector layer for the bounds
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L912">line 912</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L896">line 896</a>
         </div>
         
     </div>
@@ -1502,7 +1502,7 @@ The STAC child entities.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L902">line 902</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L886">line 886</a>
         </div>
         
     </div>
@@ -1592,7 +1592,7 @@ The STAC object.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L935">line 935</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L919">line 919</a>
         </div>
         
     </div>
@@ -1685,7 +1685,7 @@ The layer extent.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L806">line 806</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L790">line 790</a>
         </div>
         
     </div>
@@ -1775,7 +1775,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L793">line 793</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L777">line 777</a>
         </div>
         
     </div>
@@ -1865,7 +1865,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L842">line 842</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L826">line 826</a>
         </div>
         
     </div>
@@ -2003,7 +2003,7 @@ Resolves when all assets are rendered.
         
         <div class="tag-source">
             <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L865">line 865</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-beta.11/src/ol/layer/STAC.js#L849">line 849</a>
         </div>
         
     </div>
