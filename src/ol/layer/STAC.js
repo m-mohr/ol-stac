@@ -108,6 +108,8 @@ import {transformExtent} from 'ol/proj.js';
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
+ * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
+ * Only enable this if you are sure that the STAC object is already in the latest version.
  */
 
 /**
@@ -235,6 +237,11 @@ class STACLayer extends LayerGroup {
      * @private
      */
     this.boundsLayer_ = null;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.disableMigration_ = options.disableMigration || false;
 
     if (options.data) {
       try {
@@ -305,7 +312,7 @@ class STACLayer extends LayerGroup {
     if (data instanceof Asset || data instanceof STAC) {
       this.data_ = data;
     } else {
-      this.data_ = create(data);
+      this.data_ = create(data, !this.disableMigration_);
     }
     if (url && url.includes('://')) {
       this.data_.setAbsoluteUrl(url);
