@@ -57,6 +57,7 @@ import {transformExtent} from 'ol/proj.js';
  * `data` take precedence over `url`.
  * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
  * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -154,6 +155,12 @@ class STACLayer extends LayerGroup {
      * @private
      */
     this.children_ = null;
+
+    /**
+     * @type {Options}
+     * @private
+     */
+    this.childrenOptions_ = options.childrenOptions || {};
 
     /**
      * @type {Array<Asset>|null}
@@ -359,11 +366,12 @@ class STACLayer extends LayerGroup {
   /**
    * @private
    * @param {Array<STAC>} collection The list of STAC entities to show.
+   * @param {Options} [options] Options for the children.
    * @return {Promise} Resolves when complete.
    */
-  async addChildren_(collection) {
+  async addChildren_(collection, options = {}) {
     const promises = collection.map((obj) => {
-      const subgroup = new STACLayer({
+      const defaultOptions = {
         data: obj,
         crossOrigin: this.crossOrigin_,
         boundsStyle: this.collectionStyle_,
@@ -371,7 +379,8 @@ class STACLayer extends LayerGroup {
         displayOverview: this.displayOverview_,
         displayPreview: this.displayPreview_,
         displayFootprint: this.displayFootprint_,
-      });
+      };
+      const subgroup = new STACLayer(Object.assign(defaultOptions, options));
       this.addLayer_(subgroup, null);
       return subgroup;
     });
@@ -758,7 +767,7 @@ class STACLayer extends LayerGroup {
     // Add new layers
     const data = this.getData();
     if (data.isItemCollection() || data.isCollectionCollection()) {
-      await this.addChildren_(this.getData().getAll());
+      await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
     } else if (data.isItem() || data.isCollection()) {
       await this.addStacAssets_();
     }
@@ -770,7 +779,7 @@ class STACLayer extends LayerGroup {
     }
 
     if (this.children_) {
-      await this.addChildren_(this.children_);
+      await this.addChildren_(this.children_, this.childrenOptions_);
     }
   }
 
@@ -848,12 +857,14 @@ class STACLayer extends LayerGroup {
   /**
    * Updates the children STAC entities to be rendered.
    * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+   * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
    * @return {Promise} Resolves when all items are rendered.
    * @api
    */
-  async setChildren(childs) {
+  async setChildren(childs, options = {}) {
     if (!childs) {
       this.children_ = null;
+      this.childrenOptions_ = {};
       return;
     }
     if (typeof childs === 'string') {
@@ -879,6 +890,7 @@ class STACLayer extends LayerGroup {
     if (this.children_ && this.children_.length === 0) {
       this.children_ = null;
     }
+    this.childrenOptions_ = options;
     await this.updateLayers_();
   }
 
