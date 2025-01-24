@@ -340,7 +340,6 @@ declare class STACLayer extends LayerGroup {
     /**
      * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
-     * @param {STAC} data The parent STAC object.
      * @return {Promise} Resolves when complete.
      */
     private addChildren_;
