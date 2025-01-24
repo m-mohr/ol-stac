@@ -432,10 +432,11 @@ class STACLayer extends LayerGroup {
    */
   async addPreviewImage_(image) {
     const projection = await getProjection(image, 'EPSG:4326');
-    const bbox = image.getContext().getBoundingBox();
-    if (!bbox) {
+    const bboxes = image.getContext().getBoundingBoxes();
+    if (bboxes.length !== 1) {
       return;
     }
+    const bbox = bboxes[0];
     /**
      * @type {import("ol/source/ImageStatic.js").Options}
      */
