@@ -141,6 +141,11 @@ class STACLayer extends LayerGroup {
          */
         this.children_ = null;
         /**
+         * @type {Options}
+         * @private
+         */
+        this.childrenOptions_ = {};
+        /**
          * @type {Array<Asset>|null}
          * @private
          */
@@ -309,11 +314,12 @@ class STACLayer extends LayerGroup {
     /**
      * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {Options} [options] Options for the children.
      * @return {Promise} Resolves when complete.
      */
-    async addChildren_(collection) {
+    async addChildren_(collection, options = {}) {
         const promises = collection.map((obj) => {
-            const subgroup = new STACLayer({
+            const defaultOptions = {
                 data: obj,
                 crossOrigin: this.crossOrigin_,
                 boundsStyle: this.collectionStyle_,
@@ -321,7 +327,8 @@ class STACLayer extends LayerGroup {
                 displayOverview: this.displayOverview_,
                 displayPreview: this.displayPreview_,
                 displayFootprint: this.displayFootprint_,
-            });
+            };
+            const subgroup = new STACLayer(Object.assign(defaultOptions, options));
             this.addLayer_(subgroup, null);
             return subgroup;
         });
@@ -668,7 +675,7 @@ class STACLayer extends LayerGroup {
             await this.addWebMapLinks_();
         }
         if (this.children_) {
-            await this.addChildren_(this.children_);
+            await this.addChildren_(this.children_, this.childrenOptions_);
         }
     }
     /**
@@ -741,12 +748,14 @@ class STACLayer extends LayerGroup {
     /**
      * Updates the children STAC entities to be rendered.
      * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
      */
-    async setChildren(childs) {
+    async setChildren(childs, options = {}) {
         if (!childs) {
             this.children_ = null;
+            this.childrenOptions_ = {};
             return;
         }
         if (typeof childs === 'string') {
@@ -774,6 +783,7 @@ class STACLayer extends LayerGroup {
         if (this.children_ && this.children_.length === 0) {
             this.children_ = null;
         }
+        this.childrenOptions_ = options;
         await this.updateLayers_();
     }
     /**

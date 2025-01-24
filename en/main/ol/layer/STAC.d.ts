@@ -249,6 +249,11 @@ declare class STACLayer extends LayerGroup {
      */
     private children_;
     /**
+     * @type {Options}
+     * @private
+     */
+    private childrenOptions_;
+    /**
      * @type {Array<Asset>|null}
      * @private
      */
@@ -340,6 +345,7 @@ declare class STACLayer extends LayerGroup {
     /**
      * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {Options} [options] Options for the children.
      * @return {Promise} Resolves when complete.
      */
     private addChildren_;
@@ -418,10 +424,11 @@ declare class STACLayer extends LayerGroup {
     /**
      * Updates the children STAC entities to be rendered.
      * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
      */
-    setChildren(childs: ItemCollection | any | Array<STAC> | string | null): Promise<any>;
+    setChildren(childs: ItemCollection | any | Array<STAC> | string | null, options?: Options | undefined): Promise<any>;
     /**
      * Get the STAC object.
      *
