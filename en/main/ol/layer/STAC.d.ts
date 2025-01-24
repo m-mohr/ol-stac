@@ -138,6 +138,11 @@ export type Options = {
     properties?: {
         [x: string]: any;
     } | undefined;
+    /**
+     * Disable the migration of the STAC object to the latest version.
+     * Only enable this if you are sure that the STAC object is already in the latest version.
+     */
+    disableMigration?: boolean | undefined;
 };
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
@@ -213,6 +218,8 @@ export type Options = {
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
+ * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
+ * Only enable this if you are sure that the STAC object is already in the latest version.
  */
 /**
  * @classdesc
@@ -310,6 +317,11 @@ declare class STACLayer extends LayerGroup {
      * @private
      */
     private boundsLayer_;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    private disableMigration_;
     /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
