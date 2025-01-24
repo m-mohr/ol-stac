@@ -47,6 +47,7 @@ import { transformExtent } from 'ol/proj.js';
  * `data` take precedence over `url`.
  * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
  * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -144,7 +145,7 @@ class STACLayer extends LayerGroup {
          * @type {Options}
          * @private
          */
-        this.childrenOptions_ = {};
+        this.childrenOptions_ = options.childrenOptions || {};
         /**
          * @type {Array<Asset>|null}
          * @private
@@ -665,7 +666,7 @@ class STACLayer extends LayerGroup {
         // Add new layers
         const data = this.getData();
         if (data.isItemCollection() || data.isCollectionCollection()) {
-            await this.addChildren_(this.getData().getAll());
+            await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
         }
         else if (data.isItem() || data.isCollection()) {
             await this.addStacAssets_();

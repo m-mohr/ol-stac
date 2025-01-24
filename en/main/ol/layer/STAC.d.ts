@@ -21,6 +21,10 @@ export type Options = {
      */
     children?: ItemCollection | any | Array<STAC> | string | null;
     /**
+     * The the given children, apply the given options.
+     */
+    childrenOptions?: Options | undefined;
+    /**
      * The selector for the assets to be rendered,
      * only for STAC Items and Collections.
      * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -167,6 +171,7 @@ export type Options = {
  * `data` take precedence over `url`.
  * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
  * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
