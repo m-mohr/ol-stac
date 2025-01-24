@@ -75,7 +75,7 @@ export type Options = {
      */
     boundsStyle?: import("ol/style/Style.js").default | undefined;
     /**
-     * The style for individual items in a list of STAC Items or Collections.
+     * The style for individual children in a list of STAC Items or Collections.
      */
     collectionStyle?: import("ol/style/Style.js").default | undefined;
     /**
@@ -195,7 +195,7 @@ export type Options = {
  * it lets this library choose a web map link to show, but only if no other data is shown.
  * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
- * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
+ * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
  * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
@@ -243,11 +243,6 @@ declare class STACLayer extends LayerGroup {
      * @private
      */
     private getSourceOptions_;
-    /**
-     * @type {STAC|Asset}
-     * @private
-     */
-    private data_;
     /**
      * @type {Array<STAC>|null}
      * @private
@@ -345,6 +340,7 @@ declare class STACLayer extends LayerGroup {
     /**
      * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {STAC} data The parent STAC object.
      * @return {Promise} Resolves when complete.
      */
     private addChildren_;

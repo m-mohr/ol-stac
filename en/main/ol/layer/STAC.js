@@ -75,7 +75,7 @@ import { transformExtent } from 'ol/proj.js';
  * it lets this library choose a web map link to show, but only if no other data is shown.
  * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
- * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
+ * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
  * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
@@ -135,11 +135,6 @@ class STACLayer extends LayerGroup {
          * @private
          */
         this.getSourceOptions_ = options.getSourceOptions;
-        /**
-         * @type {STAC|Asset}
-         * @private
-         */
-        this.data_;
         /**
          * @type {Array<STAC>|null}
          * @private
@@ -262,15 +257,17 @@ class STACLayer extends LayerGroup {
      * @param {Array<number>} bands The (one-based) bands to show.
      */
     configure_(data, url = null, children = null, assets = null, bands = []) {
+        let stac;
         if (data instanceof Asset || data instanceof STAC) {
-            this.data_ = data;
+            stac = data;
         }
         else {
-            this.data_ = create(data, !this.disableMigration_);
+            stac = create(data, !this.disableMigration_);
         }
         if (url && url.includes('://')) {
-            this.data_.setAbsoluteUrl(url);
+            stac.setAbsoluteUrl(url);
         }
+        this.set('stac', stac);
         this.bands_ = bands;
         this.boundsLayer_ = this.addFootprint_();
         const updateBoundsStyle = () => {
@@ -312,9 +309,10 @@ class STACLayer extends LayerGroup {
     /**
      * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {STAC} data The parent STAC object.
      * @return {Promise} Resolves when complete.
      */
-    async addChildren_(collection) {
+    async addChildren_(collection, data = null) {
         const promises = collection.map((obj) => {
             const subgroup = new STACLayer({
                 data: obj,
@@ -325,7 +323,7 @@ class STACLayer extends LayerGroup {
                 displayPreview: this.displayPreview_,
                 displayFootprint: this.displayFootprint_,
             });
-            this.addLayer_(subgroup);
+            this.addLayer_(subgroup, data);
             return subgroup;
         });
         return await Promise.all(promises);
@@ -424,7 +422,7 @@ class STACLayer extends LayerGroup {
         }
         const options = {
             attributions: link.getMetadata('attribution') ||
-                this.data_.getMetadata('attribution'),
+                this.getData().getMetadata('attribution'),
             crossOrigin: this.crossOrigin_,
             url,
         };
@@ -652,15 +650,14 @@ class STACLayer extends LayerGroup {
         const oldLayers = this.getLayers();
         for (let i = oldLayers.getLength() - 1; i >= 0; i--) {
             const layer = oldLayers.item(i);
-            const stac = layer.get('stac');
-            if (stac && (stac.isLink() || stac.isAsset())) {
+            if (layer.get('stac') && !layer.get('bounds')) {
                 oldLayers.removeAt(i);
             }
         }
         // Add new layers
         const data = this.getData();
         if (data.isItemCollection() || data.isCollectionCollection()) {
-            await this.addChildren_(this.getData().getAll());
+            await this.addChildren_(this.getData().getAll(), this.getData());
         }
         else if (data.isItem() || data.isCollection()) {
             await this.addStacAssets_();
@@ -670,7 +667,7 @@ class STACLayer extends LayerGroup {
             await this.addWebMapLinks_();
         }
         if (this.children_) {
-            await this.addChildren_(this.children_);
+            await this.addChildren_(this.children_, this.getData());
         }
     }
     /**
@@ -693,7 +690,7 @@ class STACLayer extends LayerGroup {
         if (typeof this.displayWebMapLink_ === 'string') {
             types = [this.displayWebMapLink_];
         }
-        let mapLinks = this.data_.getLinksWithRels(types);
+        let mapLinks = this.getData().getLinksWithRels(types);
         if (Array.isArray(this.displayWebMapLink_)) {
             mapLinks = this.displayWebMapLink_
                 .map((link) => {
@@ -785,7 +782,7 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getData() {
-        return this.data_;
+        return this.get('stac');
     }
     /**
      * Get the children STAC entities.
