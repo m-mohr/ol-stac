@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2025-01-25
+
 - Add `disableMigration` option
+- Only show preview image if a single bbox is given
+- Set `stac` property for the layer group
+- Don't add children multiple times on subsequent `setChildren` calls
 
 ## [1.0.0-beta.12] - 2025-01-24
 
