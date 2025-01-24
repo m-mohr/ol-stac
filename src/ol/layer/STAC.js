@@ -359,10 +359,9 @@ class STACLayer extends LayerGroup {
   /**
    * @private
    * @param {Array<STAC>} collection The list of STAC entities to show.
-   * @param {STAC} data The parent STAC object.
    * @return {Promise} Resolves when complete.
    */
-  async addChildren_(collection, data = null) {
+  async addChildren_(collection) {
     const promises = collection.map((obj) => {
       const subgroup = new STACLayer({
         data: obj,
@@ -373,7 +372,7 @@ class STACLayer extends LayerGroup {
         displayPreview: this.displayPreview_,
         displayFootprint: this.displayFootprint_,
       });
-      this.addLayer_(subgroup, data);
+      this.addLayer_(subgroup, null);
       return subgroup;
     });
     return await Promise.all(promises);
@@ -698,8 +697,10 @@ class STACLayer extends LayerGroup {
    * @param {number} [zIndex=0] The z-index for the layer
    * @private
    */
-  addLayer_(layer, data, zIndex = 0) {
-    layer.set('stac', data);
+  addLayer_(layer, data = null, zIndex = 0) {
+    if (data) {
+      layer.set('stac', data);
+    }
     layer.setZIndex(zIndex);
     this.getLayers().push(layer);
   }
@@ -757,7 +758,7 @@ class STACLayer extends LayerGroup {
     // Add new layers
     const data = this.getData();
     if (data.isItemCollection() || data.isCollectionCollection()) {
-      await this.addChildren_(this.getData().getAll(), this.getData());
+      await this.addChildren_(this.getData().getAll());
     } else if (data.isItem() || data.isCollection()) {
       await this.addStacAssets_();
     }
@@ -769,7 +770,7 @@ class STACLayer extends LayerGroup {
     }
 
     if (this.children_) {
-      await this.addChildren_(this.children_, this.getData());
+      await this.addChildren_(this.children_);
     }
   }
 
