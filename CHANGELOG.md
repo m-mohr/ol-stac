@@ -88,7 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.12...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.1...HEAD>
+[1.0.0-rc.1]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.12...v1.0.0-rc.1>
 [1.0.0-beta.12]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.11...v1.0.0-beta.12>
 [1.0.0-beta.11]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...v1.0.0-beta.11>
 [1.0.0-beta.10]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.9...v1.0.0-beta.10>
