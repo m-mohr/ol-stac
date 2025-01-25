@@ -2,6 +2,7 @@ export default STACLayer;
 export type Extent = import("ol/extent.js").Extent;
 export type Layer = import("ol/layer.js").Layer;
 export type Link = any;
+export type Map = import("ol/Map.js").default;
 export type Style = import('ol/style.js').Style;
 export type SourceOptions = import('../source/type.js').SourceOptions;
 export type Options = {
@@ -156,6 +157,9 @@ export type Options = {
  */
 /**
  * @typedef {import("stac-js").Link} Link
+ */
+/**
+ * @typedef {import("ol/Map.js").default} Map
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
@@ -328,6 +332,16 @@ declare class STACLayer extends LayerGroup {
      */
     private disableMigration_;
     /**
+     * @type {Map|null}
+     * @private
+     */
+    private map_;
+    /**
+     * @type {Array<string|ErrorEvent>}
+     * @private
+     */
+    private eventQueue_;
+    /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
      * @api
@@ -356,6 +370,29 @@ declare class STACLayer extends LayerGroup {
      * @private
      */
     private configure_;
+    /**
+     * Dispatch an event.
+     * Move it to the queue if the map is not yet set.
+     * This is necessary as otherwise some events would be
+     * dispatched before someone could listen to them.
+     *
+     * @param {string|ErrorEvent} event The event.
+     * @private
+     */
+    private dispatch_;
+    /**
+     * Flush all events.
+     * @private
+     */
+    private flush_;
+    /**
+     * Set the map and flush all events.
+     * The events should only be flushed once the map is set, otherwise some
+     * functions such as getExtent() return no meaningul values.
+     *
+     * @param {Map} map The map
+     */
+    setMap_(map: Map): void;
     /**
      * @param {Array<STAC>} collection The list of STAC entities to show.
      * @param {Options} [options] Options for the children.

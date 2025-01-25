@@ -36,6 +36,9 @@ import { toGeoJSON } from 'stac-js/src/geo.js';
  * @typedef {import("stac-js").Link} Link
  */
 /**
+ * @typedef {import("ol/Map.js").default} Map
+ */
+/**
  * @typedef {import('ol/style.js').Style} Style
  */
 /**
@@ -217,6 +220,16 @@ class STACLayer extends LayerGroup {
          * @private
          */
         this.disableMigration_ = options.disableMigration || false;
+        /**
+         * @type {Map|null}
+         * @private
+         */
+        this.map_ = null;
+        /**
+         * @type {Array<string|ErrorEvent>}
+         * @private
+         */
+        this.eventQueue_ = [];
         if (options.data) {
             try {
                 this.configure_(options.data, options.url, options.children, options.assets, options.bands);
@@ -273,7 +286,7 @@ class STACLayer extends LayerGroup {
          * @type {Object}
          * @property {Error} error - Provides the original error.
          */
-        this.dispatchEvent(new ErrorEvent(error));
+        this.dispatch_(new ErrorEvent(error));
     }
     /**
      * @param {STAC|Asset|Object} data The STAC data.
@@ -308,20 +321,57 @@ class STACLayer extends LayerGroup {
         const wait2 = this.setAssets(assets).catch(this.handleError_);
         Promise.all([wait1, wait2]).then(() => {
             /**
-             * Invoked once all assets are loaded and shown on the map.
+             * Invoked once all layers are shown on the map.
              *
-             * @event ready
+             * @event layersready
              */
-            return this.dispatchEvent('layersready');
+            return this.dispatch_('layersready');
         });
         /**
-         * Invoked once the source is ready.
-         * If you provide the data inline, the event is likely fired before you can
-         * attach a listener to it. So this only really helps if a url is provided.
+         * Invoked once the STAC entity is loaded and available.
          *
          * @event sourceready
          */
-        this.dispatchEvent('sourceready');
+        this.dispatch_('sourceready');
+    }
+    /**
+     * Dispatch an event.
+     * Move it to the queue if the map is not yet set.
+     * This is necessary as otherwise some events would be
+     * dispatched before someone could listen to them.
+     *
+     * @param {string|ErrorEvent} event The event.
+     * @private
+     */
+    dispatch_(event) {
+        this.eventQueue_.push(event);
+        this.flush_();
+    }
+    /**
+     * Flush all events.
+     * @private
+     */
+    flush_() {
+        if (this.map_) {
+            for (const event of this.eventQueue_) {
+                this.dispatchEvent(event);
+            }
+            this.eventQueue_ = [];
+        }
+    }
+    /**
+     * Set the map and flush all events.
+     * The events should only be flushed once the map is set, otherwise some
+     * functions such as getExtent() return no meaningul values.
+     *
+     * @param {Map} map The map
+     */
+    setMap_(map) {
+        if (this.map_ === map) {
+            return;
+        }
+        this.map_ = map;
+        this.flush_();
     }
     /**
      * @param {Array<STAC>} collection The list of STAC entities to show.
@@ -596,6 +646,7 @@ class STACLayer extends LayerGroup {
         if (geojson) {
             const layer = this.createGeoJsonLayer_(geojson, getBoundsStyle(this.boundsStyle_, this), this.displayFootprint_);
             layer.set('bounds', true);
+            layer.on('change', () => this.setMap_(layer.getMapInternal()));
             this.addLayer_(layer, data, 1);
             return layer;
         }
@@ -864,14 +915,10 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getExtent() {
-        if (!this.boundsLayer_) {
+        if (!this.map_) {
             return;
         }
-        const map = this.boundsLayer_.getMapInternal();
-        if (!map) {
-            return;
-        }
-        const view = map.getView();
+        const view = this.map_.getView();
         if (!view) {
             return;
         }
