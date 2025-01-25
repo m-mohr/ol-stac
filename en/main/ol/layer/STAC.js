@@ -245,15 +245,18 @@ class STACLayer extends LayerGroup {
     /**
      * Returns `true` if the layer shows nothing.
      *
+     * This method should be called after the layersready event only.
+     *
      * @return {boolean} Is the layer empty?
      * @api
      */
     isEmpty() {
+        var _a;
         if (this.getLayers().getLength() <= 1) {
             return true;
         }
-        const extent = this.getExtent();
-        if (!extent || isEmpty(extent)) {
+        const bbox = (_a = this.getData()) === null || _a === void 0 ? void 0 : _a.getBoundingBox();
+        if (!bbox || isEmpty(bbox)) {
             return true;
         }
         return !this.boundsLayer_ || !this.displayFootprint_;

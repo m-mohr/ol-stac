@@ -336,6 +336,8 @@ declare class STACLayer extends LayerGroup {
     /**
      * Returns `true` if the layer shows nothing.
      *
+     * This method should be called after the layersready event only.
+     *
      * @return {boolean} Is the layer empty?
      * @api
      */
