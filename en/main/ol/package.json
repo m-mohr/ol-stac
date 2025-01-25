@@ -1,6 +1,6 @@
 {
   "name": "ol-stac",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
   "homepage": "https://mohr.ws",
   "license": "Apache-2.0",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "ol-pmtiles": "~0.2.0",
-    "stac-js": "~0.1.1"
+    "stac-js": "~0.1.2"
   },
   "peerDependencies": {
     "ol": "*"
