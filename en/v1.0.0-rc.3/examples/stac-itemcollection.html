@@ -31,8 +31,8 @@
                 <a class="dropdown-item" href="/ol-stac/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
             </div>
           </li>
-          <li class="nav-item"><a class="nav-link" href="/ol-stac/examples/"><i class="fa fa-map me-1"></i>Examples</a></li>
-          <li class="nav-item"><a class="nav-link" href="/ol-stac/apidoc/"><i class="fa fa-code me-1"></i>API</a></li>
+          <li class="nav-item"><a class="nav-link" href="./"><i class="fa fa-map me-1"></i>Examples</a></li>
+          <li class="nav-item"><a class="nav-link" href="../apidoc/"><i class="fa fa-code me-1"></i>API</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
@@ -47,7 +47,7 @@
     <div class="container-fluid line-numbers">
       <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
         <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        This example uses OL STAC v<span>1.0.0-beta.3</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+        This example uses OL STAC v<span>1.0.0-rc.3</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
       </div>
 
 
@@ -67,15 +67,20 @@
                 data-bs-target="#tag-example-list"
                 data-title="stac"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom.html&quot;&gt;Custom STAC provided via URL&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./planetary-computer.html&quot;&gt;Planetary Computer&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-webmaplinks.html&quot;&gt;STAC Collection with Web Map Links&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-raster.html&quot;&gt;STAC Collection with PMTiles (Raster)&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-pmtiles-vector.html&quot;&gt;STAC Collection with PMTiles (Vector)&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-wms.html&quot;&gt;STAC Collection with WMS&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-geojson.html&quot;&gt;STAC Item with GeoJSON assets&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >6</a>
+                >11</a>
             </span>
             <span class="badge-group">
               <a
@@ -86,10 +91,11 @@
                 data-bs-target="#tag-example-list"
                 data-title="stacapi"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >1</a>
+                >2</a>
             </span>
             <span class="badge-group">
               <a
@@ -100,28 +106,11 @@
                 data-bs-target="#tag-example-list"
                 data-title="staticimage"
                 data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-with-items.html&quot;&gt;STAC Collection with child items&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >1</a>
-            </span>
-            <span class="badge-group">
-              <a
-                href="./index.html?q=layergroup" class="badge badge-info">layergroup</a
-              ><a
-                class="badge badge-info tag-modal-toggle"
-                data-bs-toggle="modal"
-                data-bs-target="#tag-example-list"
-                data-title="layergroup"
-                data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-collection-webmaplinks.html&quot;&gt;STAC Collection with Web Map Links&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC Item&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./stac-itemcollection.html&quot;&gt;STAC Item Collection&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
-                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
-                  &lt;/ul&gt;"
-                tabindex="0"
-                >5</a>
+                >2</a>
             </span>
           </p>
           <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -227,7 +216,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-itemcollection&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol-stac&quot;: &quot;1.0.0-beta.3&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0-rc.3&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {
@@ -268,7 +257,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         const branchSearch = url.match(/\/([^\/]*)\/examples\//);
         const storageKey = 'ol-dismissed=-' + latestVersion;
         const dismissed = localStorage.getItem(storageKey) === 'true';
-        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-beta.3' != latestVersion) {
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.3' != latestVersion) {
           const link = url.replace(branchSearch[0], '/latest/examples/');
           fetch(link, {method: 'head'}).then(function(response) {
             const a = document.getElementById('latest-link');

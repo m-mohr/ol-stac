@@ -1,11 +1,10 @@
 export default STACLayer;
 export type Extent = import("ol/extent.js").Extent;
-export type GeoTIFFSourceOptions = import("../source/GeoTIFF2.js").Options2;
-export type ImageStaticSourceOptions = import("ol/source/ImageStatic.js").Options;
+export type Layer = import("ol/layer.js").Layer;
 export type Link = any;
-export type STACObject = any;
+export type Map = import("ol/Map.js").default;
 export type Style = import('ol/style.js').Style;
-export type XYZSourceOptions = import("ol/source/XYZ.js").Options;
+export type SourceOptions = import('../source/type.js').SourceOptions;
 export type Options = {
     /**
      * The STAC URL. Any of `url` and `data` must be provided.
@@ -18,6 +17,15 @@ export type Options = {
      */
     data?: STAC | Asset | any;
     /**
+     * For STAC Catalogs and Collections, any child entites
+     * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+     */
+    children?: ItemCollection | any | Array<STAC> | string | null;
+    /**
+     * The the given children, apply the given options.
+     */
+    childrenOptions?: Options | undefined;
+    /**
      * The selector for the assets to be rendered,
      * only for STAC Items and Collections.
      * This can be an array of strings corresponding to asset keys or Asset objects.
@@ -29,52 +37,50 @@ export type Options = {
      */
     bands?: number[] | undefined;
     /**
-     * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
-     * and return the completed options or a promise for the same. The function will be called with the current source options
-     * and the STAC Asset.
-     */
-    getGeoTIFFSourceOptions?: ((arg0: GeoTIFFSourceOptions, arg1: Asset) => (GeoTIFFSourceOptions | Promise<GeoTIFFSourceOptions>)) | undefined;
-    /**
-     * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+     * Optional function that can be used to configure the underlying sources. The function can do any additional work
      * and return the completed options or a promise for the same. The function will be called with the current source options
      * and the STAC Asset or Link.
+     * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+     * Please be aware that sending HTTP headers may not be supported by all sources.
      */
-    getImageStaticSourceOptions?: ((arg0: ImageStaticSourceOptions, arg1: (Asset | Link)) => (ImageStaticSourceOptions | Promise<ImageStaticSourceOptions>)) | undefined;
+    getSourceOptions?: ((arg0: SourceType, arg1: SourceOptions, arg2: (Asset | Link)) => (SourceOptions | Promise<SourceOptions>)) | undefined;
     /**
-     * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
-     * additional work and return the completed options or a promise for the same. The function will be called with the current
-     * source options and the STAC Asset or Link.
+     * Allows to hide the footprints (bounding box/geometry) of the STAC object
+     * by default.
      */
-    getXYZSourceOptions?: ((arg0: XYZSourceOptions, arg1: (Asset | Link)) => (XYZSourceOptions | Promise<XYZSourceOptions>)) | undefined;
+    displayFootprint?: boolean | undefined;
     /**
      * Allow to choose non-cloud-optimized GeoTiffs as default image to show,
      * which might not work well for larger files or larger amounts of files.
      */
     displayGeoTiffByDefault?: boolean | undefined;
     /**
-     * Allow to display images that a browser can display (e.g. PNG, JPEG),
-     * usually assets with role `thumbnail` or the link with relation type `preview`.
+     * Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+     * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
      * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
-     * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+     * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
      */
     displayPreview?: boolean | undefined;
     /**
      * Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
-     * usually the assets with role `overview` or `visual`.
+     * usually an asset with role `overview` or `visual`.
      */
     displayOverview?: boolean | undefined;
     /**
-     * Allow to display a layer based on the information provided through the
-     * web map links extension. It is only used if no other data is shown. You can set a specific type of
-     * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+     * Allow to display a layer
+     * based on the information provided through the web map links extension.
+     * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+     * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+     * it lets this library choose a web map link to show, but only if no other data is shown.
+     * To disable the functionality set this to `false`.
      */
-    displayWebMapLink?: string | boolean | undefined;
+    displayWebMapLink?: string | boolean | any[] | undefined;
     /**
      * The style for the overall bounds / footprint.
      */
     boundsStyle?: import("ol/style/Style.js").default | undefined;
     /**
-     * The style for individual items in a list of STAC Items or Collections.
+     * The style for individual children in a list of STAC Items or Collections.
      */
     collectionStyle?: import("ol/style/Style.js").default | undefined;
     /**
@@ -137,27 +143,29 @@ export type Options = {
     properties?: {
         [x: string]: any;
     } | undefined;
+    /**
+     * Disable the migration of the STAC object to the latest version.
+     * Only enable this if you are sure that the STAC object is already in the latest version.
+     */
+    disableMigration?: boolean | undefined;
 };
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("../source/GeoTIFF2.js").Options2} GeoTIFFSourceOptions
- */
-/**
- * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticSourceOptions
+ * @typedef {import("ol/layer.js").Layer} Layer
  */
 /**
  * @typedef {import("stac-js").Link} Link
  */
 /**
- * @typedef {import("stac-js").STACObject} STACObject
+ * @typedef {import("ol/Map.js").default} Map
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
  */
 /**
- * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
+ * @typedef {import('../source/type.js').SourceOptions} SourceOptions
  */
 /**
  * @typedef {Object} Options
@@ -165,36 +173,38 @@ export type Options = {
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
+ * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
  * null shows the default asset, an empty array shows no asset.
  * @property {Array<number>} [bands] The (one-based) bands to show.
- * @property {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)} [getGeoTIFFSourceOptions]
- * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
- * and return the completed options or a promise for the same. The function will be called with the current source options
- * and the STAC Asset.
- * @property {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)} [getImageStaticSourceOptions]
- * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+ * @property {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)} [getSourceOptions]
+ * Optional function that can be used to configure the underlying sources. The function can do any additional work
  * and return the completed options or a promise for the same. The function will be called with the current source options
  * and the STAC Asset or Link.
- * @property {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)} [getXYZSourceOptions]
- * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
- * additional work and return the completed options or a promise for the same. The function will be called with the current
- * source options and the STAC Asset or Link.
+ * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+ * Please be aware that sending HTTP headers may not be supported by all sources.
+ * @property {boolean} [displayFootprint=true] Allows to hide the footprints (bounding box/geometry) of the STAC object
+ * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
- * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
- * usually assets with role `thumbnail` or the link with relation type `preview`.
+ * @property {boolean} [displayPreview=false] Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+ * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
  * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
- * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+ * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
- * usually the assets with role `overview` or `visual`.
- * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
- * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * usually an asset with role `overview` or `visual`.
+ * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
+ * based on the information provided through the web map links extension.
+ * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+ * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+ * it lets this library choose a web map link to show, but only if no other data is shown.
+ * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
- * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
+ * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
  * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
@@ -217,6 +227,8 @@ export type Options = {
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
+ * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
+ * Only enable this if you are sure that the STAC object is already in the latest version.
  */
 /**
  * @classdesc
@@ -225,7 +237,7 @@ export type Options = {
  *
  * @extends LayerGroup
  * @fires sourceready
- * @fires assetsready
+ * @fires layersready
  * @fires ErorEvent#event:error
  * @api
  */
@@ -236,27 +248,22 @@ declare class STACLayer extends LayerGroup {
      */
     constructor(options: Options);
     /**
-     * @type {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
+     * @type {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)}
      * @private
      */
-    private getGeoTIFFSourceOptions_;
+    private getSourceOptions_;
     /**
-     * @type {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)}
+     * @type {Array<STAC>|null}
      * @private
      */
-    private getImageStaticSourceOptions_;
+    private children_;
     /**
-     * @type {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)}
+     * @type {Options}
      * @private
      */
-    private getXYZSourceOptions_;
+    private childrenOptions_;
     /**
-     * @type {STAC|Asset}
-     * @private
-     */
-    private data_;
-    /**
-     * @type {Array<Asset> | null}
+     * @type {Array<Asset>|null}
      * @private
      */
     private assets_;
@@ -266,10 +273,15 @@ declare class STACLayer extends LayerGroup {
      */
     private bands_;
     /**
-     * @type {string | null}
+     * @type {string|null}
      * @private
      */
     private crossOrigin_;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    private displayFootprint_;
     /**
      * @type {boolean}
      * @private
@@ -286,9 +298,9 @@ declare class STACLayer extends LayerGroup {
      */
     private displayOverview_;
     /**
-     * @type {string|boolean}
+     * @type {string|boolean|Array<Link|string>}
      */
-    displayWebMapLink_: string | boolean;
+    displayWebMapLink_: string | boolean | Array<Link | string>;
     /**
      * @type {function(Asset):string|null}
      * @private
@@ -315,84 +327,134 @@ declare class STACLayer extends LayerGroup {
      */
     private boundsLayer_;
     /**
+     * @type {boolean}
+     * @private
+     */
+    private disableMigration_;
+    /**
+     * @type {Map|null}
+     * @private
+     */
+    private map_;
+    /**
+     * @type {Array<string|ErrorEvent>}
+     * @private
+     */
+    private eventQueue_;
+    /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
      * @api
      */
-    getBoundsLayer(): VectorLayer<any> | null;
+    getBoundsLayer(): VectorLayer | null;
     /**
-     * @private
+     * Returns `true` if the layer shows nothing.
+     *
+     * This method should be called after the layersready event only.
+     *
+     * @return {boolean} Is the layer empty?
+     * @api
+     */
+    isEmpty(): boolean;
+    /**
      * @param {Error} error The error.
+     * @private
      */
     private handleError_;
     /**
-     * @private
      * @param {STAC|Asset|Object} data The STAC data.
      * @param {string} url The url to the data.
-     * @param {Array<Asset|string> | null} assets The assets to show.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
+     * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
+     * @private
      */
     private configure_;
     /**
+     * Dispatch an event.
+     * Move it to the queue if the map is not yet set.
+     * This is necessary as otherwise some events would be
+     * dispatched before someone could listen to them.
+     *
+     * @param {string|ErrorEvent} event The event.
      * @private
+     */
+    private dispatch_;
+    /**
+     * Flush all events.
+     * @private
+     */
+    private flush_;
+    /**
+     * Set the map and flush all events.
+     * The events should only be flushed once the map is set, otherwise some
+     * functions such as getExtent() return no meaningul values.
+     *
+     * @param {Map} map The map
+     */
+    setMap_(map: Map): void;
+    /**
+     * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {Options} [options] Options for the children.
      * @return {Promise} Resolves when complete.
-     */
-    private addApiCollection_;
-    /**
      * @private
-     * @return {Promise} Resolves when complete.
      */
-    private addStacAssets_;
+    private addChildren_;
     /**
-     * @private
-     * @param {Asset|Link} [ref] A STAC Link or Asset
-     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    private addImagery_;
-    /**
-     * @private
-     * @param {Asset|Link} [thumbnail] A STAC Link or Asset
+     * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
+     * @private
      */
-    private addThumbnail_;
-    /**
-     * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    addWebMapLinks_(): Promise<Array<TileLayer<any>> | undefined>;
+    private addPreviewImage_;
     /**
      * Adds a layer for a link that implements the web-map-links extension.
-     * Supports: TileJSON, WMS, WMTS, XYZ
+     * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a list of layers or undefined when complete.
      * @api
      */
-    addLayerForLink(link: any): Promise<Array<TileLayer<any>> | undefined>;
+    addLayerForLink(link: any): Promise<Array<Layer> | undefined>;
     /**
-     * @private
      * @param {Asset} [asset] A STAC Asset
      * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
      */
     private addGeoTiff_;
     /**
-     * @private
      * @param {Asset|Link} [data] A STAC Asset or Link
      * @return {Promise<TileLayer>} Resolves with a TileLayer when complete.
+     * @private
      */
     private addTileLayerForImagery_;
     /**
      * @param {Layer|LayerGroup} [layer] A Layer to add to the LayerGroup
-     * @param {STACObject} [data] The STAC object, can be any class exposed by stac-js
+     * @param {import("stac-js").STACObject} [data] The STAC object, can be any class exposed by stac-js
      * @param {number} [zIndex=0] The z-index for the layer
      * @private
      */
     private addLayer_;
     /**
-     * @private
      * @return {VectorLayer|null} The vector layer showing the geometry/bbox.
+     * @private
      */
     private addFootprint_;
+    /**
+     * @param {Asset} [asset] A STAC Asset
+     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
+     */
+    private addGeoJson_;
+    /**
+     * Creates a GeoJSON vector layer from the given GeoJSON object.
+     *
+     * @param {GeoJSON} [geojson] The GeoJSON object.
+     * @param {Style} [style] The style for the layer.
+     * @param {boolean} [visible] Whether the layer is visible.
+     * @return {VectorLayer} The new vector layer.
+     * @private
+     */
+    private createGeoJsonLayer_;
     /**
      * @private
      */
@@ -417,6 +479,14 @@ declare class STACLayer extends LayerGroup {
      */
     setAssets(assets: Array<string | Asset> | null): Promise<any>;
     /**
+     * Updates the children STAC entities to be rendered.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
+     * @return {Promise} Resolves when all items are rendered.
+     * @api
+     */
+    setChildren(childs: ItemCollection | any | Array<STAC> | string | null, options?: Options | undefined): Promise<any>;
+    /**
      * Get the STAC object.
      *
      * @return {STAC|Asset} The STAC object.
@@ -424,14 +494,33 @@ declare class STACLayer extends LayerGroup {
      */
     getData(): STAC | Asset;
     /**
+     * Get the children STAC entities.
+     *
+     * @return {STAC} The STAC child entities.
+     * @api
+     */
+    getChildren(): STAC;
+    /**
      * Get the STAC assets shown.
      *
      * @return {Array<Asset>} The STAC assets.
      * @api
      */
     getAssets(): Array<Asset>;
+    /**
+     * Get the attributions of the STAC entity assigned to this layer.
+     *
+     * @return {Array<string>} Attributions for this layer.
+     * @api
+     */
+    getAttributions(): Array<string>;
+    /**
+     * Get the layer source.
+     * @return {SourceType|null} The layer source (or `null` if not yet set).
+     */
+    getSource(): SourceType | null;
 }
+import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';
 import VectorLayer from 'ol/layer/Vector.js';
-import TileLayer from 'ol/layer/Tile.js';
 //# sourceMappingURL=STAC.d.ts.map

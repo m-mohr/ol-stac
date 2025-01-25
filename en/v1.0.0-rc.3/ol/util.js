@@ -28,22 +28,29 @@ export const defaultBoundsStyle = new Style({
 export const defaultCollectionStyle = new Style({
     stroke: new Stroke({
         color: '#ff9933',
-        width: 1,
+        width: 2,
     }),
 });
 /**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
+ * @param {STAC} [exclude=null] Excludes the given STAC entity from the list.
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export async function getStacObjectsForEvent(event) {
+export async function getStacObjectsForEvent(event, exclude = null) {
     const objects = event.map
         .getAllLayers()
         .filter((layer) => {
         if (layer instanceof VectorLayer &&
             layer.get('bounds') === true &&
             layer.get('stac') instanceof STAC) {
+            if (exclude) {
+                const stac = layer.get('stac');
+                if (stac.equals(exclude)) {
+                    return false;
+                }
+            }
             const features = layer
                 .getSource()
                 .getFeaturesAtCoordinate(event.coordinate);
@@ -65,13 +72,13 @@ export function getGeoTiffSourceInfoFromAsset(asset, bands) {
     const sourceInfo = {
         url: asset.getAbsoluteUrl(),
     };
-    let band = null;
+    let source = asset;
     // If there's just one band, we can also read the information from there.
     if (asset.getBands().length === 1) {
-        band = 0;
+        source = asset.getBand(0);
     }
     // TODO: It would be useful if OL would allow min/max values per band
-    const { minimum, maximum } = asset.getMinMaxValues(band);
+    const { minimum, maximum } = source.getMinMaxValues();
     if (typeof minimum === 'number') {
         sourceInfo.min = minimum;
     }
@@ -79,12 +86,9 @@ export function getGeoTiffSourceInfoFromAsset(asset, bands) {
         sourceInfo.max = maximum;
     }
     // TODO: It would be useful if OL would allow multiple no-data values
-    const nodata = asset.getNoDataValues(band);
+    const nodata = source.getNoDataValues();
     if (nodata.length > 0) {
         sourceInfo.nodata = nodata[0];
-    }
-    else {
-        sourceInfo.nodata = NaN; // NaN is usually a reasonable default if nothing is provided
     }
     if (bands.length > 0) {
         sourceInfo.bands = bands;
@@ -101,10 +105,13 @@ export async function getProjection(reference, defaultProjection = undefined) {
     let projection = defaultProjection;
     if (isProj4Registered()) {
         // TODO: It would be great to handle WKT2 and PROJJSON, but is not supported yet by proj4js.
-        const epsgCode = reference.getMetadata('proj:epsg');
-        if (epsgCode) {
+        const code = reference.getMetadata('proj:code');
+        if (code) {
             try {
-                projection = await fromEPSGCode(epsgCode);
+                if (code.startsWith('EPSG:')) {
+                    const id = parseInt(code.replace('EPSG:', ''), 10);
+                    projection = await fromEPSGCode(id);
+                }
             }
             catch (_) {
                 // pass

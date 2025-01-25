@@ -1,10 +1,11 @@
 /**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
+ * @param {STAC} [exclude=null] Excludes the given STAC entity from the list.
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export function getStacObjectsForEvent(event: import("ol/MapBrowserEvent.js").default<any>): Promise<Array<STAC>>;
+export function getStacObjectsForEvent(event: import("ol/MapBrowserEvent.js").default<any>, exclude?: any): Promise<Array<STAC>>;
 /**
  * Get the source info for the GeoTiff from the asset.
  * @param {import('stac-js').Asset} asset The asset to read the information from.

@@ -1,45 +1,48 @@
 /**
  * @module ol/layer/STAC
  */
+import * as pmtiles from 'pmtiles';
 import ErrorEvent from '../events/ErrorEvent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
-import GeoTIFF from '../source/GeoTIFF2.js';
+import GeoTIFF from 'ol/source/GeoTIFF.js';
 import ImageLayer from 'ol/layer/Image.js';
-import Layer from 'ol/layer/Layer.js';
 import LayerGroup from 'ol/layer/Group.js';
+import SourceType from '../source/type.js';
 import StaticImage from 'ol/source/ImageStatic.js';
 import TileJSON from 'ol/source/TileJSON.js';
 import TileLayer from 'ol/layer/Tile.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import VectorSource from 'ol/source/Vector.js';
+import VectorTileLayer from 'ol/layer/VectorTile.js';
+import VectorTileSource from 'ol/source/VectorTile.js';
 import WMS from 'ol/source/TileWMS.js';
 import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
-import create, { Asset, STAC } from 'stac-js';
-import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
-import { toGeoJSON } from 'stac-js/src/geo.js';
+import { PMTilesRasterSource, PMTilesVectorSource } from 'ol-pmtiles';
+import { isEmpty } from 'ol/extent.js';
 import { transformExtent } from 'ol/proj.js';
+import create, { Asset, ItemCollection, STAC } from 'stac-js';
+import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
+import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
+import { toGeoJSON } from 'stac-js/src/geo.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("../source/GeoTIFF2.js").Options2} GeoTIFFSourceOptions
- */
-/**
- * @typedef {import("ol/source/ImageStatic.js").Options} ImageStaticSourceOptions
+ * @typedef {import("ol/layer.js").Layer} Layer
  */
 /**
  * @typedef {import("stac-js").Link} Link
  */
 /**
- * @typedef {import("stac-js").STACObject} STACObject
+ * @typedef {import("ol/Map.js").default} Map
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
  */
 /**
- * @typedef {import("ol/source/XYZ.js").Options} XYZSourceOptions
+ * @typedef {import('../source/type.js').SourceOptions} SourceOptions
  */
 /**
  * @typedef {Object} Options
@@ -47,36 +50,38 @@ import { transformExtent } from 'ol/proj.js';
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
+ * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
  * This can be an array of strings corresponding to asset keys or Asset objects.
  * null shows the default asset, an empty array shows no asset.
  * @property {Array<number>} [bands] The (one-based) bands to show.
- * @property {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)} [getGeoTIFFSourceOptions]
- * Optional function that can be used to configure the underlying GeoTIFF sources. The function can do any additional work
- * and return the completed options or a promise for the same. The function will be called with the current source options
- * and the STAC Asset.
- * @property {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)} [getImageStaticSourceOptions]
- * Optional function that can be used to configure the underlying ImageStatic sources. The function can do any additional work
+ * @property {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)} [getSourceOptions]
+ * Optional function that can be used to configure the underlying sources. The function can do any additional work
  * and return the completed options or a promise for the same. The function will be called with the current source options
  * and the STAC Asset or Link.
- * @property {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)} [getXYZSourceOptions]
- * Optional function that can be used to configure the underlying XYZ sources that displays imagery. The function can do any
- * additional work and return the completed options or a promise for the same. The function will be called with the current
- * source options and the STAC Asset or Link.
+ * This can be useful for adding auth information such as an API token, either via query parameter or HTTP headers.
+ * Please be aware that sending HTTP headers may not be supported by all sources.
+ * @property {boolean} [displayFootprint=true] Allows to hide the footprints (bounding box/geometry) of the STAC object
+ * by default.
  * @property {boolean} [displayGeoTiffByDefault=false] Allow to choose non-cloud-optimized GeoTiffs as default image to show,
  * which might not work well for larger files or larger amounts of files.
- * @property {boolean} [displayPreview=false] Allow to display images that a browser can display (e.g. PNG, JPEG),
- * usually assets with role `thumbnail` or the link with relation type `preview`.
+ * @property {boolean} [displayPreview=false] Allow to display preview images that a browser can display (e.g. PNG, JPEG),
+ * i.e. assets with any of the roles `thumbnail`, `overview`, or a link with relation type `preview`.
  * The previews are usually not covering the full extents and as such may be placed incorrectly on the map.
- * For performance reasons, it is recommended to enable this option if you pass in STAC API Items.
+ * For performance reasons, it is recommended to enable this option if you pass in STAC API Items instead of `displayOverview`.
  * @property {boolean} [displayOverview=true] Allow to display COGs and, if `displayGeoTiffByDefault` is enabled, GeoTiffs,
- * usually the assets with role `overview` or `visual`.
- * @property {string|boolean} [displayWebMapLink=false] Allow to display a layer based on the information provided through the
- * web map links extension. It is only used if no other data is shown. You can set a specific type of
- * web map link (`tilejson`, `wms`, `wmts`, `xyz`), let OpenLayers choose (`true`) or disable the functionality (`false`).
+ * usually an asset with role `overview` or `visual`.
+ * @property {string|boolean|Array<Link|string>} [displayWebMapLink=false] Allow to display a layer
+ * based on the information provided through the web map links extension.
+ * If an array of links or link ids (property `id` in a Link Object) is provided, all corresponding layers will be shown.
+ * If set to true or to a specific type of web map link (`pmtiles`, `tilejson`, `wms`, `wmts`, `xyz`),
+ * it lets this library choose a web map link to show, but only if no other data is shown.
+ * To disable the functionality set this to `false`.
  * @property {Style} [boundsStyle] The style for the overall bounds / footprint.
- * @property {Style} [collectionStyle] The style for individual items in a list of STAC Items or Collections.
+ * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
  * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
@@ -99,6 +104,8 @@ import { transformExtent } from 'ol/proj.js';
  * @property {number} [maxZoom] The maximum view zoom level (inclusive) at which this layer will
  * be visible.
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
+ * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
+ * Only enable this if you are sure that the STAC object is already in the latest version.
  */
 /**
  * @classdesc
@@ -107,7 +114,7 @@ import { transformExtent } from 'ol/proj.js';
  *
  * @extends LayerGroup
  * @fires sourceready
- * @fires assetsready
+ * @fires layersready
  * @fires ErorEvent#event:error
  * @api
  */
@@ -130,27 +137,22 @@ class STACLayer extends LayerGroup {
         ].forEach((key) => (superOptions[key] = options[key]));
         super(superOptions);
         /**
-         * @type {function(GeoTIFFSourceOptions, Asset):(GeoTIFFSourceOptions|Promise<GeoTIFFSourceOptions>)}
+         * @type {function(SourceType, SourceOptions, (Asset|Link)):(SourceOptions|Promise<SourceOptions>)}
          * @private
          */
-        this.getGeoTIFFSourceOptions_ = options.getGeoTIFFSourceOptions;
+        this.getSourceOptions_ = options.getSourceOptions;
         /**
-         * @type {function(ImageStaticSourceOptions, (Asset|Link)):(ImageStaticSourceOptions|Promise<ImageStaticSourceOptions>)}
+         * @type {Array<STAC>|null}
          * @private
          */
-        this.getImageStaticSourceOptions_ = options.getImageStaticSourceOptions;
+        this.children_ = null;
         /**
-         * @type {function(XYZSourceOptions, (Asset|Link)):(XYZSourceOptions|Promise<XYZSourceOptions>)}
+         * @type {Options}
          * @private
          */
-        this.getXYZSourceOptions_ = options.getXYZSourceOptions;
+        this.childrenOptions_ = options.childrenOptions || {};
         /**
-         * @type {STAC|Asset}
-         * @private
-         */
-        this.data_;
-        /**
-         * @type {Array<Asset> | null}
+         * @type {Array<Asset>|null}
          * @private
          */
         this.assets_ = null;
@@ -160,10 +162,15 @@ class STACLayer extends LayerGroup {
          */
         this.bands_ = [];
         /**
-         * @type {string | null}
+         * @type {string|null}
          * @private
          */
         this.crossOrigin_ = options.crossOrigin || null;
+        /**
+         * @type {boolean}
+         * @private
+         */
+        this.displayFootprint_ = options.displayFootprint === false ? false : true;
         /**
          * @type {boolean}
          * @private
@@ -180,7 +187,7 @@ class STACLayer extends LayerGroup {
          */
         this.displayOverview_ = options.displayOverview === false ? false : true;
         /**
-         * @type {string|boolean}
+         * @type {string|boolean|Array<Link|string>}
          */
         this.displayWebMapLink_ = options.displayWebMapLink || false;
         /**
@@ -208,9 +215,24 @@ class STACLayer extends LayerGroup {
          * @private
          */
         this.boundsLayer_ = null;
+        /**
+         * @type {boolean}
+         * @private
+         */
+        this.disableMigration_ = options.disableMigration || false;
+        /**
+         * @type {Map|null}
+         * @private
+         */
+        this.map_ = null;
+        /**
+         * @type {Array<string|ErrorEvent>}
+         * @private
+         */
+        this.eventQueue_ = [];
         if (options.data) {
             try {
-                this.configure_(options.data, options.url, options.assets, options.bands);
+                this.configure_(options.data, options.url, options.children, options.assets, options.bands);
             }
             catch (error) {
                 this.handleError_(error);
@@ -222,7 +244,7 @@ class STACLayer extends LayerGroup {
         }
         fetch(options.url)
             .then((response) => response.json())
-            .then((data) => this.configure_(data, options.url, options.assets, options.bands))
+            .then((data) => this.configure_(data, options.url, options.children, options.assets, options.bands))
             .catch((error) => this.handleError_(error));
     }
     /**
@@ -234,8 +256,27 @@ class STACLayer extends LayerGroup {
         return this.boundsLayer_;
     }
     /**
-     * @private
+     * Returns `true` if the layer shows nothing.
+     *
+     * This method should be called after the layersready event only.
+     *
+     * @return {boolean} Is the layer empty?
+     * @api
+     */
+    isEmpty() {
+        var _a;
+        if (this.getLayers().getLength() <= 1) {
+            return true;
+        }
+        const bbox = (_a = this.getData()) === null || _a === void 0 ? void 0 : _a.getBoundingBox();
+        if (!bbox || isEmpty(bbox)) {
+            return true;
+        }
+        return !this.boundsLayer_ || !this.displayFootprint_;
+    }
+    /**
      * @param {Error} error The error.
+     * @private
      */
     handleError_(error) {
         /**
@@ -245,25 +286,28 @@ class STACLayer extends LayerGroup {
          * @type {Object}
          * @property {Error} error - Provides the original error.
          */
-        this.dispatchEvent(new ErrorEvent(error));
+        this.dispatch_(new ErrorEvent(error));
     }
     /**
-     * @private
      * @param {STAC|Asset|Object} data The STAC data.
      * @param {string} url The url to the data.
-     * @param {Array<Asset|string> | null} assets The assets to show.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
+     * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
+     * @private
      */
-    configure_(data, url = null, assets = null, bands = []) {
+    configure_(data, url = null, children = null, assets = null, bands = []) {
+        let stac;
         if (data instanceof Asset || data instanceof STAC) {
-            this.data_ = data;
+            stac = data;
         }
         else {
-            this.data_ = create(data);
+            stac = create(data, !this.disableMigration_);
         }
         if (url && url.includes('://')) {
-            this.data_.setAbsoluteUrl(url);
+            stac.setAbsoluteUrl(url);
         }
+        this.set('stac', stac);
         this.bands_ = bands;
         this.boundsLayer_ = this.addFootprint_();
         const updateBoundsStyle = () => {
@@ -273,129 +317,122 @@ class STACLayer extends LayerGroup {
         };
         this.getLayers().on('add', updateBoundsStyle);
         this.getLayers().on('remove', updateBoundsStyle);
-        this.setAssets(assets)
-            .then(() => {
+        const wait1 = this.setChildren(children).catch(this.handleError_);
+        const wait2 = this.setAssets(assets).catch(this.handleError_);
+        Promise.all([wait1, wait2]).then(() => {
             /**
-             * Invoked once all assets are loaded and shown on the map.
+             * Invoked once all layers are shown on the map.
              *
-             * @event assetsready
+             * @event layersready
              */
-            return this.dispatchEvent('assetsready');
-        })
-            .catch((error) => this.handleError_(error));
+            return this.dispatch_('layersready');
+        });
         /**
-         * Invoked once the source is ready.
-         * If you provide the data inline, the event is likely fired before you can
-         * attach a listener to it. So this only really helps if a url is provided.
+         * Invoked once the STAC entity is loaded and available.
          *
          * @event sourceready
          */
-        this.dispatchEvent('sourceready');
+        this.dispatch_('sourceready');
     }
     /**
+     * Dispatch an event.
+     * Move it to the queue if the map is not yet set.
+     * This is necessary as otherwise some events would be
+     * dispatched before someone could listen to them.
+     *
+     * @param {string|ErrorEvent} event The event.
      * @private
-     * @return {Promise} Resolves when complete.
      */
-    async addApiCollection_() {
-        const promises = this.getData()
-            .getAll()
-            .map((obj) => {
-            const subgroup = new STACLayer({
+    dispatch_(event) {
+        this.eventQueue_.push(event);
+        this.flush_();
+    }
+    /**
+     * Flush all events.
+     * @private
+     */
+    flush_() {
+        if (this.map_) {
+            for (const event of this.eventQueue_) {
+                this.dispatchEvent(event);
+            }
+            this.eventQueue_ = [];
+        }
+    }
+    /**
+     * Set the map and flush all events.
+     * The events should only be flushed once the map is set, otherwise some
+     * functions such as getExtent() return no meaningul values.
+     *
+     * @param {Map} map The map
+     */
+    setMap_(map) {
+        if (this.map_ === map) {
+            return;
+        }
+        this.map_ = map;
+        this.flush_();
+    }
+    /**
+     * @param {Array<STAC>} collection The list of STAC entities to show.
+     * @param {Options} [options] Options for the children.
+     * @return {Promise} Resolves when complete.
+     * @private
+     */
+    async addChildren_(collection, options = {}) {
+        const promises = collection.map((obj) => {
+            const defaultOptions = {
                 data: obj,
                 crossOrigin: this.crossOrigin_,
                 boundsStyle: this.collectionStyle_,
                 displayGeoTiffByDefault: this.displayGeoTiffByDefault_,
                 displayOverview: this.displayOverview_,
                 displayPreview: this.displayPreview_,
-            });
-            this.addLayer_(subgroup);
+                displayFootprint: this.displayFootprint_,
+            };
+            const subgroup = new STACLayer(Object.assign(defaultOptions, options));
+            this.addLayer_(subgroup, null);
             return subgroup;
         });
         return await Promise.all(promises);
     }
     /**
-     * @private
-     * @return {Promise} Resolves when complete.
-     */
-    async addStacAssets_() {
-        let assets = this.getAssets();
-        if (assets === null) {
-            assets = [];
-            // No specific asset given by the user, visualize the default geotiff
-            const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
-            if (geotiff) {
-                assets.push(geotiff);
-            }
-            else {
-                // This may return Links or Assets
-                const thumbnails = this.getData().getThumbnails();
-                if (thumbnails.length > 0) {
-                    assets.push(thumbnails[0]);
-                }
-            }
-        }
-        const promises = assets.map((asset) => this.addImagery_(asset));
-        return await Promise.all(promises);
-    }
-    /**
-     * @private
-     * @param {Asset|Link} [ref] A STAC Link or Asset
-     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    async addImagery_(ref) {
-        if (!ref) {
-            return;
-        }
-        if (ref.isGeoTIFF()) {
-            return await this.addGeoTiff_(ref);
-        }
-        if (ref.canBrowserDisplayImage()) {
-            return await this.addThumbnail_(ref);
-        }
-    }
-    /**
-     * @private
-     * @param {Asset|Link} [thumbnail] A STAC Link or Asset
+     * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
+     * @private
      */
-    async addThumbnail_(thumbnail) {
-        if (!this.displayPreview_) {
+    async addPreviewImage_(image) {
+        const projection = await getProjection(image, 'EPSG:4326');
+        const bboxes = image.getContext().getBoundingBoxes();
+        if (bboxes.length !== 1) {
             return;
         }
+        const bbox = bboxes[0];
         /**
-         * @type {ImageStaticSourceOptions}
+         * @type {import("ol/source/ImageStatic.js").Options}
          */
         let options = {
-            url: thumbnail.getAbsoluteUrl(),
-            projection: await getProjection(thumbnail, 'EPSG:4326'),
-            imageExtent: thumbnail.getContext().getBoundingBox(),
+            url: image.getAbsoluteUrl(),
+            projection,
+            imageExtent: transformExtent(bbox, 'EPSG:4326', projection),
             crossOrigin: this.crossOrigin_,
         };
-        if (this.getImageStaticSourceOptions_) {
-            options = await this.getImageStaticSourceOptions_(options, thumbnail);
+        if (this.getSourceOptions_) {
+            // @ts-ignore
+            options = await this.getSourceOptions_(SourceType.ImageStatic, options, image);
         }
         const layer = new ImageLayer({
             source: new StaticImage(options),
         });
-        this.addLayer_(layer, thumbnail);
+        this.addLayer_(layer, image);
         return layer;
     }
     /**
-     * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    async addWebMapLinks_() {
-        const links = this.getWebMapLinks();
-        if (links.length > 0) {
-            return await this.addLayerForLink(links[0]);
-        }
-    }
-    /**
      * Adds a layer for a link that implements the web-map-links extension.
-     * Supports: TileJSON, WMS, WMTS, XYZ
+     * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ
      * @see https://github.com/stac-extensions/web-map-links
      * @param {Link} link A web map link
-     * @return {Promise<Array<TileLayer>|undefined>} Resolves with a list of layers or undefined when complete.
+     * @return {Promise<Array<Layer>|undefined>} Resolves with a list of layers or undefined when complete.
      * @api
      */
     async addLayerForLink(link) {
@@ -406,26 +443,63 @@ class STACLayer extends LayerGroup {
         }
         const options = {
             attributions: link.getMetadata('attribution') ||
-                this.data_.getMetadata('attribution'),
+                this.getData().getMetadata('attribution'),
             crossOrigin: this.crossOrigin_,
             url,
         };
+        const updateOptions = async (type, options) => {
+            if (this.getSourceOptions_) {
+                options = await this.getSourceOptions_(type, options, link);
+            }
+            return options;
+        };
         const sources = [];
         switch (link.rel) {
+            case 'pmtiles':
+                const p = new pmtiles.PMTiles(options.url);
+                const headers = await p.getHeader();
+                let source;
+                switch (headers.tileType) {
+                    case pmtiles.TileType.Mvt:
+                        source = new PMTilesVectorSource(await updateOptions(SourceType.PMTilesVector, options));
+                        break;
+                    case pmtiles.TileType.Avif:
+                    case pmtiles.TileType.Jpeg:
+                    case pmtiles.TileType.Png:
+                    case pmtiles.TileType.Webp:
+                        source = new PMTilesRasterSource(await updateOptions(SourceType.PMTilesRaster, options));
+                        break;
+                    default:
+                        return; // Unsupported
+                }
+                sources.push(source);
+                break;
             case 'tilejson':
-                sources.push(new TileJSON(options));
+                sources.push(new TileJSON(await updateOptions(SourceType.TileJSON, options)));
                 break;
             case 'wms':
                 if (!Array.isArray(link['wms:layers'])) {
-                    return;
+                    break;
                 }
-                const styles = link['wms:styles'] || '';
-                for (const layer of link['wms:layers']) {
+                for (const i in link['wms:layers']) {
+                    const layers = link['wms:layers'][i] || '';
+                    let styles = '';
+                    if (Array.isArray(link['wms:styles']) &&
+                        typeof link['wms:styles'][i] === 'string') {
+                        styles = link['wms:styles'][i];
+                    }
                     const params = Object.assign({
-                        LAYERS: layer,
+                        LAYERS: layers,
                         STYLES: styles,
                     }, link['wms:dimensions']);
-                    const wmsOptions = Object.assign({}, options, { params });
+                    if (typeof link['wms:transparent'] === 'boolean') {
+                        params.TRANSPARENT = String(link['wms:transparent']);
+                    }
+                    if (typeof link['type'] === 'string' &&
+                        link['type'].startsWith('image/')) {
+                        params.FORMAT = link['type'];
+                    }
+                    const wmsOptions = await updateOptions(SourceType.TileWMS, Object.assign({}, options, { params }));
                     sources.push(new WMS(wmsOptions));
                 }
                 break;
@@ -438,39 +512,51 @@ class STACLayer extends LayerGroup {
                     ? link['wmts:layer']
                     : [link['wmts:layer']];
                 for (const layer of layers) {
-                    const wmtsOptions = Object.assign({}, options, { layer });
+                    let wmtsOptions = Object.assign({}, options, { layer });
+                    if (typeof link['type'] === 'string' &&
+                        link['type'].startsWith('image/')) {
+                        wmtsOptions.format = link['type'];
+                    }
+                    wmtsOptions = await updateOptions(SourceType.WMTS, wmtsOptions);
                     sources.push(new WMTS(optionsFromCapabilities(wmtsCapabilities, wmtsOptions)));
                 }
                 break;
             case 'xyz':
-                sources.push(new XYZ(options));
+                sources.push(new XYZ(await updateOptions(SourceType.XYZ, options)));
                 break;
             default:
                 return;
         }
         return sources.map((source) => {
-            const layer = new TileLayer({
-                source,
-            });
+            let layer;
+            if (source instanceof VectorTileSource) {
+                layer = new VectorTileLayer({
+                    source,
+                    declutter: true,
+                });
+            }
+            else if (source instanceof PMTilesRasterSource) {
+                layer = new WebGLTileLayer({ source });
+            }
+            else {
+                layer = new TileLayer({ source });
+            }
             this.addLayer_(layer, link);
             return layer;
         });
     }
     /**
-     * @private
      * @param {Asset} [asset] A STAC Asset
      * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
      */
     async addGeoTiff_(asset) {
-        if (!this.displayOverview_) {
-            return;
-        }
         if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
             return await this.addTileLayerForImagery_(asset);
         }
         const sourceInfo = getGeoTiffSourceInfoFromAsset(asset, this.bands_);
         /**
-         * @type {GeoTIFFSourceOptions}
+         * @type {import("ol/source/GeoTIFF.js").Options}
          */
         let options = {
             sources: [sourceInfo],
@@ -479,57 +565,51 @@ class STACLayer extends LayerGroup {
         if (projection) {
             options.projection = projection;
         }
-        if (this.getGeoTIFFSourceOptions_) {
-            options = await this.getGeoTIFFSourceOptions_(options, asset);
+        if (this.getSourceOptions_) {
+            // @ts-ignore
+            options = await this.getSourceOptions_(SourceType.GeoTIFF, options, asset);
         }
-        const tileserverFallback = async (asset, layer) => {
-            if (layer) {
-                this.getLayers().remove(layer);
-            }
-            return await this.addTileLayerForImagery_(asset);
-        };
-        try {
-            const source = new GeoTIFF(options);
-            const layer = new WebGLTileLayer({ source });
-            if (this.useTileLayerAsFallback_) {
-                const errorFn = () => tileserverFallback(asset, layer);
-                source.on('error', errorFn);
-                source.on('tileloaderror', errorFn);
+        const source = new GeoTIFF(options);
+        const status = new Promise((resolve, reject) => {
+            source.on('error', reject);
+            source.on('change', () => {
                 // see https://github.com/openlayers/openlayers/issues/14926
-                source.on('change', () => {
-                    if (source.getState() === 'error') {
-                        tileserverFallback(asset, layer);
-                    }
-                });
-                layer.on('error', errorFn);
-                // Call this to ensure we can load the GeoTIFF, otherwise try fallback
-                await source.getView();
-            }
+                if (source.getState() === 'error') {
+                    reject(source.getError());
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+        try {
+            await status;
+            const layer = new WebGLTileLayer({ source });
             this.addLayer_(layer, asset);
             return layer;
         }
         catch (error) {
             if (this.useTileLayerAsFallback_) {
-                return await tileserverFallback(asset, null);
+                return await this.addTileLayerForImagery_(asset);
             }
             this.handleError_(error);
         }
     }
     /**
-     * @private
      * @param {Asset|Link} [data] A STAC Asset or Link
      * @return {Promise<TileLayer>} Resolves with a TileLayer when complete.
+     * @private
      */
     async addTileLayerForImagery_(data) {
         /**
-         * @type {XYZSourceOptions}
+         * @type {import("ol/source/XYZ.js").Options}
          */
         let options = {
             crossOrigin: this.crossOrigin_,
             url: this.buildTileUrlTemplate_(data),
         };
-        if (this.getXYZSourceOptions_) {
-            options = await this.getXYZSourceOptions_(options, data);
+        if (this.getSourceOptions_) {
+            options = await this.getSourceOptions_(SourceType.XYZ, options, data);
         }
         const layer = new TileLayer({
             source: new XYZ(options),
@@ -539,18 +619,20 @@ class STACLayer extends LayerGroup {
     }
     /**
      * @param {Layer|LayerGroup} [layer] A Layer to add to the LayerGroup
-     * @param {STACObject} [data] The STAC object, can be any class exposed by stac-js
+     * @param {import("stac-js").STACObject} [data] The STAC object, can be any class exposed by stac-js
      * @param {number} [zIndex=0] The z-index for the layer
      * @private
      */
-    addLayer_(layer, data, zIndex = 0) {
-        layer.set('stac', data);
+    addLayer_(layer, data = null, zIndex = 0) {
+        if (data) {
+            layer.set('stac', data);
+        }
         layer.setZIndex(zIndex);
         this.getLayers().push(layer);
     }
     /**
-     * @private
      * @return {VectorLayer|null} The vector layer showing the geometry/bbox.
+     * @private
      */
     addFootprint_() {
         let geojson = null;
@@ -562,25 +644,55 @@ class STACLayer extends LayerGroup {
             geojson = data.toGeoJSON();
         }
         if (geojson) {
-            const format = new GeoJSON();
-            const source = new VectorSource({
-                format,
-                loader: (extent, resolution, projection) => {
-                    const features = format.readFeatures(geojson, {
-                        featureProjection: projection,
-                    });
-                    source.addFeatures(features);
-                },
-            });
-            const vectorLayer = new VectorLayer({
-                source,
-                style: getBoundsStyle(this.boundsStyle_, this),
-            });
-            vectorLayer.set('bounds', true);
-            this.addLayer_(vectorLayer, data, 1);
-            return vectorLayer;
+            const layer = this.createGeoJsonLayer_(geojson, getBoundsStyle(this.boundsStyle_, this), this.displayFootprint_);
+            layer.set('bounds', true);
+            layer.on('change', () => this.setMap_(layer.getMapInternal()));
+            this.addLayer_(layer, data, 1);
+            return layer;
         }
         return null;
+    }
+    /**
+     * @param {Asset} [asset] A STAC Asset
+     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
+     */
+    async addGeoJson_(asset) {
+        try {
+            const response = await fetch(asset.getAbsoluteUrl());
+            const geojson = await response.json();
+            const layer = this.createGeoJsonLayer_(geojson);
+            this.addLayer_(layer, asset);
+            return layer;
+        }
+        catch (error) {
+            this.handleError_(error);
+        }
+    }
+    /**
+     * Creates a GeoJSON vector layer from the given GeoJSON object.
+     *
+     * @param {GeoJSON} [geojson] The GeoJSON object.
+     * @param {Style} [style] The style for the layer.
+     * @param {boolean} [visible] Whether the layer is visible.
+     * @return {VectorLayer} The new vector layer.
+     * @private
+     */
+    createGeoJsonLayer_(geojson, style = null, visible = true) {
+        const format = new GeoJSON();
+        const source = new VectorSource({
+            format,
+            loader: (extent, resolution, projection) => {
+                const features = format.readFeatures(geojson, {
+                    featureProjection: projection,
+                });
+                source.addFeatures(features);
+            },
+        });
+        if (!style) {
+            style = defaultCollectionStyle;
+        }
+        return new VectorLayer({ source, style, visible });
     }
     /**
      * @private
@@ -590,21 +702,72 @@ class STACLayer extends LayerGroup {
         const oldLayers = this.getLayers();
         for (let i = oldLayers.getLength() - 1; i >= 0; i--) {
             const layer = oldLayers.item(i);
-            const stac = layer.get('stac');
-            if (stac && (stac.isLink() || stac.isAsset())) {
+            if (layer.get('stac') && !layer.get('bounds')) {
                 oldLayers.removeAt(i);
             }
         }
-        // Add new layers
+        // Add layers by priority
         const data = this.getData();
-        if (data.isItemCollection() || data.isCollectionCollection()) {
-            await this.addApiCollection_();
+        // Show the web map links provided by the user
+        if (Array.isArray(this.displayWebMapLink_)) {
+            const promises = this.getWebMapLinks().map(async (link) => await this.addLayerForLink(link));
+            await Promise.all(promises);
         }
-        else if (data.isItem() || data.isCollection()) {
-            await this.addStacAssets_();
+        // Show children if provided
+        if (this.children_) {
+            await this.addChildren_(this.children_, this.childrenOptions_);
         }
-        if (this.displayWebMapLink_ && this.hasOnlyBounds()) {
-            await this.addWebMapLinks_();
+        // Show the assets provided by the user
+        const assets = this.getAssets();
+        if (assets) {
+            const promises = assets.map(async (ref) => {
+                if (!ref) {
+                    return;
+                }
+                if (ref.type === geojsonMediaType) {
+                    return await this.addGeoJson_(ref);
+                }
+                if (ref.isGeoTIFF()) {
+                    return await this.addGeoTiff_(ref);
+                }
+                if (ref.canBrowserDisplayImage()) {
+                    return await this.addPreviewImage_(ref);
+                }
+            });
+            await Promise.all(promises);
+        }
+        // If the user didn't provide any specific asset/map link/children to show,
+        // choose a sensible default visualization
+        if (this.hasOnlyBounds()) {
+            // Show the ItemCollection/CollectionCollection entries
+            if (data.isItemCollection() || data.isCollectionCollection()) {
+                await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
+            }
+            else {
+                // Show web map links
+                const links = this.getWebMapLinks();
+                if (links.length > 0) {
+                    await this.addLayerForLink(links[0]);
+                }
+                else {
+                    // Find an asset that we can visualize
+                    const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
+                    let layer;
+                    // Try to visualize the default GeoTIFF first
+                    if (geotiff && this.displayOverview_) {
+                        layer = await this.addGeoTiff_(geotiff);
+                    }
+                    // If no GeoTIFF is available or it can't be shown (e.g. error),
+                    // try to visualize the default thumbnail
+                    if (this.displayPreview_ && (!geotiff || !layer)) {
+                        // This may return Links or Assets
+                        const thumbnails = this.getData().getThumbnails(true, 'overview');
+                        if (thumbnails.length > 0) {
+                            await this.addPreviewImage_(thumbnails[0]);
+                        }
+                    }
+                }
+            }
         }
     }
     /**
@@ -623,17 +786,33 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getWebMapLinks() {
-        let types = ['xyz', 'tilejson', 'wmts', 'wms']; // This also defines the priority
+        let types = ['xyz', 'tilejson', 'pmtiles', 'wmts', 'wms']; // This also defines the priority
         if (typeof this.displayWebMapLink_ === 'string') {
             types = [this.displayWebMapLink_];
         }
-        const links = this.data_.getLinksWithRels(types);
-        links.sort((a, b) => {
-            const prioA = types.indexOf(a.rel);
-            const prioB = types.indexOf(b.rel);
-            return prioA - prioB;
-        });
-        return links;
+        let mapLinks = this.getData().getLinksWithRels(types);
+        if (Array.isArray(this.displayWebMapLink_)) {
+            mapLinks = this.displayWebMapLink_
+                .map((link) => {
+                if (typeof link === 'string') {
+                    const match = mapLinks.find((candidate) => candidate.id === link);
+                    if (match) {
+                        return match;
+                    }
+                    return null;
+                }
+                return link;
+            })
+                .filter((link) => !!link);
+        }
+        else {
+            mapLinks.sort((a, b) => {
+                const prioA = types.indexOf(a.rel);
+                const prioB = types.indexOf(b.rel);
+                return prioA - prioB;
+            });
+        }
+        return mapLinks;
     }
     /**
      * Update the assets to be rendered.
@@ -659,13 +838,63 @@ class STACLayer extends LayerGroup {
         await this.updateLayers_();
     }
     /**
+     * Updates the children STAC entities to be rendered.
+     * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
+     * @return {Promise} Resolves when all items are rendered.
+     * @api
+     */
+    async setChildren(childs, options = {}) {
+        if (!childs) {
+            this.children_ = null;
+            this.childrenOptions_ = {};
+            return;
+        }
+        if (typeof childs === 'string') {
+            const response = await fetch(childs);
+            childs = await response.json();
+        }
+        if (typeof childs === 'object' && childs.type === 'FeatureCollection') {
+            childs = childs.features;
+        }
+        if (childs instanceof ItemCollection) {
+            this.children_ = childs.getAll();
+        }
+        else if (Array.isArray(childs)) {
+            childs = childs.map((child) => {
+                if (child instanceof STAC) {
+                    return child;
+                }
+                return create(child);
+            });
+            this.children_ = childs;
+        }
+        else {
+            this.children_ = null; // Invalid input
+        }
+        if (this.children_ && this.children_.length === 0) {
+            this.children_ = null;
+        }
+        this.childrenOptions_ = options;
+        await this.updateLayers_();
+    }
+    /**
      * Get the STAC object.
      *
      * @return {STAC|Asset} The STAC object.
      * @api
      */
     getData() {
-        return this.data_;
+        return this.get('stac');
+    }
+    /**
+     * Get the children STAC entities.
+     *
+     * @return {STAC} The STAC child entities.
+     * @api
+     */
+    getChildren() {
+        return this.children_;
     }
     /**
      * Get the STAC assets shown.
@@ -678,31 +907,53 @@ class STACLayer extends LayerGroup {
     }
     /**
      * Get the extent of the layer.
+     * If `displayFootprint` is set to `false`, the extent is always returned in
+     * EPSG:4326 instead of the map projection. Make sure to transform it with the
+     * ol.proj.transformExtent function if needed.
      *
      * @return {Extent|undefined} The layer extent.
      * @api
      */
     getExtent() {
+        if (!this.map_) {
+            return;
+        }
+        const view = this.map_.getView();
+        if (!view) {
+            return;
+        }
         const data = this.getData();
         if (!data) {
-            return;
-        }
-        const layer = this.getLayers().item(0);
-        if (!layer || !(layer instanceof Layer)) {
-            return;
-        }
-        const map = layer.getMapInternal();
-        if (!map) {
-            return;
-        }
-        const view = map.getView();
-        if (!view) {
             return;
         }
         const bbox = data.getBoundingBox();
         if (bbox) {
             return transformExtent(bbox, 'EPSG:4326', view.getProjection());
         }
+    }
+    /**
+     * Get the attributions of the STAC entity assigned to this layer.
+     *
+     * @return {Array<string>} Attributions for this layer.
+     * @api
+     */
+    getAttributions() {
+        const attribution = [];
+        const stac = this.getData();
+        if (stac) {
+            const attribution = stac.getMetadata('attribution');
+            if (attribution) {
+                attribution.push(attribution);
+            }
+        }
+        return attribution;
+    }
+    /**
+     * Get the layer source.
+     * @return {SourceType|null} The layer source (or `null` if not yet set).
+     */
+    getSource() {
+        return null;
     }
 }
 export default STACLayer;

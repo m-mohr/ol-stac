@@ -19,11 +19,13 @@ import WMS from 'ol/source/TileWMS.js';
 import WMTS, { optionsFromCapabilities } from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
-import create, { Asset, ItemCollection, STAC } from 'stac-js';
 import { PMTilesRasterSource, PMTilesVectorSource } from 'ol-pmtiles';
-import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
-import { toGeoJSON } from 'stac-js/src/geo.js';
+import { isEmpty } from 'ol/extent.js';
 import { transformExtent } from 'ol/proj.js';
+import create, { Asset, ItemCollection, STAC } from 'stac-js';
+import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
+import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
+import { toGeoJSON } from 'stac-js/src/geo.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
@@ -32,6 +34,9 @@ import { transformExtent } from 'ol/proj.js';
  */
 /**
  * @typedef {import("stac-js").Link} Link
+ */
+/**
+ * @typedef {import("ol/Map.js").default} Map
  */
 /**
  * @typedef {import('ol/style.js').Style} Style
@@ -109,7 +114,7 @@ import { transformExtent } from 'ol/proj.js';
  *
  * @extends LayerGroup
  * @fires sourceready
- * @fires assetsready
+ * @fires layersready
  * @fires ErorEvent#event:error
  * @api
  */
@@ -215,6 +220,16 @@ class STACLayer extends LayerGroup {
          * @private
          */
         this.disableMigration_ = options.disableMigration || false;
+        /**
+         * @type {Map|null}
+         * @private
+         */
+        this.map_ = null;
+        /**
+         * @type {Array<string|ErrorEvent>}
+         * @private
+         */
+        this.eventQueue_ = [];
         if (options.data) {
             try {
                 this.configure_(options.data, options.url, options.children, options.assets, options.bands);
@@ -241,8 +256,27 @@ class STACLayer extends LayerGroup {
         return this.boundsLayer_;
     }
     /**
-     * @private
+     * Returns `true` if the layer shows nothing.
+     *
+     * This method should be called after the layersready event only.
+     *
+     * @return {boolean} Is the layer empty?
+     * @api
+     */
+    isEmpty() {
+        var _a;
+        if (this.getLayers().getLength() <= 1) {
+            return true;
+        }
+        const bbox = (_a = this.getData()) === null || _a === void 0 ? void 0 : _a.getBoundingBox();
+        if (!bbox || isEmpty(bbox)) {
+            return true;
+        }
+        return !this.boundsLayer_ || !this.displayFootprint_;
+    }
+    /**
      * @param {Error} error The error.
+     * @private
      */
     handleError_(error) {
         /**
@@ -252,15 +286,15 @@ class STACLayer extends LayerGroup {
          * @type {Object}
          * @property {Error} error - Provides the original error.
          */
-        this.dispatchEvent(new ErrorEvent(error));
+        this.dispatch_(new ErrorEvent(error));
     }
     /**
-     * @private
      * @param {STAC|Asset|Object} data The STAC data.
      * @param {string} url The url to the data.
      * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
      * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
+     * @private
      */
     configure_(data, url = null, children = null, assets = null, bands = []) {
         let stac;
@@ -283,40 +317,67 @@ class STACLayer extends LayerGroup {
         };
         this.getLayers().on('add', updateBoundsStyle);
         this.getLayers().on('remove', updateBoundsStyle);
-        this.setChildren(children)
-            .then(() => {
+        const wait1 = this.setChildren(children).catch(this.handleError_);
+        const wait2 = this.setAssets(assets).catch(this.handleError_);
+        Promise.all([wait1, wait2]).then(() => {
             /**
-             * Invoked once the child STAC entites are loaded and shown on the map.
+             * Invoked once all layers are shown on the map.
              *
-             * @event childrenready
+             * @event layersready
              */
-            return this.dispatchEvent('childrenready');
-        })
-            .catch((error) => this.handleError_(error));
-        this.setAssets(assets)
-            .then(() => {
-            /**
-             * Invoked once all assets are loaded and shown on the map.
-             *
-             * @event assetsready
-             */
-            return this.dispatchEvent('assetsready');
-        })
-            .catch((error) => this.handleError_(error));
+            return this.dispatch_('layersready');
+        });
         /**
-         * Invoked once the source is ready.
-         * If you provide the data inline, the event is likely fired before you can
-         * attach a listener to it. So this only really helps if a url is provided.
+         * Invoked once the STAC entity is loaded and available.
          *
          * @event sourceready
          */
-        this.dispatchEvent('sourceready');
+        this.dispatch_('sourceready');
     }
     /**
+     * Dispatch an event.
+     * Move it to the queue if the map is not yet set.
+     * This is necessary as otherwise some events would be
+     * dispatched before someone could listen to them.
+     *
+     * @param {string|ErrorEvent} event The event.
      * @private
+     */
+    dispatch_(event) {
+        this.eventQueue_.push(event);
+        this.flush_();
+    }
+    /**
+     * Flush all events.
+     * @private
+     */
+    flush_() {
+        if (this.map_) {
+            for (const event of this.eventQueue_) {
+                this.dispatchEvent(event);
+            }
+            this.eventQueue_ = [];
+        }
+    }
+    /**
+     * Set the map and flush all events.
+     * The events should only be flushed once the map is set, otherwise some
+     * functions such as getExtent() return no meaningul values.
+     *
+     * @param {Map} map The map
+     */
+    setMap_(map) {
+        if (this.map_ === map) {
+            return;
+        }
+        this.map_ = map;
+        this.flush_();
+    }
+    /**
      * @param {Array<STAC>} collection The list of STAC entities to show.
      * @param {Options} [options] Options for the children.
      * @return {Promise} Resolves when complete.
+     * @private
      */
     async addChildren_(collection, options = {}) {
         const promises = collection.map((obj) => {
@@ -336,9 +397,9 @@ class STACLayer extends LayerGroup {
         return await Promise.all(promises);
     }
     /**
-     * @private
      * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
+     * @private
      */
     async addPreviewImage_(image) {
         const projection = await getProjection(image, 'EPSG:4326');
@@ -485,9 +546,9 @@ class STACLayer extends LayerGroup {
         });
     }
     /**
-     * @private
      * @param {Asset} [asset] A STAC Asset
      * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
      */
     async addGeoTiff_(asset) {
         if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
@@ -535,9 +596,9 @@ class STACLayer extends LayerGroup {
         }
     }
     /**
-     * @private
      * @param {Asset|Link} [data] A STAC Asset or Link
      * @return {Promise<TileLayer>} Resolves with a TileLayer when complete.
+     * @private
      */
     async addTileLayerForImagery_(data) {
         /**
@@ -570,8 +631,8 @@ class STACLayer extends LayerGroup {
         this.getLayers().push(layer);
     }
     /**
-     * @private
      * @return {VectorLayer|null} The vector layer showing the geometry/bbox.
+     * @private
      */
     addFootprint_() {
         let geojson = null;
@@ -583,26 +644,55 @@ class STACLayer extends LayerGroup {
             geojson = data.toGeoJSON();
         }
         if (geojson) {
-            const format = new GeoJSON();
-            const source = new VectorSource({
-                format,
-                loader: (extent, resolution, projection) => {
-                    const features = format.readFeatures(geojson, {
-                        featureProjection: projection,
-                    });
-                    source.addFeatures(features);
-                },
-            });
-            const vectorLayer = new VectorLayer({
-                source,
-                style: getBoundsStyle(this.boundsStyle_, this),
-                visible: this.displayFootprint_,
-            });
-            vectorLayer.set('bounds', true);
-            this.addLayer_(vectorLayer, data, 1);
-            return vectorLayer;
+            const layer = this.createGeoJsonLayer_(geojson, getBoundsStyle(this.boundsStyle_, this), this.displayFootprint_);
+            layer.set('bounds', true);
+            layer.on('change', () => this.setMap_(layer.getMapInternal()));
+            this.addLayer_(layer, data, 1);
+            return layer;
         }
         return null;
+    }
+    /**
+     * @param {Asset} [asset] A STAC Asset
+     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
+     */
+    async addGeoJson_(asset) {
+        try {
+            const response = await fetch(asset.getAbsoluteUrl());
+            const geojson = await response.json();
+            const layer = this.createGeoJsonLayer_(geojson);
+            this.addLayer_(layer, asset);
+            return layer;
+        }
+        catch (error) {
+            this.handleError_(error);
+        }
+    }
+    /**
+     * Creates a GeoJSON vector layer from the given GeoJSON object.
+     *
+     * @param {GeoJSON} [geojson] The GeoJSON object.
+     * @param {Style} [style] The style for the layer.
+     * @param {boolean} [visible] Whether the layer is visible.
+     * @return {VectorLayer} The new vector layer.
+     * @private
+     */
+    createGeoJsonLayer_(geojson, style = null, visible = true) {
+        const format = new GeoJSON();
+        const source = new VectorSource({
+            format,
+            loader: (extent, resolution, projection) => {
+                const features = format.readFeatures(geojson, {
+                    featureProjection: projection,
+                });
+                source.addFeatures(features);
+            },
+        });
+        if (!style) {
+            style = defaultCollectionStyle;
+        }
+        return new VectorLayer({ source, style, visible });
     }
     /**
      * @private
@@ -631,10 +721,16 @@ class STACLayer extends LayerGroup {
         const assets = this.getAssets();
         if (assets) {
             const promises = assets.map(async (ref) => {
-                if (ref && ref.isGeoTIFF()) {
+                if (!ref) {
+                    return;
+                }
+                if (ref.type === geojsonMediaType) {
+                    return await this.addGeoJson_(ref);
+                }
+                if (ref.isGeoTIFF()) {
                     return await this.addGeoTiff_(ref);
                 }
-                if (ref && ref.canBrowserDisplayImage()) {
+                if (ref.canBrowserDisplayImage()) {
                     return await this.addPreviewImage_(ref);
                 }
             });
@@ -819,14 +915,10 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getExtent() {
-        if (!this.boundsLayer_) {
+        if (!this.map_) {
             return;
         }
-        const map = this.boundsLayer_.getMapInternal();
-        if (!map) {
-            return;
-        }
-        const view = map.getView();
+        const view = this.map_.getView();
         if (!view) {
             return;
         }
