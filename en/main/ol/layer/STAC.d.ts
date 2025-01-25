@@ -334,30 +334,30 @@ declare class STACLayer extends LayerGroup {
      */
     getBoundsLayer(): VectorLayer | null;
     /**
-     * @private
      * @param {Error} error The error.
+     * @private
      */
     private handleError_;
     /**
-     * @private
      * @param {STAC|Asset|Object} data The STAC data.
      * @param {string} url The url to the data.
      * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
      * @param {Array<Asset|string>|null} assets The assets to show.
      * @param {Array<number>} bands The (one-based) bands to show.
+     * @private
      */
     private configure_;
     /**
-     * @private
      * @param {Array<STAC>} collection The list of STAC entities to show.
      * @param {Options} [options] Options for the children.
      * @return {Promise} Resolves when complete.
+     * @private
      */
     private addChildren_;
     /**
-     * @private
      * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
+     * @private
      */
     private addPreviewImage_;
     /**
@@ -370,15 +370,15 @@ declare class STACLayer extends LayerGroup {
      */
     addLayerForLink(link: any): Promise<Array<Layer> | undefined>;
     /**
-     * @private
      * @param {Asset} [asset] A STAC Asset
      * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
      */
     private addGeoTiff_;
     /**
-     * @private
      * @param {Asset|Link} [data] A STAC Asset or Link
      * @return {Promise<TileLayer>} Resolves with a TileLayer when complete.
+     * @private
      */
     private addTileLayerForImagery_;
     /**
@@ -389,10 +389,26 @@ declare class STACLayer extends LayerGroup {
      */
     private addLayer_;
     /**
-     * @private
      * @return {VectorLayer|null} The vector layer showing the geometry/bbox.
+     * @private
      */
     private addFootprint_;
+    /**
+     * @param {Asset} [asset] A STAC Asset
+     * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+     * @private
+     */
+    private addGeoJson_;
+    /**
+     * Creates a GeoJSON vector layer from the given GeoJSON object.
+     *
+     * @param {GeoJSON} [geojson] The GeoJSON object.
+     * @param {Style} [style] The style for the layer.
+     * @param {boolean} [visible] Whether the layer is visible.
+     * @return {VectorLayer} The new vector layer.
+     * @private
+     */
+    private createGeoJsonLayer_;
     /**
      * @private
      */
