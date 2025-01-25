@@ -19,8 +19,10 @@ import WMS from 'ol/source/TileWMS.js';
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
-import create, {Asset, ItemCollection, STAC} from 'stac-js';
 import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
+import {transformExtent} from 'ol/proj.js';
+
+import create, {Asset, ItemCollection, STAC} from 'stac-js';
 import {
   defaultBoundsStyle,
   defaultCollectionStyle,
@@ -30,9 +32,8 @@ import {
   getSpecificWebMapUrl,
   getWmtsCapabilities,
 } from '../util.js';
+import {geojsonMediaType} from 'stac-js/src/mediatypes.js';
 import {toGeoJSON} from 'stac-js/src/geo.js';
-import {transformExtent} from 'ol/proj.js';
-
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
@@ -287,8 +288,8 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {Error} error The error.
+   * @private
    */
   handleError_(error) {
     /**
@@ -302,12 +303,12 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {STAC|Asset|Object} data The STAC data.
    * @param {string} url The url to the data.
    * @param {ItemCollection|Object|Array<STAC>|string|null} children The child STAC entities to show.
    * @param {Array<Asset|string>|null} assets The assets to show.
    * @param {Array<number>} bands The (one-based) bands to show.
+   * @private
    */
   configure_(data, url = null, children = null, assets = null, bands = []) {
     let stac;
@@ -364,10 +365,10 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {Array<STAC>} collection The list of STAC entities to show.
    * @param {Options} [options] Options for the children.
    * @return {Promise} Resolves when complete.
+   * @private
    */
   async addChildren_(collection, options = {}) {
     const promises = collection.map((obj) => {
@@ -388,9 +389,9 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {Asset|Link} [image] A STAC Link or Asset
    * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
+   * @private
    */
   async addPreviewImage_(image) {
     const projection = await getProjection(image, 'EPSG:4326');
@@ -566,9 +567,9 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {Asset} [asset] A STAC Asset
    * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+   * @private
    */
   async addGeoTiff_(asset) {
     if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
@@ -624,9 +625,9 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @param {Asset|Link} [data] A STAC Asset or Link
    * @return {Promise<TileLayer>} Resolves with a TileLayer when complete.
+   * @private
    */
   async addTileLayerForImagery_(data) {
     /**
@@ -661,8 +662,8 @@ class STACLayer extends LayerGroup {
   }
 
   /**
-   * @private
    * @return {VectorLayer|null} The vector layer showing the geometry/bbox.
+   * @private
    */
   addFootprint_() {
     let geojson = null;
@@ -674,27 +675,60 @@ class STACLayer extends LayerGroup {
     }
 
     if (geojson) {
-      const format = new GeoJSON();
-      const source = new VectorSource({
-        format,
-        loader: (extent, resolution, projection) => {
-          const features = format.readFeatures(geojson, {
-            featureProjection: projection,
-          });
-          source.addFeatures(features);
-        },
-      });
-      const vectorLayer = new VectorLayer({
-        source,
-        style: getBoundsStyle(this.boundsStyle_, this),
-        visible: this.displayFootprint_,
-      });
-      vectorLayer.set('bounds', true);
-      this.addLayer_(vectorLayer, data, 1);
-      return vectorLayer;
+      const layer = this.createGeoJsonLayer_(
+        geojson,
+        getBoundsStyle(this.boundsStyle_, this),
+        this.displayFootprint_
+      );
+      layer.set('bounds', true);
+      this.addLayer_(layer, data, 1);
+      return layer;
     }
 
     return null;
+  }
+
+  /**
+   * @param {Asset} [asset] A STAC Asset
+   * @return {Promise<Layer|undefined>} Resolves with a Layer or undefined when complete.
+   * @private
+   */
+  async addGeoJson_(asset) {
+    try {
+      const response = await fetch(asset.getAbsoluteUrl());
+      const geojson = await response.json();
+      const layer = this.createGeoJsonLayer_(geojson);
+      this.addLayer_(layer, asset);
+      return layer;
+    } catch (error) {
+      this.handleError_(error);
+    }
+  }
+
+  /**
+   * Creates a GeoJSON vector layer from the given GeoJSON object.
+   *
+   * @param {GeoJSON} [geojson] The GeoJSON object.
+   * @param {Style} [style] The style for the layer.
+   * @param {boolean} [visible] Whether the layer is visible.
+   * @return {VectorLayer} The new vector layer.
+   * @private
+   */
+  createGeoJsonLayer_(geojson, style = null, visible = true) {
+    const format = new GeoJSON();
+    const source = new VectorSource({
+      format,
+      loader: (extent, resolution, projection) => {
+        const features = format.readFeatures(geojson, {
+          featureProjection: projection,
+        });
+        source.addFeatures(features);
+      },
+    });
+    if (!style) {
+      style = defaultCollectionStyle;
+    }
+    return new VectorLayer({source, style, visible});
   }
 
   /**
@@ -730,10 +764,16 @@ class STACLayer extends LayerGroup {
     const assets = this.getAssets();
     if (assets) {
       const promises = assets.map(async (ref) => {
-        if (ref && ref.isGeoTIFF()) {
+        if (!ref) {
+          return;
+        }
+        if (ref.type === geojsonMediaType) {
+          return await this.addGeoJson_(ref);
+        }
+        if (ref.isGeoTIFF()) {
           return await this.addGeoTiff_(ref);
         }
-        if (ref && ref.canBrowserDisplayImage()) {
+        if (ref.canBrowserDisplayImage()) {
           return await this.addPreviewImage_(ref);
         }
       });
