@@ -51,12 +51,15 @@ function showUrl() {
       displayGeoTiffByDefault: true,
       displayWebMapLink: true,
     });
-
     layer.on('sourceready', () => {
       const view = map.getView();
       view.fit(layer.getExtent());
     });
-
+    layer.on('layersready', () => {
+      if (layer.isEmpty()) {
+        alert('No spatial information available in the data source');
+      }
+    });
     map.addLayer(layer);
   } catch (error) {
     alert(error.message);

@@ -20,6 +20,7 @@ import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
 import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
+import {isEmpty} from 'ol/extent.js';
 import {transformExtent} from 'ol/proj.js';
 
 import create, {Asset, ItemCollection, STAC} from 'stac-js';
@@ -121,7 +122,7 @@ import {toGeoJSON} from 'stac-js/src/geo.js';
  *
  * @extends LayerGroup
  * @fires sourceready
- * @fires assetsready
+ * @fires layersready
  * @fires ErorEvent#event:error
  * @api
  */
@@ -288,6 +289,25 @@ class STACLayer extends LayerGroup {
   }
 
   /**
+   * Returns `true` if the layer shows nothing.
+   *
+   * This method should be called after the layersready event only.
+   *
+   * @return {boolean} Is the layer empty?
+   * @api
+   */
+  isEmpty() {
+    if (this.getLayers().getLength() <= 1) {
+      return true;
+    }
+    const bbox = this.getData()?.getBoundingBox();
+    if (!bbox || isEmpty(bbox)) {
+      return true;
+    }
+    return !this.boundsLayer_ || !this.displayFootprint_;
+  }
+
+  /**
    * @param {Error} error The error.
    * @private
    */
@@ -332,27 +352,16 @@ class STACLayer extends LayerGroup {
     this.getLayers().on('add', updateBoundsStyle);
     this.getLayers().on('remove', updateBoundsStyle);
 
-    this.setChildren(children)
-      .then(() => {
-        /**
-         * Invoked once the child STAC entites are loaded and shown on the map.
-         *
-         * @event childrenready
-         */
-        return this.dispatchEvent('childrenready');
-      })
-      .catch((error) => this.handleError_(error));
-
-    this.setAssets(assets)
-      .then(() => {
-        /**
-         * Invoked once all assets are loaded and shown on the map.
-         *
-         * @event assetsready
-         */
-        return this.dispatchEvent('assetsready');
-      })
-      .catch((error) => this.handleError_(error));
+    const wait1 = this.setChildren(children).catch(this.handleError_);
+    const wait2 = this.setAssets(assets).catch(this.handleError_);
+    Promise.all([wait1, wait2]).then(() => {
+      /**
+       * Invoked once all assets are loaded and shown on the map.
+       *
+       * @event ready
+       */
+      return this.dispatchEvent('layersready');
+    });
 
     /**
      * Invoked once the source is ready.

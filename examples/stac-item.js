@@ -30,7 +30,7 @@ layer.on('sourceready', () => {
   view.fit(layer.getExtent());
 });
 
-layer.on('assetsready', () => {
+layer.on('layersready', () => {
   // Assign titles for e.g. a layerswitcher
   for (const sublayer of layer.getLayersArray()) {
     const stac = sublayer.get('stac');
