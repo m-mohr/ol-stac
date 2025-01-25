@@ -233,7 +233,7 @@ export type Options = {
  *
  * @extends LayerGroup
  * @fires sourceready
- * @fires assetsready
+ * @fires layersready
  * @fires ErorEvent#event:error
  * @api
  */
@@ -333,6 +333,13 @@ declare class STACLayer extends LayerGroup {
      * @api
      */
     getBoundsLayer(): VectorLayer | null;
+    /**
+     * Returns `true` if the layer shows nothing.
+     *
+     * @return {boolean} Is the layer empty?
+     * @api
+     */
+    isEmpty(): boolean;
     /**
      * @param {Error} error The error.
      * @private

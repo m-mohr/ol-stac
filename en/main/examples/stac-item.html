@@ -198,7 +198,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
   view.fit(layer.getExtent());
 });
 
-layer.on(&#x27;assetsready&#x27;, () &#x3D;&gt; {
+layer.on(&#x27;layersready&#x27;, () &#x3D;&gt; {
   // Assign titles for e.g. a layerswitcher
   for (const sublayer of layer.getLayersArray()) {
     const stac &#x3D; sublayer.get(&#x27;stac&#x27;);
