@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.2] - 2025-01-25
+
 - Fix setting the `stac` property for children
 - Allow to set specific options for children
+- Update stac-js to only return 2D bounding boxes
+- Better prioritize what is shown from user input or by default
 
 ## [1.0.0-rc.1] - 2025-01-25
 
@@ -91,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.1...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.2...HEAD>
+[1.0.0-rc.2]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.1...v1.0.0-rc.2>
 [1.0.0-rc.1]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.12...v1.0.0-rc.1>
 [1.0.0-beta.12]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.11...v1.0.0-beta.12>
 [1.0.0-beta.11]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.10...v1.0.0-beta.11>
