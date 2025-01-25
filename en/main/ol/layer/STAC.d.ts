@@ -356,20 +356,10 @@ declare class STACLayer extends LayerGroup {
     private addChildren_;
     /**
      * @private
-     * @return {Promise} Resolves when complete.
-     */
-    private addStacAssets_;
-    /**
-     * @private
      * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
      */
     private addPreviewImage_;
-    /**
-     * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    addWebMapLinks_(): Promise<Array<Layer> | undefined>;
     /**
      * Adds a layer for a link that implements the web-map-links extension.
      * Supports: PMTiles, TileJSON, WMS, WMTS, XYZ

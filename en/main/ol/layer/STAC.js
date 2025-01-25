@@ -337,43 +337,6 @@ class STACLayer extends LayerGroup {
     }
     /**
      * @private
-     * @return {Promise} Resolves when complete.
-     */
-    async addStacAssets_() {
-        let assets = this.getAssets();
-        // No assets provided by the user, guess a sensible default visualization
-        if (assets === null) {
-            assets = [];
-            // No specific asset given by the user, visualize the default geotiff
-            const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
-            let layer;
-            // Try to visualize the default GeoTIFF first
-            if (geotiff && this.displayOverview_) {
-                layer = await this.addGeoTiff_(geotiff);
-            }
-            // If no GeoTIFF is available or it can't be shown (e.g. error),
-            // try to visualize the default thumbnail
-            if (this.displayPreview_ && (!geotiff || !layer)) {
-                // This may return Links or Assets
-                const thumbnails = this.getData().getThumbnails(true, 'overview');
-                if (thumbnails.length > 0) {
-                    await this.addPreviewImage_(thumbnails[0]);
-                }
-            }
-        }
-        // Show the assets provided by the user
-        const promises = assets.map(async (ref) => {
-            if (ref && ref.isGeoTIFF()) {
-                return await this.addGeoTiff_(ref);
-            }
-            if (ref && ref.canBrowserDisplayImage()) {
-                return await this.addPreviewImage_(ref);
-            }
-        });
-        return await Promise.all(promises);
-    }
-    /**
-     * @private
      * @param {Asset|Link} [image] A STAC Link or Asset
      * @return {Promise<ImageLayer|undefined>} Resolves with am ImageLayer or udnefined when complete.
      */
@@ -402,16 +365,6 @@ class STACLayer extends LayerGroup {
         });
         this.addLayer_(layer, image);
         return layer;
-    }
-    /**
-     * Adds a layer for the web map links available in the STAC links.
-     * @return {Promise<Array<Layer>|undefined>} Resolves with a Layer or undefined when complete.
-     */
-    async addWebMapLinks_() {
-        const links = this.getWebMapLinks();
-        if (links.length > 0) {
-            return await this.addLayerForLink(links[0]);
-        }
     }
     /**
      * Adds a layer for a link that implements the web-map-links extension.
@@ -663,20 +616,62 @@ class STACLayer extends LayerGroup {
                 oldLayers.removeAt(i);
             }
         }
-        // Add new layers
+        // Add layers by priority
         const data = this.getData();
-        if (data.isItemCollection() || data.isCollectionCollection()) {
-            await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
+        // Show the web map links provided by the user
+        if (Array.isArray(this.displayWebMapLink_)) {
+            const promises = this.getWebMapLinks().map(async (link) => await this.addLayerForLink(link));
+            await Promise.all(promises);
         }
-        else if (data.isItem() || data.isCollection()) {
-            await this.addStacAssets_();
-        }
-        if (this.displayWebMapLink_ &&
-            (Array.isArray(this.displayWebMapLink_) || this.hasOnlyBounds())) {
-            await this.addWebMapLinks_();
-        }
+        // Show children if provided
         if (this.children_) {
             await this.addChildren_(this.children_, this.childrenOptions_);
+        }
+        // Show the assets provided by the user
+        const assets = this.getAssets();
+        if (assets) {
+            const promises = assets.map(async (ref) => {
+                if (ref && ref.isGeoTIFF()) {
+                    return await this.addGeoTiff_(ref);
+                }
+                if (ref && ref.canBrowserDisplayImage()) {
+                    return await this.addPreviewImage_(ref);
+                }
+            });
+            await Promise.all(promises);
+        }
+        // If the user didn't provide any specific asset/map link/children to show,
+        // choose a sensible default visualization
+        if (this.hasOnlyBounds()) {
+            // Show the ItemCollection/CollectionCollection entries
+            if (data.isItemCollection() || data.isCollectionCollection()) {
+                await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
+            }
+            else {
+                // Show web map links
+                const links = this.getWebMapLinks();
+                if (links.length > 0) {
+                    await this.addLayerForLink(links[0]);
+                }
+                else {
+                    // Find an asset that we can visualize
+                    const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
+                    let layer;
+                    // Try to visualize the default GeoTIFF first
+                    if (geotiff && this.displayOverview_) {
+                        layer = await this.addGeoTiff_(geotiff);
+                    }
+                    // If no GeoTIFF is available or it can't be shown (e.g. error),
+                    // try to visualize the default thumbnail
+                    if (this.displayPreview_ && (!geotiff || !layer)) {
+                        // This may return Links or Assets
+                        const thumbnails = this.getData().getThumbnails(true, 'overview');
+                        if (thumbnails.length > 0) {
+                            await this.addPreviewImage_(thumbnails[0]);
+                        }
+                    }
+                }
+            }
         }
     }
     /**
