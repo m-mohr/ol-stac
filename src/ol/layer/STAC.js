@@ -33,8 +33,8 @@ import {
   getSpecificWebMapUrl,
   getWmtsCapabilities,
 } from '../util.js';
+import {fixGeoJson, toGeoJSON} from 'stac-js/src/geo.js';
 import {geojsonMediaType} from 'stac-js/src/mediatypes.js';
-import {toGeoJSON} from 'stac-js/src/geo.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
@@ -368,8 +368,9 @@ class STACLayer extends LayerGroup {
     this.getLayers().on('add', updateBoundsStyle);
     this.getLayers().on('remove', updateBoundsStyle);
 
-    const wait1 = this.setChildren(children).catch(this.handleError_);
-    const wait2 = this.setAssets(assets).catch(this.handleError_);
+    const errorHandler = (error) => this.handleError_(error);
+    const wait1 = this.setChildren(children).catch(errorHandler);
+    const wait2 = this.setAssets(assets).catch(errorHandler);
     Promise.all([wait1, wait2]).then(() => {
       /**
        * Invoked once all layers are shown on the map.
@@ -785,6 +786,7 @@ class STACLayer extends LayerGroup {
     const source = new VectorSource({
       format,
       loader: (extent, resolution, projection) => {
+        geojson = fixGeoJson(geojson);
         const features = format.readFeatures(geojson, {
           featureProjection: projection,
         });

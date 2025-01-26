@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix GeoJSON coordinates before projection
+- Ensure bounding boxes are valid
+- STAC Collection with Items example shows all items correctly
+
 ## [1.0.0-rc.3] - 2025-01-25
 
 - Support visualizing GeoJSON
