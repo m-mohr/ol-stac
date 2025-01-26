@@ -24,8 +24,8 @@ import { isEmpty } from 'ol/extent.js';
 import { transformExtent } from 'ol/proj.js';
 import create, { Asset, ItemCollection, STAC } from 'stac-js';
 import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
-import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
 import { fixGeoJson, toGeoJSON } from 'stac-js/src/geo.js';
+import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
