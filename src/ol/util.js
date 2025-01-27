@@ -5,11 +5,13 @@
 import VectorLayer from 'ol/layer/Vector.js';
 import {Fill, Stroke, Style} from 'ol/style.js';
 import {STAC} from 'stac-js';
-import {WMTSCapabilities} from 'ol/format.js';
 import {
   fromEPSGCode,
   isRegistered as isProj4Registered,
 } from 'ol/proj/proj4.js';
+
+export const LABEL_EXTENSION =
+  'https://stac-extensions.github.io/label/v1.*/schema.json';
 
 /**
  * The default style for rendering bounds of the STAC main entities.
@@ -173,21 +175,4 @@ export function getSpecificWebMapUrl(link) {
     }
   }
   return url;
-}
-
-/**
- * Gets the WMTS capabilities from the given web-map-links URL.
- * @param {string} url Base URL for the WMTS
- * @return {Promise<Object|null>} Resolves with the WMTS Capabilities object
- */
-export async function getWmtsCapabilities(url) {
-  try {
-    const urlObj = new URL(url);
-    urlObj.searchParams.set('service', 'wmts');
-    urlObj.searchParams.set('request', 'GetCapabilities');
-    const response = await fetch(urlObj);
-    return new WMTSCapabilities().read(await response.text());
-  } catch (error) {
-    return null;
-  }
 }
