@@ -951,16 +951,15 @@ class STACLayer extends LayerGroup {
             this.children_ = childs.getAll();
         }
         else if (isObject(childs) && childs.type === 'FeatureCollection') {
-            childs = create(childs).getAll();
+            this.children_ = create(childs, !this.disableMigration_).getAll();
         }
         else if (Array.isArray(childs)) {
-            childs = childs.map((child) => {
+            this.children_ = childs.map((child) => {
                 if (child instanceof STAC) {
                     return child;
                 }
-                return create(child);
+                return create(child, !this.disableMigration_);
             });
-            this.children_ = childs;
         }
         else {
             this.children_ = null; // Invalid input
