@@ -18,9 +18,9 @@ export type Options = {
     data?: STAC | Asset | any;
     /**
      * For STAC Catalogs and Collections, any child entites
-     * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+     * to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.
      */
-    children?: ItemCollection | any | Array<STAC> | string | null;
+    children?: ItemCollection | any | Array<STAC | any> | null;
     /**
      * The the given children, apply the given options.
      */
@@ -92,7 +92,7 @@ export type Options = {
      * A function that generates a URL template for a tile server (XYZ),
      * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
      */
-    buildTileUrlTemplate?: ((arg0: Asset) => string | null) | undefined;
+    buildTileUrlTemplate?: ((arg0: (Asset | Link)) => string | null) | undefined;
     /**
      * Uses the given URL template only when the client-side GeoTIFF rendering fails.
      */
@@ -148,6 +148,12 @@ export type Options = {
      * Only enable this if you are sure that the STAC object is already in the latest version.
      */
     disableMigration?: boolean | undefined;
+    /**
+     * Sets a custom function to make HTTP requests with.
+     * The first parameter is the URL to request and the output is a promise that resolves with the response body.
+     * The second parameter is the return type, either `json` (default) or `text`.
+     */
+    httpRequestFn?: ((arg0: string, arg1: string) => (any)) | undefined;
 };
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
@@ -173,8 +179,8 @@ export type Options = {
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
- * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
- * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {ItemCollection|Object|Array<STAC|Object>|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.
  * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
@@ -207,7 +213,7 @@ export type Options = {
  * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
- * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
+ * @property {function((Asset|Link)):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
  * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
  * @property {boolean} [useTileLayerAsFallback=false] Uses the given URL template only when the client-side GeoTIFF rendering fails.
  * @property {number} [opacity=1] Opacity (0, 1).
@@ -229,6 +235,9 @@ export type Options = {
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
  * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
  * Only enable this if you are sure that the STAC object is already in the latest version.
+ * @property {function(string,string):(*)} [httpRequestFn=null] Sets a custom function to make HTTP requests with.
+ * The first parameter is the URL to request and the output is a promise that resolves with the response body.
+ * The second parameter is the return type, either `json` (default) or `text`.
  */
 /**
  * @classdesc
@@ -302,7 +311,7 @@ declare class STACLayer extends LayerGroup {
      */
     displayWebMapLink_: string | boolean | Array<Link | string>;
     /**
-     * @type {function(Asset):string|null}
+     * @type {function((Asset|Link)):string|null}
      * @private
      */
     private buildTileUrlTemplate_;
@@ -341,6 +350,14 @@ declare class STACLayer extends LayerGroup {
      * @private
      */
     private eventQueue_;
+    /**
+     * Default function make HTTP requests with.
+     *
+     * @param {string} url The URL to request and the output is a promise that resolves with the response body.
+     * @param {string} responseType The return type, either `json` (default) or `text`.
+     * @return {Promise<*>} The (parsed) response body.
+     */
+    fetch_(url: string, responseType?: string): Promise<any>;
     /**
      * Returns the vector layer that visualizes the bounds / footprint.
      * @return {VectorLayer|null} The vector layer for the bounds
@@ -456,6 +473,13 @@ declare class STACLayer extends LayerGroup {
      */
     private createGeoJsonLayer_;
     /**
+     * Adds GeoJSON labels and GeoTIFF source imagery to the map based on the label extension.
+     *
+     * @return {Promise<Layer|undefined>} The layer added to the map.
+     * @private
+     */
+    private addLabelExtension_;
+    /**
      * @private
      */
     private updateLayers_;
@@ -480,12 +504,15 @@ declare class STACLayer extends LayerGroup {
     setAssets(assets: Array<string | Asset> | null): Promise<any>;
     /**
      * Updates the children STAC entities to be rendered.
-     * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     *
+     * If an object is passed, it must be a GeoJSON FeatureCollection.
+     *
+     * @param {ItemCollection|Object|Array<STAC|Object>|null} childs The children to show.
      * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
      */
-    setChildren(childs: ItemCollection | any | Array<STAC> | string | null, options?: Options | undefined): Promise<any>;
+    setChildren(childs: ItemCollection | any | Array<STAC | any> | null, options?: Options | undefined): Promise<any>;
     /**
      * Get the STAC object.
      *
@@ -496,10 +523,10 @@ declare class STACLayer extends LayerGroup {
     /**
      * Get the children STAC entities.
      *
-     * @return {STAC} The STAC child entities.
+     * @return {Array<STAC>} The STAC child entities.
      * @api
      */
-    getChildren(): STAC;
+    getChildren(): Array<STAC>;
     /**
      * Get the STAC assets shown.
      *
@@ -519,6 +546,13 @@ declare class STACLayer extends LayerGroup {
      * @return {SourceType|null} The layer source (or `null` if not yet set).
      */
     getSource(): SourceType | null;
+    /**
+     * Gets the WMTS capabilities from the given web-map-links URL.
+     * @param {string} url Base URL for the WMTS
+     * @return {Promise<Object|null>} Resolves with the WMTS Capabilities object
+     * @private
+     */
+    private getWmtsCapabilities_;
 }
 import SourceType from '../source/type.js';
 import LayerGroup from 'ol/layer/Group.js';

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>OL STAC v1.0.0-rc.3 API - Module: ol/layer/STAC</title>
+    <title>OL STAC v1.0.0-rc.4 API - Module: ol/layer/STAC</title>
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
@@ -86,7 +86,7 @@
           <h1 class="page-title" data-filename="module-ol_layer_STAC.html">Module: ol/layer/STAC</h1>
           <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
             <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            This documentation is for OL STAC v<span id="package-version">1.0.0-rc.3</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+            This documentation is for OL STAC v<span id="package-version">1.0.0-rc.4</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
           </div>
           
 
@@ -463,10 +463,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
 <span class="param-type">Object</span>
 |
 
-<span class="param-type">Array.&lt;STAC></span>
-|
-
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;(STAC|Object)></span>
 |
 
 <span class="param-type">null</span>
@@ -480,7 +477,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
 
             <td class="description last">
                 <p>For STAC Catalogs and Collections, any child entites
-to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.</p>
+to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.</p>
                 
             </td>
         </tr>
@@ -1098,6 +1095,33 @@ be visible.</p>
             <td class="description last">
                 <p>Disable the migration of the STAC object to the latest version.
 Only enable this if you are sure that the STAC object is already in the latest version.</p>
+                
+            </td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>httpRequestFn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+                
+                    <br>(defaults to null)
+                
+            
+            </td>
+
+            <td class="description last">
+                <p>Sets a custom function to make HTTP requests with.
+The first parameter is the URL to request and the output is a promise that resolves with the response body.
+The second parameter is the return type, either <code>json</code> (default) or <code>text</code>.</p>
                 
             </td>
         </tr>

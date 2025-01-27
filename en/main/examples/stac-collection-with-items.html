@@ -47,7 +47,7 @@
     <div class="container-fluid line-numbers">
       <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
         <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        This example uses OL STAC v<span>1.0.0-rc.3</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+        This example uses OL STAC v<span>1.0.0-rc.4</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
       </div>
 
 
@@ -78,9 +78,10 @@
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-from-object.html&quot;&gt;STAC Item from an object&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-tileserver.html&quot;&gt;STAC Item with COG rendered by a tile server&lt;/a&gt;
                   &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-geojson.html&quot;&gt;STAC Item with GeoJSON assets&lt;/a&gt;
+                  &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item-labels.html&quot;&gt;STAC Item with Label Extension&lt;/a&gt;
                   &lt;/ul&gt;"
                 tabindex="0"
-                >11</a>
+                >12</a>
             </span>
             <span class="badge-group">
               <a
@@ -220,7 +221,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-collection-with-items&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol-stac&quot;: &quot;1.0.0-rc.3&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0-rc.4&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {
@@ -261,7 +262,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         const branchSearch = url.match(/\/([^\/]*)\/examples\//);
         const storageKey = 'ol-dismissed=-' + latestVersion;
         const dismissed = localStorage.getItem(storageKey) === 'true';
-        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.3' != latestVersion) {
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.4' != latestVersion) {
           const link = url.replace(branchSearch[0], '/latest/examples/');
           fetch(link, {method: 'head'}).then(function(response) {
             const a = document.getElementById('latest-link');

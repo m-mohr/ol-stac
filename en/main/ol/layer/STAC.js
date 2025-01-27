@@ -22,10 +22,12 @@ import XYZ from 'ol/source/XYZ.js';
 import { PMTilesRasterSource, PMTilesVectorSource } from 'ol-pmtiles';
 import { isEmpty } from 'ol/extent.js';
 import { transformExtent } from 'ol/proj.js';
-import create, { Asset, ItemCollection, STAC } from 'stac-js';
-import { defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, getWmtsCapabilities, } from '../util.js';
+import create, { APICollection, Asset, Item, ItemCollection, STAC, } from 'stac-js';
+import { LABEL_EXTENSION, defaultBoundsStyle, defaultCollectionStyle, getBoundsStyle, getGeoTiffSourceInfoFromAsset, getProjection, getSpecificWebMapUrl, } from '../util.js';
+import { WMTSCapabilities } from 'ol/format.js';
 import { fixGeoJson, toGeoJSON } from 'stac-js/src/geo.js';
 import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
+import { isObject } from 'stac-js/src/utils.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
@@ -50,8 +52,8 @@ import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
- * @property {ItemCollection|Object|Array<STAC>|string|null} [children=null] For STAC Catalogs and Collections, any child entites
- * to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.
+ * @property {ItemCollection|Object|Array<STAC|Object>|null} [children=null] For STAC Catalogs and Collections, any child entites
+ * to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.
  * @property {Options} [childrenOptions={}] The the given children, apply the given options.
  * @property {Array<string|Asset>|null} [assets=null] The selector for the assets to be rendered,
  * only for STAC Items and Collections.
@@ -84,7 +86,7 @@ import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
  * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
- * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
+ * @property {function((Asset|Link)):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
  * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
  * @property {boolean} [useTileLayerAsFallback=false] Uses the given URL template only when the client-side GeoTIFF rendering fails.
  * @property {number} [opacity=1] Opacity (0, 1).
@@ -106,6 +108,9 @@ import { geojsonMediaType } from 'stac-js/src/mediatypes.js';
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
  * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
  * Only enable this if you are sure that the STAC object is already in the latest version.
+ * @property {function(string,string):(*)} [httpRequestFn=null] Sets a custom function to make HTTP requests with.
+ * The first parameter is the URL to request and the output is a promise that resolves with the response body.
+ * The second parameter is the return type, either `json` (default) or `text`.
  */
 /**
  * @classdesc
@@ -191,7 +196,7 @@ class STACLayer extends LayerGroup {
          */
         this.displayWebMapLink_ = options.displayWebMapLink || false;
         /**
-         * @type {function(Asset):string|null}
+         * @type {function((Asset|Link)):string|null}
          * @private
          */
         this.buildTileUrlTemplate_ = options.buildTileUrlTemplate || null;
@@ -230,6 +235,9 @@ class STACLayer extends LayerGroup {
          * @private
          */
         this.eventQueue_ = [];
+        if (options.httpRequestFn) {
+            this.fetch_ = options.httpRequestFn;
+        }
         if (options.data) {
             try {
                 this.configure_(options.data, options.url, options.children, options.assets, options.bands);
@@ -242,10 +250,29 @@ class STACLayer extends LayerGroup {
         if (!options.url) {
             throw new Error('Either url or data must be provided');
         }
-        fetch(options.url)
-            .then((response) => response.json())
+        this.fetch_(options.url)
             .then((data) => this.configure_(data, options.url, options.children, options.assets, options.bands))
             .catch((error) => this.handleError_(error));
+    }
+    /**
+     * Default function make HTTP requests with.
+     *
+     * @param {string} url The URL to request and the output is a promise that resolves with the response body.
+     * @param {string} responseType The return type, either `json` (default) or `text`.
+     * @return {Promise<*>} The (parsed) response body.
+     */
+    async fetch_(url, responseType = 'json') {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Unexpected response from ${url}: ${response.status}`);
+        }
+        if (responseType === 'json') {
+            return await response.json();
+        }
+        if (responseType === 'text') {
+            return await response.text();
+        }
+        return null;
     }
     /**
      * Returns the vector layer that visualizes the bounds / footprint.
@@ -304,7 +331,7 @@ class STACLayer extends LayerGroup {
         else {
             stac = create(data, !this.disableMigration_);
         }
-        if (url && url.includes('://')) {
+        if (url && url.includes('://') && stac instanceof STAC) {
             stac.setAbsoluteUrl(url);
         }
         this.set('stac', stac);
@@ -505,7 +532,7 @@ class STACLayer extends LayerGroup {
                 }
                 break;
             case 'wmts':
-                const wmtsCapabilities = await getWmtsCapabilities(url);
+                const wmtsCapabilities = await this.getWmtsCapabilities_(url);
                 if (!wmtsCapabilities) {
                     return;
                 }
@@ -660,8 +687,7 @@ class STACLayer extends LayerGroup {
      */
     async addGeoJson_(asset) {
         try {
-            const response = await fetch(asset.getAbsoluteUrl());
-            const geojson = await response.json();
+            const geojson = await this.fetch_(asset.getAbsoluteUrl());
             const layer = this.createGeoJsonLayer_(geojson);
             this.addLayer_(layer, asset);
             return layer;
@@ -695,6 +721,59 @@ class STACLayer extends LayerGroup {
             style = defaultCollectionStyle;
         }
         return new VectorLayer({ source, style, visible });
+    }
+    /**
+     * Adds GeoJSON labels and GeoTIFF source imagery to the map based on the label extension.
+     *
+     * @return {Promise<Layer|undefined>} The layer added to the map.
+     * @private
+     */
+    async addLabelExtension_() {
+        const data = this.getData();
+        if (!(data instanceof Item)) {
+            return;
+        }
+        // determine the asset with the geojson labels
+        let assets = data.getAssetsWithRoles(['labels', 'labels-vector'], true);
+        let labelAsset;
+        if (assets.length > 1) {
+            labelAsset = assets.find((asset) => asset.roles.includes('labels-vector'));
+        }
+        if (!labelAsset) {
+            labelAsset = data.getAsset('vector_labels');
+        }
+        if (!labelAsset) {
+            assets = data
+                .getAssets()
+                .filter((asset) => asset.type === geojsonMediaType && !asset.roles);
+            if (assets.length === 1) {
+                labelAsset = assets[0];
+            }
+        }
+        // Add the source imagery
+        const sourceLinks = data.getLinksWithRels(['source']);
+        if (labelAsset && sourceLinks.length > 0) {
+            const promises = sourceLinks.map(async (link) => {
+                try {
+                    const response = await this.fetch_(link.getAbsoluteUrl());
+                    const stac = create(response);
+                    return stac;
+                }
+                catch (error) {
+                    this.handleError_(error);
+                    return null;
+                }
+            });
+            const items = (await Promise.all(promises)).filter((item) => item instanceof STAC);
+            await this.addChildren_(items, { displayFootprint: false });
+        }
+        // Add the GeoJSON labels
+        try {
+            await this.addGeoJson_(labelAsset);
+        }
+        catch (error) {
+            this.handleError_(error);
+        }
     }
     /**
      * @private
@@ -742,10 +821,17 @@ class STACLayer extends LayerGroup {
         // choose a sensible default visualization
         if (this.hasOnlyBounds()) {
             // Show the ItemCollection/CollectionCollection entries
-            if (data.isItemCollection() || data.isCollectionCollection()) {
-                await this.addChildren_(this.getData().getAll(), this.childrenOptions_);
+            if (data instanceof APICollection) {
+                await this.addChildren_(data.getAll(), this.childrenOptions_);
             }
-            else {
+            else if (data instanceof STAC) {
+                // Show label extension
+                if (data.isItem() &&
+                    data.supportsExtension(LABEL_EXTENSION) &&
+                    data.getMetadata('label:type') === 'vector') {
+                    await this.addLabelExtension_();
+                    return;
+                }
                 // Show web map links
                 const links = this.getWebMapLinks();
                 if (links.length > 0) {
@@ -753,7 +839,7 @@ class STACLayer extends LayerGroup {
                 }
                 else {
                     // Find an asset that we can visualize
-                    const geotiff = this.getData().getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
+                    const geotiff = data.getDefaultGeoTIFF(true, !this.displayGeoTiffByDefault_);
                     let layer;
                     // Try to visualize the default GeoTIFF first
                     if (geotiff && this.displayOverview_) {
@@ -763,7 +849,7 @@ class STACLayer extends LayerGroup {
                     // try to visualize the default thumbnail
                     if (this.displayPreview_ && (!geotiff || !layer)) {
                         // This may return Links or Assets
-                        const thumbnails = this.getData().getThumbnails(true, 'overview');
+                        const thumbnails = data.getThumbnails(true, 'overview');
                         if (thumbnails.length > 0) {
                             await this.addPreviewImage_(thumbnails[0]);
                         }
@@ -788,11 +874,15 @@ class STACLayer extends LayerGroup {
      * @api
      */
     getWebMapLinks() {
+        const data = this.getData();
+        if (data instanceof Asset) {
+            return [];
+        }
         let types = ['xyz', 'tilejson', 'pmtiles', 'wmts', 'wms']; // This also defines the priority
         if (typeof this.displayWebMapLink_ === 'string') {
             types = [this.displayWebMapLink_];
         }
-        let mapLinks = this.getData().getLinksWithRels(types);
+        let mapLinks = data.getLinksWithRels(types);
         if (Array.isArray(this.displayWebMapLink_)) {
             mapLinks = this.displayWebMapLink_
                 .map((link) => {
@@ -824,9 +914,10 @@ class STACLayer extends LayerGroup {
      */
     async setAssets(assets) {
         if (Array.isArray(assets)) {
+            const data = this.getData();
             this.assets_ = assets.map((asset) => {
-                if (typeof asset === 'string') {
-                    return this.getData().getAsset(asset);
+                if (data instanceof STAC && typeof asset === 'string') {
+                    return data.getAsset(asset);
                 }
                 if (!(asset instanceof Asset)) {
                     return new Asset(asset);
@@ -841,7 +932,10 @@ class STACLayer extends LayerGroup {
     }
     /**
      * Updates the children STAC entities to be rendered.
-     * @param {ItemCollection|Object|Array<STAC>|string|null} childs The children to show.
+     *
+     * If an object is passed, it must be a GeoJSON FeatureCollection.
+     *
+     * @param {ItemCollection|Object|Array<STAC|Object>|null} childs The children to show.
      * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
@@ -852,15 +946,11 @@ class STACLayer extends LayerGroup {
             this.childrenOptions_ = {};
             return;
         }
-        if (typeof childs === 'string') {
-            const response = await fetch(childs);
-            childs = await response.json();
-        }
-        if (typeof childs === 'object' && childs.type === 'FeatureCollection') {
-            childs = childs.features;
-        }
         if (childs instanceof ItemCollection) {
             this.children_ = childs.getAll();
+        }
+        else if (isObject(childs) && childs.type === 'FeatureCollection') {
+            childs = create(childs).getAll();
         }
         else if (Array.isArray(childs)) {
             childs = childs.map((child) => {
@@ -892,7 +982,7 @@ class STACLayer extends LayerGroup {
     /**
      * Get the children STAC entities.
      *
-     * @return {STAC} The STAC child entities.
+     * @return {Array<STAC>} The STAC child entities.
      * @api
      */
     getChildren() {
@@ -956,6 +1046,24 @@ class STACLayer extends LayerGroup {
      */
     getSource() {
         return null;
+    }
+    /**
+     * Gets the WMTS capabilities from the given web-map-links URL.
+     * @param {string} url Base URL for the WMTS
+     * @return {Promise<Object|null>} Resolves with the WMTS Capabilities object
+     * @private
+     */
+    async getWmtsCapabilities_(url) {
+        try {
+            const urlObj = new URL(url);
+            urlObj.searchParams.set('service', 'wmts');
+            urlObj.searchParams.set('request', 'GetCapabilities');
+            const response = await this.fetch_(urlObj.toString(), 'text');
+            return new WMTSCapabilities().read(response);
+        }
+        catch (error) {
+            return null;
+        }
     }
 }
 export default STACLayer;

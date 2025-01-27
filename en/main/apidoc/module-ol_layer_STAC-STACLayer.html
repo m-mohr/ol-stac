@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>OL STAC v1.0.0-rc.3 API - Class: STACLayer</title>
+    <title>OL STAC v1.0.0-rc.4 API - Class: STACLayer</title>
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
@@ -99,7 +99,7 @@
           <h1 class="page-title" data-filename="module-ol_layer_STAC-STACLayer.html">Class: STACLayer</h1>
           <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
             <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            This documentation is for OL STAC v<span id="package-version">1.0.0-rc.3</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+            This documentation is for OL STAC v<span id="package-version">1.0.0-rc.4</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
           </div>
           
 
@@ -146,8 +146,8 @@ The layers created by this LayerGroup all have a 'stac' value that can be retrie
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L132">line 132</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L143">line 143</a>
         </div>
         
     </div>
@@ -257,10 +257,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
 <span class="param-type">Object</span>
 |
 
-<span class="param-type">Array.&lt;STAC></span>
-|
-
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;(STAC|Object)></span>
 |
 
 <span class="param-type">null</span>
@@ -277,7 +274,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
             <td  class="description last">
                 
                 <p>For STAC Catalogs and Collections, any child entites
-to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.</p></td>
+to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.</p></td>
         </tr>
 
 	
@@ -946,6 +943,35 @@ Only enable this if you are sure that the STAC object is already in the latest v
         </tr>
 
 	
+
+        <tr class="">
+            
+                <td class="name"><code>httpRequestFn</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+                
+                    (defaults to null)
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>Sets a custom function to make HTTP requests with.
+The first parameter is the URL to request and the output is a promise that resolves with the response body.
+The second parameter is the return type, either <code>json</code> (default) or <code>text</code>.</p></td>
+        </tr>
+
+	
 	</tbody>
 </table>
     
@@ -1054,8 +1080,8 @@ Only enable this if you are sure that the STAC object is already in the latest v
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L501">line 501</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L536">line 536</a>
         </div>
         
     </div>
@@ -1197,8 +1223,8 @@ Resolves with a list of layers or undefined when complete.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L1024">line 1024</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1129">line 1129</a>
         </div>
         
     </div>
@@ -1287,8 +1313,8 @@ The STAC assets.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L1064">line 1064</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1169">line 1169</a>
         </div>
         
     </div>
@@ -1377,8 +1403,8 @@ Attributions for this layer.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L303">line 303</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L338">line 338</a>
         </div>
         
     </div>
@@ -1460,15 +1486,15 @@ The vector layer for the bounds
         <div class="anchor" id="getChildren">
         </div>
         <h4 class="name">
-            getChildren<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{STAC}</span>
+            getChildren<span class="signature">()</span><span class="fa fa-arrow-circle-right"></span><span class="type-signature returnType">{Array.&lt;STAC>}</span>
             
             
 
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L1014">line 1014</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1119">line 1119</a>
         </div>
         
     </div>
@@ -1557,8 +1583,8 @@ The STAC child entities.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L1004">line 1004</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1109">line 1109</a>
         </div>
         
     </div>
@@ -1647,8 +1673,8 @@ The STAC object.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L1037">line 1037</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1142">line 1142</a>
         </div>
         
     </div>
@@ -1740,8 +1766,8 @@ The layer extent.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L905">line 905</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1006">line 1006</a>
         </div>
         
     </div>
@@ -1830,8 +1856,8 @@ An array of links.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L892">line 892</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L993">line 993</a>
         </div>
         
     </div>
@@ -1920,8 +1946,8 @@ An array of links.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L315">line 315</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L350">line 350</a>
         </div>
         
     </div>
@@ -2011,8 +2037,8 @@ Is the layer empty?
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L941">line 941</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1047">line 1047</a>
         </div>
         
     </div>
@@ -2149,8 +2175,8 @@ Resolves when all assets are rendered.
         </h4>
         
         <div class="tag-source">
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.3/src/ol/layer/STAC.js#L965">line 965</a>
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js">layer/STAC.js</a>,
+            <a href="https://github.com/m-mohr/ol-stac/blob/v1.0.0-rc.4/src/ol/layer/STAC.js#L1075">line 1075</a>
         </div>
         
     </div>
@@ -2164,6 +2190,7 @@ Resolves when all assets are rendered.
     
     <div class="description">
         <p>Updates the children STAC entities to be rendered.</p>
+<p>If an object is passed, it must be a GeoJSON FeatureCollection.</p>
     </div>
     
 
@@ -2206,10 +2233,7 @@ Resolves when all assets are rendered.
 <span class="param-type">Object</span>
 |
 
-<span class="param-type">Array.&lt;STAC></span>
-|
-
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;(STAC|Object)></span>
 |
 
 <span class="param-type">null</span>
@@ -2329,10 +2353,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
 <span class="param-type">Object</span>
 |
 
-<span class="param-type">Array.&lt;STAC></span>
-|
-
-<span class="param-type">string</span>
+<span class="param-type">Array.&lt;(STAC|Object)></span>
 |
 
 <span class="param-type">null</span>
@@ -2349,7 +2370,7 @@ Can also be used as url for data, if it is absolute and doesn't contain a self l
             <td  class="description last">
                 
                 <p>For STAC Catalogs and Collections, any child entites
-to show. Can be STAC ItemCollections (as ItemCollection, GeoJSON FeatureCollection, or URL) or a list of STAC entities.</p></td>
+to show. Can be STAC ItemCollections (as ItemCollection or GeoJSON FeatureCollection) or a list of STAC entities.</p></td>
         </tr>
 
 	
@@ -3015,6 +3036,35 @@ be visible.</p></td>
                 
                 <p>Disable the migration of the STAC object to the latest version.
 Only enable this if you are sure that the STAC object is already in the latest version.</p></td>
+        </tr>
+
+	
+
+        <tr class="">
+            
+                <td class="name"><code>httpRequestFn</code></td>
+            
+
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+                
+                    (defaults to null)
+                
+            
+            </td>
+
+            
+
+            <td  class="description last">
+                
+                <p>Sets a custom function to make HTTP requests with.
+The first parameter is the URL to request and the output is a promise that resolves with the response body.
+The second parameter is the return type, either <code>json</code> (default) or <code>text</code>.</p></td>
         </tr>
 
 	

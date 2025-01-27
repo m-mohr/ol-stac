@@ -37,12 +37,7 @@ export function getBoundsStyle(originalStyle?: Style | undefined, layerGroup?: i
  * @return {string|null} Specific URL
  */
 export function getSpecificWebMapUrl(link: any): string | null;
-/**
- * Gets the WMTS capabilities from the given web-map-links URL.
- * @param {string} url Base URL for the WMTS
- * @return {Promise<Object|null>} Resolves with the WMTS Capabilities object
- */
-export function getWmtsCapabilities(url: string): Promise<any | null>;
+export const LABEL_EXTENSION: "https://stac-extensions.github.io/label/v1.*/schema.json";
 /**
  * The default style for rendering bounds of the STAC main entities.
  * @type {Style}
