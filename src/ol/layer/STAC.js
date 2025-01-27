@@ -102,7 +102,7 @@ import {isObject} from 'stac-js/src/utils.js';
  * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
- * @property {function(Asset):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
+ * @property {function((Asset|Link)):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
  * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
  * @property {boolean} [useTileLayerAsFallback=false] Uses the given URL template only when the client-side GeoTIFF rendering fails.
  * @property {number} [opacity=1] Opacity (0, 1).
@@ -124,7 +124,7 @@ import {isObject} from 'stac-js/src/utils.js';
  * @property {Object<string, *>} [properties] Arbitrary observable properties. Can be accessed with `#get()` and `#set()`. `stac` and `bounds` are reserved and may be overridden.
  * @property {boolean} [disableMigration=false] Disable the migration of the STAC object to the latest version.
  * Only enable this if you are sure that the STAC object is already in the latest version.
- * @property {function(string,string):*|null} [httpRequestFn=null] Sets a custom function to make HTTP requests with.
+ * @property {function(string,string):(*)} [httpRequestFn=null] Sets a custom function to make HTTP requests with.
  * The first parameter is the URL to request and the output is a promise that resolves with the response body.
  * The second parameter is the return type, either `json` (default) or `text`.
  */
@@ -226,7 +226,7 @@ class STACLayer extends LayerGroup {
     this.displayWebMapLink_ = options.displayWebMapLink || false;
 
     /**
-     * @type {function(Asset|Link):string|null}
+     * @type {function((Asset|Link)):string|null}
      * @private
      */
     this.buildTileUrlTemplate_ = options.buildTileUrlTemplate || null;

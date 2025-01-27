@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.4] - 2025-01-27
+
 - Fix GeoJSON coordinates before projection
 - Ensure bounding boxes are valid
 - STAC Collection with Items example shows all items correctly
+- Support for visualizing Items that implement the label extension (vector only)
 
-## [1.0.0-rc.3] - 2025-01-25
+## [1.0.0-rc.3] - 2025-01-26
 
 - Support visualizing GeoJSON
 - Replaced event `assetsready` with `layersready`
@@ -106,7 +109,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.3...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.4...HEAD>
+[1.0.0-rc.4]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.3...v1.0.0-rc.4>
 [1.0.0-rc.3]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.2...v1.0.0-rc.3>
 [1.0.0-rc.2]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.1...v1.0.0-rc.2>
 [1.0.0-rc.1]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-beta.12...v1.0.0-rc.1>
