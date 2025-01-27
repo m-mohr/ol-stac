@@ -348,8 +348,9 @@ class STACLayer extends LayerGroup {
    * @api
    */
   isEmpty() {
-    if (this.getLayers().getLength() <= 1) {
-      return true;
+    const count = this.getLayers().getLength();
+    if (count > 1) {
+      return false;
     }
     const bbox = this.getData()?.getBoundingBox();
     if (!bbox || isEmpty(bbox)) {
