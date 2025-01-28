@@ -32,35 +32,44 @@ export const defaultCollectionStyle = new Style({
     }),
 });
 /**
+ * @typedef {import('ol/Collection.js').default} Collection
+ * @template T
+ */
+/**
+ * @typedef {import('ol/Feature.js').default} Feature
+ */
+/**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
  * @param {STAC} [exclude=null] Excludes the given STAC entity from the list.
+ * @param {Collection<Feature>} [selectedFeatures=null] A collection to add the selected features to.
+ * @param {number} [hitTolerance=0] The hit tolerance in pixels.
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export async function getStacObjectsForEvent(event, exclude = null) {
-    const objects = event.map
-        .getAllLayers()
-        .filter((layer) => {
-        if (layer instanceof VectorLayer &&
-            layer.get('bounds') === true &&
-            layer.get('stac') instanceof STAC) {
-            if (exclude) {
+export async function getStacObjectsForEvent(event, exclude = null, selectedFeatures = null, hitTolerance = 0) {
+    const objects = new Set();
+    event.map.forEachFeatureAtPixel(event.pixel, 
+    // Callback for all features that were found
+    (feature, layer) => {
+        selectedFeatures.push(feature);
+        objects.add(layer.get('stac'));
+    }, {
+        // Options for forEachFeatureAtPixel
+        hitTolerance,
+        // Filter the layers upfront, this ensures the presence of a STAC object
+        // so that we don't need to check in the callback above
+        layerFilter(layer) {
+            if (layer instanceof VectorLayer && layer.get('bounds') === true) {
                 const stac = layer.get('stac');
-                if (stac.equals(exclude)) {
-                    return false;
+                if (stac instanceof STAC && (!exclude || !stac.equals(exclude))) {
+                    return true;
                 }
             }
-            const features = layer
-                .getSource()
-                .getFeaturesAtCoordinate(event.coordinate);
-            return features.length > 0;
-        }
-        return false;
-    })
-        .map((layer) => layer.get('stac'));
-    // Make sure we return no duplicates
-    return [...new Set(objects)];
+            return false;
+        },
+    });
+    return [...objects];
 }
 /**
  * Get the source info for the GeoTiff from the asset.

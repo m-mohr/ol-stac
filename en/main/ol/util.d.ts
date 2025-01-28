@@ -1,11 +1,20 @@
 /**
+ * @typedef {import('ol/Collection.js').default} Collection
+ * @template T
+ */
+/**
+ * @typedef {import('ol/Feature.js').default} Feature
+ */
+/**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
  * @param {STAC} [exclude=null] Excludes the given STAC entity from the list.
+ * @param {Collection<Feature>} [selectedFeatures=null] A collection to add the selected features to.
+ * @param {number} [hitTolerance=0] The hit tolerance in pixels.
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export function getStacObjectsForEvent(event: import("ol/MapBrowserEvent.js").default<any>, exclude?: any): Promise<Array<STAC>>;
+export function getStacObjectsForEvent(event: import("ol/MapBrowserEvent.js").default<any>, exclude?: any, selectedFeatures?: import("ol/Collection.js").default<any> | undefined, hitTolerance?: number | undefined): Promise<Array<STAC>>;
 /**
  * Get the source info for the GeoTiff from the asset.
  * @param {import('stac-js').Asset} asset The asset to read the information from.
@@ -50,5 +59,7 @@ export const defaultBoundsStyle: Style;
  * @api
  */
 export const defaultCollectionStyle: Style;
+export type Collection<T> = import("ol/Collection.js").default<any>;
+export type Feature = import('ol/Feature.js').default;
 import { Style } from 'ol/style.js';
 //# sourceMappingURL=util.d.ts.map
