@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Parameter to retrieve the features through `getStacObjectsForEvent`
+- Parameter to set the hit tolerance for `getStacObjectsForEvent`
+
 ## [1.0.0-rc.6] - 2025-01-28
 
 - Fix adding children through `setChildren`
