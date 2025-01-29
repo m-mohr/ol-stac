@@ -313,7 +313,7 @@ declare class STACLayer extends LayerGroup {
      */
     displayWebMapLink_: string | boolean | Array<Link | string>;
     /**
-     * @type {function((Asset|Link)):string|null}
+     * @type {function((Asset|Link)):Promise<string>|string|null}
      * @private
      */
     private buildTileUrlTemplate_;

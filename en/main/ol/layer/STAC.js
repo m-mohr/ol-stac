@@ -197,7 +197,7 @@ class STACLayer extends LayerGroup {
          */
         this.displayWebMapLink_ = options.displayWebMapLink || false;
         /**
-         * @type {function((Asset|Link)):string|null}
+         * @type {function((Asset|Link)):Promise<string>|string|null}
          * @private
          */
         this.buildTileUrlTemplate_ = options.buildTileUrlTemplate || null;
@@ -631,13 +631,13 @@ class STACLayer extends LayerGroup {
      * @private
      */
     async addTileLayerForImagery_(data) {
-        /**
-         * @type {import("ol/source/XYZ.js").Options}
-         */
         let url = this.buildTileUrlTemplate_(data);
         if (url instanceof Promise) {
             url = await url;
         }
+        /**
+         * @type {import("ol/source/XYZ.js").Options}
+         */
         let options = {
             crossOrigin: this.crossOrigin_,
             url,
