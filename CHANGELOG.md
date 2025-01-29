@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- `buildTileUrlTemplate` supports async functions
+
 ## [1.0.0-rc.7] - 2025-01-29
 
 - Parameter to retrieve the features through `getStacObjectsForEvent`
