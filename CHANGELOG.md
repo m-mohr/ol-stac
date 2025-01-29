@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.7] - 2025-01-29
+
 - Parameter to retrieve the features through `getStacObjectsForEvent`
 - Parameter to set the hit tolerance for `getStacObjectsForEvent`
+- Properly visualize (GeoJSON) points and multi-points
+- Don't import from barrel files, see <https://github.com/openlayers/openlayers/issues/16461>
 
 ## [1.0.0-rc.6] - 2025-01-28
 
@@ -120,7 +124,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.6...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.7...HEAD>
+[1.0.0-rc.7]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.6...v1.0.0-rc.7>
 [1.0.0-rc.6]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.5...v1.0.0-rc.6>
 [1.0.0-rc.5]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.4...v1.0.0-rc.5>
 [1.0.0-rc.4]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.3...v1.0.0-rc.4>
