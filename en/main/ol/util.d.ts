@@ -61,5 +61,5 @@ export const defaultBoundsStyle: Style;
 export const defaultCollectionStyle: Style;
 export type Collection<T> = import("ol/Collection.js").default<any>;
 export type Feature = import('ol/Feature.js').default;
-import { Style } from 'ol/style.js';
+import Style from 'ol/style/Style.js';
 //# sourceMappingURL=util.d.ts.map

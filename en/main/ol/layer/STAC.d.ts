@@ -1,9 +1,9 @@
 export default STACLayer;
 export type Extent = import("ol/extent.js").Extent;
-export type Layer = import("ol/layer.js").Layer;
+export type Layer = import("ol/layer/Layer.js").default;
 export type Link = any;
 export type Map = import("ol/Map.js").default;
-export type Style = import('ol/style.js').Style;
+export type Style = import('ol/style/Style.js').default;
 export type SourceOptions = import('../source/type.js').SourceOptions;
 export type Options = {
     /**
@@ -159,7 +159,7 @@ export type Options = {
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("ol/layer.js").Layer} Layer
+ * @typedef {import("ol/layer/Layer.js").default} Layer
  */
 /**
  * @typedef {import("stac-js").Link} Link
@@ -168,7 +168,7 @@ export type Options = {
  * @typedef {import("ol/Map.js").default} Map
  */
 /**
- * @typedef {import('ol/style.js').Style} Style
+ * @typedef {import('ol/style/Style.js').default} Style
  */
 /**
  * @typedef {import('../source/type.js').SourceOptions} SourceOptions

@@ -1,8 +1,10 @@
 /**
  * @module ol/util
  */
+import Fill from 'ol/style/Fill.js';
+import Stroke from 'ol/style/Stroke.js';
+import Style from 'ol/style/Style.js';
 import VectorLayer from 'ol/layer/Vector.js';
-import { Fill, Stroke, Style } from 'ol/style.js';
 import { STAC } from 'stac-js';
 import { fromEPSGCode, isRegistered as isProj4Registered, } from 'ol/proj/proj4.js';
 export const LABEL_EXTENSION = 'https://stac-extensions.github.io/label/v1.*/schema.json';
