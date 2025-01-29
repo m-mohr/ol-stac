@@ -17,12 +17,9 @@ import VectorTileLayer from 'ol/layer/VectorTile.js';
 import VectorTileSource from 'ol/source/VectorTile.js';
 import WMS from 'ol/source/TileWMS.js';
 import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS.js';
+import WMTSCapabilities from 'ol/format/WMTSCapabilities.js';
 import WebGLTileLayer from 'ol/layer/WebGLTile.js';
 import XYZ from 'ol/source/XYZ.js';
-import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
-import {isEmpty} from 'ol/extent.js';
-import {transformExtent} from 'ol/proj.js';
-
 import create, {
   APICollection,
   Asset,
@@ -39,15 +36,17 @@ import {
   getProjection,
   getSpecificWebMapUrl,
 } from '../util.js';
-import {WMTSCapabilities} from 'ol/format.js';
+import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
 import {fixGeoJson, toGeoJSON} from 'stac-js/src/geo.js';
 import {geojsonMediaType} from 'stac-js/src/mediatypes.js';
+import {isEmpty} from 'ol/extent.js';
 import {isObject} from 'stac-js/src/utils.js';
+import {transformExtent} from 'ol/proj.js';
 /**
  * @typedef {import("ol/extent.js").Extent} Extent
  */
 /**
- * @typedef {import("ol/layer.js").Layer} Layer
+ * @typedef {import("ol/layer/Layer.js").default} Layer
  */
 /**
  * @typedef {import("stac-js").Link} Link
@@ -56,7 +55,7 @@ import {isObject} from 'stac-js/src/utils.js';
  * @typedef {import("ol/Map.js").default} Map
  */
 /**
- * @typedef {import('ol/style.js').Style} Style
+ * @typedef {import('ol/style/Style.js').default} Style
  */
 /**
  * @typedef {import('../source/type.js').SourceOptions} SourceOptions
