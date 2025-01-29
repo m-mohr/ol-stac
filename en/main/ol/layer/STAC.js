@@ -86,8 +86,9 @@ import { transformExtent } from 'ol/proj.js';
  * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
- * @property {function((Asset|Link)):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
+ * @property {function((Asset|Link)):Promise<string>|string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
  * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
+ * The function provided can return a promise (i.e. be async) or a string.
  * @property {boolean} [useTileLayerAsFallback=false] Uses the given URL template only when the client-side GeoTIFF rendering fails.
  * @property {number} [opacity=1] Opacity (0, 1).
  * @property {boolean} [visible=true] Visibility.
@@ -633,9 +634,13 @@ class STACLayer extends LayerGroup {
         /**
          * @type {import("ol/source/XYZ.js").Options}
          */
+        let url = this.buildTileUrlTemplate_(data);
+        if (url instanceof Promise) {
+            url = await url;
+        }
         let options = {
             crossOrigin: this.crossOrigin_,
-            url: this.buildTileUrlTemplate_(data),
+            url,
         };
         if (this.getSourceOptions_) {
             options = await this.getSourceOptions_(SourceType.XYZ, options, data);

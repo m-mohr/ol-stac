@@ -91,8 +91,9 @@ export type Options = {
     /**
      * A function that generates a URL template for a tile server (XYZ),
      * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
+     * The function provided can return a promise (i.e. be async) or a string.
      */
-    buildTileUrlTemplate?: ((arg0: (Asset | Link)) => string | null) | undefined;
+    buildTileUrlTemplate?: ((arg0: (Asset | Link)) => Promise<string> | string | null) | undefined;
     /**
      * Uses the given URL template only when the client-side GeoTIFF rendering fails.
      */
@@ -213,8 +214,9 @@ export type Options = {
  * @property {Style} [collectionStyle] The style for individual children in a list of STAC Items or Collections.
  * @property {null|string} [crossOrigin] For thumbnails: The `crossOrigin` attribute for loaded images / tiles.
  * See https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image for more detail.
- * @property {function((Asset|Link)):string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
+ * @property {function((Asset|Link)):Promise<string>|string|null} [buildTileUrlTemplate=null] A function that generates a URL template for a tile server (XYZ),
  * which will be used instead of the client-side GeoTIFF rendering (except if `useTileLayerAsFallback` is `true`).
+ * The function provided can return a promise (i.e. be async) or a string.
  * @property {boolean} [useTileLayerAsFallback=false] Uses the given URL template only when the client-side GeoTIFF rendering fails.
  * @property {number} [opacity=1] Opacity (0, 1).
  * @property {boolean} [visible=true] Visibility.
