@@ -1,10 +1,14 @@
 /**
- * @typedef {import('ol/Collection.js').default} Collection
- * @template T
+ * Creates a style for visualization.
+ *
+ * @param {ColorLike} strokeColor Stroke color
+ * @param {number} strokeWidth Stroke with
+ * @param {ColorLike} fillColor Fill color
+ * @param {number} circleRadius Circle/Point radius
+ * @return {Style} The style for visualization.
+ * @api
  */
-/**
- * @typedef {import('ol/Feature.js').default} Feature
- */
+export function getStyle(strokeColor: ColorLike, strokeWidth: number, fillColor?: ColorLike, circleRadius?: number): Style;
 /**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
@@ -46,7 +50,21 @@ export function getBoundsStyle(originalStyle?: Style | undefined, layerGroup?: i
  * @return {string|null} Specific URL
  */
 export function getSpecificWebMapUrl(link: any): string | null;
-export const LABEL_EXTENSION: "https://stac-extensions.github.io/label/v1.*/schema.json";
+/**
+ * @typedef {import('ol/colorlike.js').ColorLike} ColorLike
+ */
+/**
+ * @typedef {import('ol/Collection.js').default} Collection
+ * @template T
+ */
+/**
+ * @typedef {import('ol/Feature.js').default} Feature
+ */
+/**
+ * The pattern for the supported versions of the label extension.
+ * @type {string}
+ */
+export const LABEL_EXTENSION: string;
 /**
  * The default style for rendering bounds of the STAC main entities.
  * @type {Style}
@@ -59,6 +77,7 @@ export const defaultBoundsStyle: Style;
  * @api
  */
 export const defaultCollectionStyle: Style;
+export type ColorLike = import('ol/colorlike.js').ColorLike;
 export type Collection<T> = import("ol/Collection.js").default<any>;
 export type Feature = import('ol/Feature.js').default;
 import Style from 'ol/style/Style.js';

@@ -1,38 +1,16 @@
 /**
  * @module ol/util
  */
+import Circle from 'ol/style/Circle.js';
 import Fill from 'ol/style/Fill.js';
 import Stroke from 'ol/style/Stroke.js';
 import Style from 'ol/style/Style.js';
 import VectorLayer from 'ol/layer/Vector.js';
 import { STAC } from 'stac-js';
 import { fromEPSGCode, isRegistered as isProj4Registered, } from 'ol/proj/proj4.js';
-export const LABEL_EXTENSION = 'https://stac-extensions.github.io/label/v1.*/schema.json';
 /**
- * The default style for rendering bounds of the STAC main entities.
- * @type {Style}
- * @api
+ * @typedef {import('ol/colorlike.js').ColorLike} ColorLike
  */
-export const defaultBoundsStyle = new Style({
-    fill: new Fill({
-        color: 'rgba(255,255,255,0.4)',
-    }),
-    stroke: new Stroke({
-        color: '#3399CC',
-        width: 3,
-    }),
-});
-/**
- * The default style for rendering collection list children.
- * @type {Style}
- * @api
- */
-export const defaultCollectionStyle = new Style({
-    stroke: new Stroke({
-        color: '#ff9933',
-        width: 2,
-    }),
-});
 /**
  * @typedef {import('ol/Collection.js').default} Collection
  * @template T
@@ -40,6 +18,54 @@ export const defaultCollectionStyle = new Style({
 /**
  * @typedef {import('ol/Feature.js').default} Feature
  */
+/**
+ * The pattern for the supported versions of the label extension.
+ * @type {string}
+ */
+export const LABEL_EXTENSION = 'https://stac-extensions.github.io/label/v1.*/schema.json';
+/**
+ * Creates a style for visualization.
+ *
+ * @param {ColorLike} strokeColor Stroke color
+ * @param {number} strokeWidth Stroke with
+ * @param {ColorLike} fillColor Fill color
+ * @param {number} circleRadius Circle/Point radius
+ * @return {Style} The style for visualization.
+ * @api
+ */
+export function getStyle(strokeColor, strokeWidth, fillColor = 'rgba(255,255,255,0.4)', circleRadius = 5) {
+    let fill;
+    if (fillColor) {
+        fill = new Fill({
+            color: fillColor,
+        });
+    }
+    const stroke = new Stroke({
+        color: strokeColor,
+        width: strokeWidth,
+    });
+    return new Style({
+        image: new Circle({
+            fill,
+            stroke,
+            radius: circleRadius,
+        }),
+        fill,
+        stroke,
+    });
+}
+/**
+ * The default style for rendering bounds of the STAC main entities.
+ * @type {Style}
+ * @api
+ */
+export const defaultBoundsStyle = getStyle('#3399CC', 3);
+/**
+ * The default style for rendering collection list children.
+ * @type {Style}
+ * @api
+ */
+export const defaultCollectionStyle = getStyle('#ff9933', 2, null);
 /**
  * Get the STAC objects associated with this event, if any. Excludes API Collections.
  * @param {import('ol/MapBrowserEvent.js').default} event The asset to read the information from.
