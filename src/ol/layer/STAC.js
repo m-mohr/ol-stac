@@ -37,7 +37,7 @@ import {
   getSpecificWebMapUrl,
 } from '../util.js';
 import {PMTilesRasterSource, PMTilesVectorSource} from 'ol-pmtiles';
-import {fixGeoJson, toGeoJSON} from 'stac-js/src/geo.js';
+import {fixGeoJson, toGeoJSON, unionBoundingBox} from 'stac-js/src/geo.js';
 import {geojsonMediaType} from 'stac-js/src/mediatypes.js';
 import {isEmpty} from 'ol/extent.js';
 import {isObject} from 'stac-js/src/utils.js';
@@ -484,6 +484,15 @@ class STACLayer extends LayerGroup {
         displayFootprint: this.displayFootprint_,
       };
       const subgroup = new STACLayer(Object.assign(defaultOptions, options));
+      // If no data is given, but items are provided, then we don't get a map from the
+      // footprint layer so we need to get it from this new STAC Layer so that extent
+      // calculations etc. work.
+      // @ts-ignore
+      subgroup.on('sourceready', () => {
+        if (subgroup.map_) {
+          this.setMap_(subgroup.map_);
+        }
+      });
       this.addLayer_(subgroup, null);
       return subgroup;
     });
@@ -1153,12 +1162,18 @@ class STACLayer extends LayerGroup {
       return;
     }
 
+    let bbox;
     const data = this.getData();
-    if (!data) {
-      return;
+    if (data) {
+      bbox = data.getBoundingBox();
     }
 
-    const bbox = data.getBoundingBox();
+    const items = this.getChildren();
+    if (!bbox && items) {
+      const bboxes = items.map((item) => item.getBoundingBox());
+      bbox = unionBoundingBox(bboxes);
+    }
+
     if (bbox) {
       return transformExtent(bbox, 'EPSG:4326', view.getProjection());
     }
