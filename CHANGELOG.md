@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.8] - 2025-02-03
+
+- `getExtent`: Compute extent correctly when children are provided but no parent
 - `buildTileUrlTemplate` supports async functions
 
 ## [1.0.0-rc.7] - 2025-01-29
