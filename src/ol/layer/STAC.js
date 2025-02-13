@@ -685,10 +685,6 @@ class STACLayer extends LayerGroup {
    * @private
    */
   async addGeoTiff_(asset) {
-    if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
-      return await this.addTileLayerForImagery_(asset);
-    }
-
     const sourceInfo = getGeoTiffSourceInfoFromAsset(asset, this.bands_);
 
     /**
@@ -710,6 +706,10 @@ class STACLayer extends LayerGroup {
         options,
         asset
       );
+    }
+
+    if (this.buildTileUrlTemplate_ && !this.useTileLayerAsFallback_) {
+      return await this.addTileLayerForImagery_(asset);
     }
 
     const source = new GeoTIFF(options);
