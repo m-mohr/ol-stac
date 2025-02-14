@@ -482,6 +482,8 @@ class STACLayer extends LayerGroup {
         displayOverview: this.displayOverview_,
         displayPreview: this.displayPreview_,
         displayFootprint: this.displayFootprint_,
+        useTileLayerAsFallback: this.useTileLayerAsFallback_,
+        buildTileUrlTemplate: this.buildTileUrlTemplate_,
       };
       const subgroup = new STACLayer(Object.assign(defaultOptions, options));
       // If no data is given, but items are provided, then we don't get a map from the
