@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0-rc.9] - 2025-02-14
+
+- Pass `useTileLayerAsFallback` and `buildTileUrlTemplate` options to the layer of childrens
+
 ## [1.0.0-rc.8] - 2025-02-03
 
 - `getExtent`: Compute extent correctly when children are provided but no parent
@@ -129,7 +133,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.7...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.9...HEAD>
+[1.0.0-rc.9]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.8...v1.0.0-rc.9>
+[1.0.0-rc.8]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.7...v1.0.0-rc.8>
 [1.0.0-rc.7]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.6...v1.0.0-rc.7>
 [1.0.0-rc.6]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.5...v1.0.0-rc.6>
 [1.0.0-rc.5]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.4...v1.0.0-rc.5>
