@@ -31,6 +31,8 @@ import {
 export const LABEL_EXTENSION =
   'https://stac-extensions.github.io/label/v1.*/schema.json';
 
+const transparentFill = new Fill({color: 'rgba(0,0,0,0)'});
+
 /**
  * Creates a style for visualization.
  *
@@ -47,7 +49,7 @@ export function getStyle(
   fillColor = 'rgba(255,255,255,0.4)',
   circleRadius = 5
 ) {
-  let fill;
+  let fill = transparentFill;
   if (fillColor) {
     fill = new Fill({
       color: fillColor,
@@ -102,7 +104,9 @@ export async function getStacObjectsForEvent(
     event.pixel,
     // Callback for all features that were found
     (feature, layer) => {
-      selectedFeatures.push(feature);
+      if (selectedFeatures) {
+        selectedFeatures.push(feature);
+      }
       objects.add(layer.get('stac'));
     },
     {
@@ -200,7 +204,7 @@ export async function getProjection(reference, defaultProjection = undefined) {
 export function getBoundsStyle(originalStyle, layerGroup) {
   const style = originalStyle.clone();
   if (!layerGroup.hasOnlyBounds()) {
-    style.setFill(null);
+    style.setFill(transparentFill);
   }
   return style;
 }
