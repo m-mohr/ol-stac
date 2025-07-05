@@ -22,12 +22,13 @@ Dig into the API documentation for all details:
 ol-stac appreciates contributions of all kinds.
 
 The development of this package was financially supported by:
+
 - [Planet Labs PBC](https://planet.com)
 - [EOX IT Services GmbH](https://eox.at)
 
 Many thanks also to OpenLayers and its contributors.
 
-[If you need any help, please contact me.](https://mohr.ws)
+[If you need any help, please contact me.](https://moregeo.it)
 
 ## TypeScript support
 
