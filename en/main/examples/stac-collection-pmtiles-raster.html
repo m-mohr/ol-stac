@@ -9,11 +9,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
-    <link rel="stylesheet" type="text/css" href="/ol-stac/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="/theme/site.css">
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
-      <a class="navbar-brand" href="/ol-stac/">OL STAC</a>
+      <a class="navbar-brand" href="/">OL STAC</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -24,11 +24,11 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
-              <a class="dropdown-item" href="/ol-stac/doc/">Docs</a>
+              <a class="dropdown-item" href="/doc/">Docs</a>
               <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/ol-stac/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
-                <a class="dropdown-item" href="/ol-stac/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
-                <a class="dropdown-item" href="/ol-stac/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="./"><i class="fa fa-map me-1"></i>Examples</a></li>
@@ -36,8 +36,8 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
-              <a class="dropdown-item" href="https://github.com/m-mohr/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
-              <a class="dropdown-item" href="/ol-stac/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+              <a class="dropdown-item" href="https://github.com/moregeo-it/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
             </div>
           </li>
         </ul>
@@ -47,7 +47,7 @@
     <div class="container-fluid line-numbers">
       <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
         <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        This example uses OL STAC v<span>1.0.0-rc.10</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+        This example uses OL STAC v<span>1.0.0</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
       </div>
 
 
@@ -195,13 +195,14 @@ const layer &#x3D; new STAC({
       &#x27;https://stac-extensions.github.io/web-map-links/v1.2.0/schema.json&#x27;,
     ],
     &#x27;type&#x27;: &#x27;Collection&#x27;,
-    &#x27;id&#x27;: &#x27;Mt. Whitney&#x27;,
-    &#x27;description&#x27;: &#x27;Topographic raster map as PMTiles for Mt. Whitney, US&#x27;,
+    &#x27;id&#x27;: &#x27;dem&#x27;,
+    &#x27;description&#x27;: &#x27;DEM of the world&#x27;,
     &#x27;license&#x27;: &#x27;proprietary&#x27;,
-    &#x27;attribution&#x27;: &#x27;USGS&#x27;,
+    &#x27;attribution&#x27;:
+      &#x27;see &lt;a href&#x3D;&quot;https://github.com/tilezen/joerd/blob/master/docs/attribution.md&quot;&gt;tilezen/joerd&lt;/a&gt;&#x27;,
     &#x27;extent&#x27;: {
       &#x27;spatial&#x27;: {
-        &#x27;bbox&#x27;: [[-118.31982, 36.56109, -118.26069, 36.59301]],
+        &#x27;bbox&#x27;: [[-180, -90, 180, 90]],
       },
       &#x27;temporal&#x27;: {
         &#x27;interval&#x27;: [[null, null]],
@@ -209,9 +210,11 @@ const layer &#x3D; new STAC({
     },
     &#x27;links&#x27;: [
       {
-        &#x27;href&#x27;: &#x27;https://pmtiles.io/usgs-mt-whitney-8-15-webp-512.pmtiles&#x27;,
+        &#x27;href&#x27;:
+          &#x27;https://r2-public.protomaps.com/protomaps-sample-datasets/terrarium_z9.pmtiles&#x27;,
         &#x27;rel&#x27;: &#x27;pmtiles&#x27;,
         &#x27;type&#x27;: &#x27;application/vnd.pmtiles&#x27;,
+        &#x27;pmtiles:layers&#x27;: [&#x27;dem&#x27;],
       },
     ],
   },
@@ -229,8 +232,10 @@ const map &#x3D; new Map({
     zoom: 0,
   }),
 });
-const view &#x3D; map.getView();
-view.fit(layer.getExtent());
+layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
+  const view &#x3D; map.getView();
+  view.fit(layer.getExtent());
+});
 </code></pre>
       </div>
 
@@ -262,7 +267,7 @@ view.fit(layer.getExtent());
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-collection-pmtiles-raster&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol-stac&quot;: &quot;1.0.0-rc.10&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {
@@ -303,7 +308,7 @@ view.fit(layer.getExtent());
         const branchSearch = url.match(/\/([^\/]*)\/examples\//);
         const storageKey = 'ol-dismissed=-' + latestVersion;
         const dismissed = localStorage.getItem(storageKey) === 'true';
-        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.10' != latestVersion) {
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0' != latestVersion) {
           const link = url.replace(branchSearch[0], '/latest/examples/');
           fetch(link, {method: 'head'}).then(function(response) {
             const a = document.getElementById('latest-link');

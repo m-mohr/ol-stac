@@ -18,7 +18,7 @@ export function getStyle(strokeColor: ColorLike, strokeWidth: number, fillColor?
  * @return {Promise<Array<STAC>>} A list of STAC objects
  * @api
  */
-export function getStacObjectsForEvent(event: import("ol/MapBrowserEvent.js").default<any>, exclude?: any, selectedFeatures?: import("ol/Collection.js").default<any> | undefined, hitTolerance?: number | undefined): Promise<Array<STAC>>;
+export function getStacObjectsForEvent(event: import('ol/MapBrowserEvent.js').default, exclude?: any, selectedFeatures?: import("ol/Collection.js").default<any> | undefined, hitTolerance?: number | undefined): Promise<Array<STAC>>;
 /**
  * Get the source info for the GeoTiff from the asset.
  * @param {import('stac-js').Asset} asset The asset to read the information from.

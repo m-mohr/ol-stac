@@ -9,11 +9,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/ol/ol.css">
-    <link rel="stylesheet" type="text/css" href="/ol-stac/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="/theme/site.css">
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
-      <a class="navbar-brand" href="/ol-stac/">OL STAC</a>
+      <a class="navbar-brand" href="/">OL STAC</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -24,11 +24,11 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
-              <a class="dropdown-item" href="/ol-stac/doc/">Docs</a>
+              <a class="dropdown-item" href="/doc/">Docs</a>
               <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="/ol-stac/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
-                <a class="dropdown-item" href="/ol-stac/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
-                <a class="dropdown-item" href="/ol-stac/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="./"><i class="fa fa-map me-1"></i>Examples</a></li>
@@ -36,8 +36,8 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
             <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
-              <a class="dropdown-item" href="https://github.com/m-mohr/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
-              <a class="dropdown-item" href="/ol-stac/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+              <a class="dropdown-item" href="https://github.com/moregeo-it/ol-stac"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
             </div>
           </li>
         </ul>
@@ -47,7 +47,7 @@
     <div class="container-fluid line-numbers">
       <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
         <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        This example uses OL STAC v<span>1.0.0-rc.10</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+        This example uses OL STAC v<span>1.0.0</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
       </div>
 
 
@@ -210,8 +210,10 @@ import {register} from &#x27;ol/proj/proj4.js&#x27;;
 register(proj4); // required to support source reprojection
 
 const layer &#x3D; new STAC({
-  url: &#x27;https://raw.githubusercontent.com/stac-extensions/label/refs/heads/main/examples/spacenet-roads/roads_item.json&#x27;,
-  displayGeoTiffByDefault: true,
+  url: &#x27;http://127.0.0.1:8081/examples/spacenet-roads/roads_item.json&#x27;,
+  // Disabled loading the GeoTiff for now due to excessive requests.
+  // See https://github.com/openlayers/openlayers/issues/16961
+  displayGeoTiffByDefault: false,
 });
 
 const background &#x3D; new TileLayer({
@@ -262,7 +264,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-item-labels&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol-stac&quot;: &quot;1.0.0-rc.10&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {
@@ -303,7 +305,7 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
         const branchSearch = url.match(/\/([^\/]*)\/examples\//);
         const storageKey = 'ol-dismissed=-' + latestVersion;
         const dismissed = localStorage.getItem(storageKey) === 'true';
-        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.10' != latestVersion) {
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0' != latestVersion) {
           const link = url.replace(branchSearch[0], '/latest/examples/');
           fetch(link, {method: 'head'}).then(function(response) {
             const a = document.getElementById('latest-link');

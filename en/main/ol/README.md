@@ -2,18 +2,18 @@
 
 An "automagical" STAC LayerGroup for OpenLayers released under the [Apache 2.0 license](LICENSE.md).
 
-![Test Status](https://github.com/m-mohr/ol-stac/workflows/Test/badge.svg)
+![Test Status](https://github.com/moregeo-it/ol-stac/workflows/Test/badge.svg)
 
 ## Getting Started
 
 Please read the Quick Start first:
-<https://m-mohr.github.io/ol-stac/doc/quickstart.html>
+<https://ol-stac.moregeo.it/doc/quickstart.html>
 
 Explore the examples to get started with some more code:
-<https://m-mohr.github.io/ol-stac/en/latest/examples/>
+<https://ol-stac.moregeo.it/en/latest/examples/>
 
 Dig into the API documentation for all details:
-<https://m-mohr.github.io/ol-stac/en/latest/apidoc/>
+<https://ol-stac.moregeo.it/en/latest/apidoc/>
 
 **ol-stac requires OpenLayers version >=7.5.2**
 
@@ -22,12 +22,13 @@ Dig into the API documentation for all details:
 ol-stac appreciates contributions of all kinds.
 
 The development of this package was financially supported by:
+
 - [Planet Labs PBC](https://planet.com)
 - [EOX IT Services GmbH](https://eox.at)
 
 Many thanks also to OpenLayers and its contributors.
 
-[If you need any help, please contact me.](https://mohr.ws)
+[If you need any help, please contact me.](https://moregeo.it)
 
 ## TypeScript support
 
@@ -35,11 +36,11 @@ The [ol-stac package](https://npmjs.com/package/ol-stac) includes auto-generated
 
 ## Documentation
 
-Check out the [hosted examples](https://m-mohr.github.io/ol-stac/en/latest/examples/) or the [API documentation](https://m-mohr.github.io/ol-stac/en/latest/apidoc/).
+Check out the [hosted examples](https://ol-stac.moregeo.it/en/latest/examples/) or the [API documentation](https://ol-stac.moregeo.it/en/latest/apidoc/).
 
 ## Bugs
 
-Please use the [GitHub issue tracker](https://github.com/m-mohr/ol-stac/issues) for all bugs and feature requests. Before creating a new issue, do a quick search to see if the problem has been reported already.
+Please use the [GitHub issue tracker](https://github.com/moregeo-it/ol-stac/issues) for all bugs and feature requests. Before creating a new issue, do a quick search to see if the problem has been reported already.
 
 ## Related work
 

@@ -953,16 +953,11 @@ class STACLayer extends LayerGroup {
      * If an object is passed, it must be a GeoJSON FeatureCollection.
      *
      * @param {ItemCollection|Object|Array<STAC|Object>|null} childs The children to show.
-     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
+     * @param {Options|null} [options=null] Optionally, new STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
      */
-    async setChildren(childs, options = {}) {
-        if (!childs) {
-            this.children_ = null;
-            this.childrenOptions_ = {};
-            return;
-        }
+    async setChildren(childs, options = null) {
         if (childs instanceof ItemCollection) {
             this.children_ = childs.getAll();
         }
@@ -983,7 +978,9 @@ class STACLayer extends LayerGroup {
         if (this.children_ && this.children_.length === 0) {
             this.children_ = null;
         }
-        this.childrenOptions_ = options;
+        if (this.children_ && isObject(options)) {
+            this.childrenOptions_ = options;
+        }
         await this.updateLayers_();
     }
     /**

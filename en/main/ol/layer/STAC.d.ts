@@ -510,11 +510,11 @@ declare class STACLayer extends LayerGroup {
      * If an object is passed, it must be a GeoJSON FeatureCollection.
      *
      * @param {ItemCollection|Object|Array<STAC|Object>|null} childs The children to show.
-     * @param {Options} [options] STACLayer options for the children. Only applies if `children` are given.
+     * @param {Options|null} [options=null] Optionally, new STACLayer options for the children. Only applies if `children` are given.
      * @return {Promise} Resolves when all items are rendered.
      * @api
      */
-    setChildren(childs: ItemCollection | any | Array<STAC | any> | null, options?: Options | undefined): Promise<any>;
+    setChildren(childs: ItemCollection | any | Array<STAC | any> | null, options?: Options | null | undefined): Promise<any>;
     /**
      * Get the STAC object.
      *

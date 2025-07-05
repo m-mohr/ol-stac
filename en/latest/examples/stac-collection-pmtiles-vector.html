@@ -47,7 +47,7 @@
     <div class="container-fluid line-numbers">
       <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
         <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        This example uses OL STAC v<span>1.0.0-rc.10</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+        This example uses OL STAC v<span>1.0.0</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
       </div>
 
 
@@ -191,30 +191,31 @@ const layer &#x3D; new STAC({
   displayWebMapLink: &#x27;pmtiles&#x27;,
   displayFootprint: false,
   data: {
-    &#x27;stac_version&#x27;: &#x27;1.0.0&#x27;,
+    &#x27;stac_version&#x27;: &#x27;1.1.0&#x27;,
     &#x27;stac_extensions&#x27;: [
       &#x27;https://stac-extensions.github.io/web-map-links/v1.2.0/schema.json&#x27;,
     ],
     &#x27;type&#x27;: &#x27;Collection&#x27;,
-    &#x27;id&#x27;: &#x27;Firenze&#x27;,
-    &#x27;description&#x27;: &#x27;Vector data as PMTiles for Firenze, Italy&#x27;,
+    &#x27;id&#x27;: &#x27;Overtuere Maps Buildings&#x27;,
+    &#x27;description&#x27;:
+      &#x27;The Overture Maps buildings theme describes human-made structures with roofs or interior spaces that are permanently or semi-permanently in one place.&#x27;,
     &#x27;license&#x27;: &#x27;ODbL&#x27;,
-    &#x27;attribution&#x27;: &#x27;© OpenStreetMap Contributors&#x27;,
+    &#x27;attribution&#x27;: &#x27;© Overture Maps Foundation&#x27;,
     &#x27;extent&#x27;: {
       &#x27;spatial&#x27;: {
-        &#x27;bbox&#x27;: [[11.154026, 43.7270125, 11.3289395, 43.8325455]],
+        &#x27;bbox&#x27;: [[-180, -90, 180, 90]],
       },
       &#x27;temporal&#x27;: {
-        &#x27;interval&#x27;: [[&#x27;2023-01-18T07:49:39Z&#x27;, &#x27;2023-01-18T07:49:39Z&#x27;]],
+        &#x27;interval&#x27;: [[&#x27;2025-04-23T00:00:00Z&#x27;, &#x27;2025-04-24T00:00:00Z&#x27;]],
       },
     },
     &#x27;links&#x27;: [
       {
-        &#x27;href&#x27;: &#x27;https://pmtiles.io/protomaps(vector)ODbL_firenze.pmtiles&#x27;,
+        &#x27;href&#x27;:
+          &#x27;https://overturemaps-tiles-us-west-2-beta.s3.amazonaws.com/2025-04-23/places.pmtiles&#x27;,
         &#x27;rel&#x27;: &#x27;pmtiles&#x27;,
         &#x27;type&#x27;: &#x27;application/vnd.pmtiles&#x27;,
-        &#x27;title&#x27;: &#x27;Firenze Preview&#x27;,
-        &#x27;pmtiles:layers&#x27;: [&#x27;buildings&#x27;, &#x27;natural&#x27;, &#x27;roads&#x27;, &#x27;transit&#x27;, &#x27;water&#x27;],
+        &#x27;title&#x27;: &#x27;Buildings&#x27;,
       },
     ],
   },
@@ -232,8 +233,10 @@ const map &#x3D; new Map({
     zoom: 0,
   }),
 });
-const view &#x3D; map.getView();
-view.fit(layer.getExtent());
+layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
+  const view &#x3D; map.getView();
+  view.fit(layer.getExtent());
+});
 </code></pre>
       </div>
 
@@ -265,7 +268,7 @@ view.fit(layer.getExtent());
         <pre><code id="example-pkg-source" class="language-json">{
   &quot;name&quot;: &quot;stac-collection-pmtiles-vector&quot;,
   &quot;dependencies&quot;: {
-    &quot;ol-stac&quot;: &quot;1.0.0-rc.10&quot;,
+    &quot;ol-stac&quot;: &quot;1.0.0&quot;,
     &quot;proj4&quot;: &quot;2.9.0&quot;
   },
   &quot;devDependencies&quot;: {
@@ -306,7 +309,7 @@ view.fit(layer.getExtent());
         const branchSearch = url.match(/\/([^\/]*)\/examples\//);
         const storageKey = 'ol-dismissed=-' + latestVersion;
         const dismissed = localStorage.getItem(storageKey) === 'true';
-        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0-rc.10' != latestVersion) {
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '1.0.0' != latestVersion) {
           const link = url.replace(branchSearch[0], '/latest/examples/');
           fetch(link, {method: 'head'}).then(function(response) {
             const a = document.getElementById('latest-link');
