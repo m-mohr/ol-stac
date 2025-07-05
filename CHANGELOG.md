@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `childrenOptions` get lost when using `setChildren`
 - Fixed various examples
+- Updated ol-pmtiles and stac-js
 
 ## [1.0.0-rc.10] - 2025-03-06
 
