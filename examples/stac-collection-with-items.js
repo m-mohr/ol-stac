@@ -11,10 +11,7 @@ register(proj4); // required to support source reprojection
 
 const layer = new STAC({
   url: 'https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-cci-lc',
-  children:
-    'https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-cci-lc/items?datetime=2020-01-01T00%3A00%3A00.000Z%2F2020-12-31T00%3A00%3A00.000Z&limit=32',
-  displayPreview: true,
-  displayGeoTiffByDefault: false,
+  displayPreview: false,
 });
 
 const background = new TileLayer({
@@ -41,3 +38,14 @@ layer.on('sourceready', () => {
   const view = map.getView();
   view.fit(layer.getExtent());
 });
+
+fetch(
+  'https://planetarycomputer.microsoft.com/api/stac/v1/collections/esa-cci-lc/items?datetime=2020-01-01T00%3A00%3A00.000Z%2F2020-12-31T00%3A00%3A00.000Z&limit=32'
+)
+  .then((response) => response.json())
+  .then((items) => {
+    layer.setChildren(items, {displayPreview: true});
+  })
+  .catch((error) => {
+    alert('Error fetching items:' + error.message);
+  });

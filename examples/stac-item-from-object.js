@@ -99,4 +99,7 @@ const map = new Map({
   target: 'map',
   layers: [background, layer],
 });
-map.getView().fit(layer.getExtent());
+layer.on('sourceready', () => {
+  const view = map.getView();
+  view.fit(layer.getExtent());
+});

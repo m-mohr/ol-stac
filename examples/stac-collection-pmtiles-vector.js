@@ -12,30 +12,31 @@ const layer = new STAC({
   displayWebMapLink: 'pmtiles',
   displayFootprint: false,
   data: {
-    'stac_version': '1.0.0',
+    'stac_version': '1.1.0',
     'stac_extensions': [
       'https://stac-extensions.github.io/web-map-links/v1.2.0/schema.json',
     ],
     'type': 'Collection',
-    'id': 'Firenze',
-    'description': 'Vector data as PMTiles for Firenze, Italy',
+    'id': 'Overtuere Maps Buildings',
+    'description':
+      'The Overture Maps buildings theme describes human-made structures with roofs or interior spaces that are permanently or semi-permanently in one place.',
     'license': 'ODbL',
-    'attribution': '© OpenStreetMap Contributors',
+    'attribution': '© Overture Maps Foundation',
     'extent': {
       'spatial': {
-        'bbox': [[11.154026, 43.7270125, 11.3289395, 43.8325455]],
+        'bbox': [[-180, -90, 180, 90]],
       },
       'temporal': {
-        'interval': [['2023-01-18T07:49:39Z', '2023-01-18T07:49:39Z']],
+        'interval': [['2025-04-23T00:00:00Z', '2025-04-24T00:00:00Z']],
       },
     },
     'links': [
       {
-        'href': 'https://pmtiles.io/protomaps(vector)ODbL_firenze.pmtiles',
+        'href':
+          'https://overturemaps-tiles-us-west-2-beta.s3.amazonaws.com/2025-04-23/places.pmtiles',
         'rel': 'pmtiles',
         'type': 'application/vnd.pmtiles',
-        'title': 'Firenze Preview',
-        'pmtiles:layers': ['buildings', 'natural', 'roads', 'transit', 'water'],
+        'title': 'Buildings',
       },
     ],
   },
@@ -53,5 +54,7 @@ const map = new Map({
     zoom: 0,
   }),
 });
-const view = map.getView();
-view.fit(layer.getExtent());
+layer.on('sourceready', () => {
+  const view = map.getView();
+  view.fit(layer.getExtent());
+});

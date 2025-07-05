@@ -52,5 +52,7 @@ const map = new Map({
     zoom: 0,
   }),
 });
-const view = map.getView();
-view.fit(layer.getExtent());
+layer.on('sourceready', () => {
+  const view = map.getView();
+  view.fit(layer.getExtent());
+});

@@ -16,13 +16,14 @@ const layer = new STAC({
       'https://stac-extensions.github.io/web-map-links/v1.2.0/schema.json',
     ],
     'type': 'Collection',
-    'id': 'Mt. Whitney',
-    'description': 'Topographic raster map as PMTiles for Mt. Whitney, US',
+    'id': 'dem',
+    'description': 'DEM of the world',
     'license': 'proprietary',
-    'attribution': 'USGS',
+    'attribution':
+      'see <a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md">tilezen/joerd</a>',
     'extent': {
       'spatial': {
-        'bbox': [[-118.31982, 36.56109, -118.26069, 36.59301]],
+        'bbox': [[-180, -90, 180, 90]],
       },
       'temporal': {
         'interval': [[null, null]],
@@ -30,9 +31,11 @@ const layer = new STAC({
     },
     'links': [
       {
-        'href': 'https://pmtiles.io/usgs-mt-whitney-8-15-webp-512.pmtiles',
+        'href':
+          'https://r2-public.protomaps.com/protomaps-sample-datasets/terrarium_z9.pmtiles',
         'rel': 'pmtiles',
         'type': 'application/vnd.pmtiles',
+        'pmtiles:layers': ['dem'],
       },
     ],
   },
@@ -50,5 +53,7 @@ const map = new Map({
     zoom: 0,
   }),
 });
-const view = map.getView();
-view.fit(layer.getExtent());
+layer.on('sourceready', () => {
+  const view = map.getView();
+  view.fit(layer.getExtent());
+});

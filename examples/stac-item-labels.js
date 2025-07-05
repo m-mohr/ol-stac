@@ -9,8 +9,10 @@ import {register} from 'ol/proj/proj4.js';
 register(proj4); // required to support source reprojection
 
 const layer = new STAC({
-  url: 'https://raw.githubusercontent.com/stac-extensions/label/refs/heads/main/examples/spacenet-roads/roads_item.json',
-  displayGeoTiffByDefault: true,
+  url: 'http://127.0.0.1:8081/examples/spacenet-roads/roads_item.json',
+  // Disabled loading the GeoTiff for now due to excessive requests.
+  // See https://github.com/openlayers/openlayers/issues/16961
+  displayGeoTiffByDefault: false,
 });
 
 const background = new TileLayer({
