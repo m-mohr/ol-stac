@@ -370,7 +370,7 @@ export default class ExampleBuilder {
       data.resources.forEach((resource) => {
         const absoluteUrl = /^https?:\/\//.test(resource)
           ? resource
-          : `https://m-mohr.github.io/ol-stac/en/v${pkg.version}/examples/${resource}`;
+          : `https://ol-stac.moregeo.it/en/v${pkg.version}/examples/${resource}`;
         if (isJsRegEx.test(resource)) {
           if (!isTemplateJs.test(resource)) {
             data.js.local.push(resource);

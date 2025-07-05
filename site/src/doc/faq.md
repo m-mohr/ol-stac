@@ -23,7 +23,7 @@ The web-map-links extension is supported to show links for:
 - WMTS
 - XYZ
 
-For GeoTiff rendering the extension (through the [stac-js library](https://github.com/m-mohr/stac-js)) makes use of:
+For GeoTiff rendering the extension (through the [stac-js library](https://github.com/moregeo-it/stac-js)) makes use of:
 - classification
 - eo
 - file

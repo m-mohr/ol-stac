@@ -9,7 +9,7 @@ If you're eager to get your first map based on OpenLayers and enriched with STAC
 
 For a more in-depth overview of OL STAC core concepts, check out the [tutorials](./tutorials/).
 
-Find additional reference material in the [API docs](/ol-stac/en/latest/apidoc/) and [examples](/ol-stac/en/latest/examples/).
+Find additional reference material in the [API docs](/en/latest/apidoc/) and [examples](/en/latest/examples/).
 
 # Frequently Asked Questions (FAQ)
 

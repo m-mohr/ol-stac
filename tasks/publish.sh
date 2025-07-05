@@ -15,7 +15,7 @@ BUILT_PACKAGE=build/ol
 #
 # URL for canonical repo.
 #
-REMOTE=https://github.com/m-mohr/ol-stac.git
+REMOTE=https://github.com/moregeo-it/ol-stac.git
 
 #
 # Display usage and exit.

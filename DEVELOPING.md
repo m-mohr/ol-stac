@@ -2,7 +2,7 @@
 
 ## Setting up development environment
 
-You will start by [forking](https://github.com/m-mohr/ol-stac/fork) the OL STAC repository.
+You will start by [forking](https://github.com/moregeo-it/ol-stac/fork) the OL STAC repository.
 
 ### Installing dependencies
 

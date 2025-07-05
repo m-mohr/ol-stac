@@ -9,7 +9,7 @@ export async function getLatestRelease() {
   await client.paginate(
     client.rest.repos.listReleases,
     {
-      owner: 'm-mohr',
+      owner: 'moregeo-it',
       repo: 'ol-stac',
     },
     (response) => {

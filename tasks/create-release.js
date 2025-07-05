@@ -15,7 +15,7 @@ import {readFile, stat} from 'node:fs/promises';
  * @property {string} package Path to zip archive with sources.
  */
 
-const owner = 'm-mohr';
+const owner = 'moregeo-it';
 const repo = 'ol-stac';
 
 /**

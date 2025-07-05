@@ -2,16 +2,16 @@
   "name": "ol-stac",
   "version": "1.0.0",
   "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
-  "homepage": "https://mohr.ws",
+  "homepage": "https://moregeo.it",
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/ol/layer/STAC.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/m-mohr/ol-stac.git"
+    "url": "git://github.com/moregeo-it/ol-stac.git"
   },
   "bugs": {
-    "url": "https://github.com/m-mohr/ol-stac/issues"
+    "url": "https://github.com/moregeo-it/ol-stac/issues"
   },
   "funding": {
     "type": "github",
