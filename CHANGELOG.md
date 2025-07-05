@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-07-05
+
+- `childrenOptions` get lost when using `setChildren`
+
 ## [1.0.0-rc.10] - 2025-03-06
 
 - `getStacObjectsForEvent`: Detection works correctly for polygons without a fill
