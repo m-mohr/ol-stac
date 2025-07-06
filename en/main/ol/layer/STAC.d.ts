@@ -9,6 +9,8 @@ export type Options = {
     /**
      * The STAC URL. Any of `url` and `data` must be provided.
      * Can also be used as url for data, if it is absolute and doesn't contain a self link.
+     * Don't use this is you pass in a stac-js object as `data`, set the url manually through
+     * `setAbsoluteUrl` on the stac-js object before passing it in.
      */
     url?: string | undefined;
     /**
@@ -178,6 +180,8 @@ export type Options = {
  * @typedef {Object} Options
  * @property {string} [url] The STAC URL. Any of `url` and `data` must be provided.
  * Can also be used as url for data, if it is absolute and doesn't contain a self link.
+ * Don't use this is you pass in a stac-js object as `data`, set the url manually through
+ * `setAbsoluteUrl` on the stac-js object before passing it in.
  * @property {STAC|Asset|Object} [data] The STAC metadata. Any of `url` and `data` must be provided.
  * `data` take precedence over `url`.
  * @property {ItemCollection|Object|Array<STAC|Object>|null} [children=null] For STAC Catalogs and Collections, any child entites

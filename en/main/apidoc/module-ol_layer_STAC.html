@@ -412,7 +412,9 @@
 
             <td class="description last">
                 <p>The STAC URL. Any of <code>url</code> and <code>data</code> must be provided.
-Can also be used as url for data, if it is absolute and doesn't contain a self link.</p>
+Can also be used as url for data, if it is absolute and doesn't contain a self link.
+Don't use this is you pass in a stac-js object as <code>data</code>, set the url manually through
+<code>setAbsoluteUrl</code> on the stac-js object before passing it in.</p>
                 
             </td>
         </tr>

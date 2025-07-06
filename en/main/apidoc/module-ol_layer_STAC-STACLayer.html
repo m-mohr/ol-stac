@@ -147,7 +147,7 @@ The layers created by this LayerGroup all have a 'stac' value that can be retrie
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L143">line 143</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L145">line 145</a>
         </div>
         
     </div>
@@ -205,7 +205,9 @@ The layers created by this LayerGroup all have a 'stac' value that can be retrie
             <td  class="description last">
                 
                 <p>The STAC URL. Any of <code>url</code> and <code>data</code> must be provided.
-Can also be used as url for data, if it is absolute and doesn't contain a self link.</p></td>
+Can also be used as url for data, if it is absolute and doesn't contain a self link.
+Don't use this is you pass in a stac-js object as <code>data</code>, set the url manually through
+<code>setAbsoluteUrl</code> on the stac-js object before passing it in.</p></td>
         </tr>
 
 	
@@ -1082,7 +1084,7 @@ The second parameter is the return type, either <code>json</code> (default) or <
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L548">line 548</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L550">line 550</a>
         </div>
         
     </div>
@@ -1225,7 +1227,7 @@ Resolves with a list of layers or undefined when complete.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1141">line 1141</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1143">line 1143</a>
         </div>
         
     </div>
@@ -1315,7 +1317,7 @@ The STAC assets.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1187">line 1187</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1189">line 1189</a>
         </div>
         
     </div>
@@ -1405,7 +1407,7 @@ Attributions for this layer.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L338">line 338</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L340">line 340</a>
         </div>
         
     </div>
@@ -1495,7 +1497,7 @@ The vector layer for the bounds
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1131">line 1131</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1133">line 1133</a>
         </div>
         
     </div>
@@ -1585,7 +1587,7 @@ The STAC child entities.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1121">line 1121</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1123">line 1123</a>
         </div>
         
     </div>
@@ -1675,7 +1677,7 @@ The STAC object.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1154">line 1154</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1156">line 1156</a>
         </div>
         
     </div>
@@ -1768,7 +1770,7 @@ The layer extent.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1022">line 1022</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1024">line 1024</a>
         </div>
         
     </div>
@@ -1858,7 +1860,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1009">line 1009</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1011">line 1011</a>
         </div>
         
     </div>
@@ -1948,7 +1950,7 @@ An array of links.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L350">line 350</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L352">line 352</a>
         </div>
         
     </div>
@@ -2039,7 +2041,7 @@ Is the layer empty?
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1063">line 1063</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1065">line 1065</a>
         </div>
         
     </div>
@@ -2177,7 +2179,7 @@ Resolves when all assets are rendered.
         
         <div class="tag-source">
             <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js">layer/STAC.js</a>,
-            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1091">line 1091</a>
+            <a href="https://github.com/moregeo-it/ol-stac/blob/v1.0.0/src/ol/layer/STAC.js#L1093">line 1093</a>
         </div>
         
     </div>
@@ -2302,7 +2304,9 @@ Resolves when all assets are rendered.
             <td  class="description last">
                 
                 <p>The STAC URL. Any of <code>url</code> and <code>data</code> must be provided.
-Can also be used as url for data, if it is absolute and doesn't contain a self link.</p></td>
+Can also be used as url for data, if it is absolute and doesn't contain a self link.
+Don't use this is you pass in a stac-js object as <code>data</code>, set the url manually through
+<code>setAbsoluteUrl</code> on the stac-js object before passing it in.</p></td>
         </tr>
 
 	
