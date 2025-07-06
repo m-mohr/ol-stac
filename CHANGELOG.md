@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Only use the `url` option for non-stac-js objects
+
 ## [1.0.0] - 2025-07-05
 
 - `childrenOptions` get lost when using `setChildren`
