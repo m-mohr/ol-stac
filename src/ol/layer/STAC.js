@@ -1163,6 +1163,13 @@ class STACLayer extends LayerGroup {
       return;
     }
 
+    // todo: In general it might be better to get the actual extent of the layers/sources.
+    // Unfortunately, the extent is requested before it is available
+    // at least for the footprint layer due to the use of the GeoJSON loader.
+    // So we stick to the bounding box of the STAC entity for now,
+    // which sometimes is too small.
+    // See https://github.com/radiantearth/stac-browser/issues/634 for details.
+
     let bbox;
     const data = this.getData();
     if (data) {
@@ -1170,7 +1177,7 @@ class STACLayer extends LayerGroup {
     }
 
     const items = this.getChildren();
-    if (!bbox && items) {
+    if (items) {
       const bboxes = items.map((item) => item.getBoundingBox());
       bbox = unionBoundingBox(bboxes);
     }
@@ -1178,6 +1185,15 @@ class STACLayer extends LayerGroup {
     if (bbox) {
       return transformExtent(bbox, 'EPSG:4326', view.getProjection());
     }
+  }
+
+  getLayerState() {
+    const state = super.getLayerState();
+    // Fixes the issue that the view is clipped based on the extent of the layer.
+    // The extent is usually the bbox, but sometimes there are even items outside of the bbox.
+    // See https://github.com/radiantearth/stac-browser/issues/634 for details.
+    state.extent = undefined;
+    return state;
   }
 
   /**
