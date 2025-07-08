@@ -46,7 +46,7 @@ export default {
       patterns: [
         {
           from: path.join(root, 'site', 'src', 'theme'),
-          to: 'ol-stac/theme',
+          to: 'theme',
         },
         {from: 'resources', to: 'resources'},
         {from: 'index.html', to: 'index.html'},
