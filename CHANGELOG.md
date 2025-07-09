@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-07-09
+
 - Only use the `url` option for non-stac-js objects
+- Fix clipping outside of bbox
 
 ## [1.0.0] - 2025-07-05
 
@@ -145,7 +148,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First release
 
-[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.10...HEAD>
+[Unreleased]: <https://github.com/stac-extensions/contacts/compare/v1.0.1...HEAD>
+[1.0.1]: <https://github.com/stac-extensions/contacts/compare/v1.0.0...v1.0.1>
+[1.0.0]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.10...v1.0.0>
 [1.0.0-rc.10]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.9...v1.0.0-rc.10>
 [1.0.0-rc.9]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.8...v1.0.0-rc.9>
 [1.0.0-rc.8]: <https://github.com/stac-extensions/contacts/compare/v1.0.0-rc.7...v1.0.0-rc.8>
