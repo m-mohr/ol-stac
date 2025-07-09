@@ -540,6 +540,7 @@ declare class STACLayer extends LayerGroup {
      * @api
      */
     getAssets(): Array<Asset>;
+    getLayerState(): import("ol/layer/Layer.js").State;
     /**
      * Get the attributions of the STAC entity assigned to this layer.
      *
