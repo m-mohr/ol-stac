@@ -603,6 +603,7 @@ class STACLayer extends LayerGroup {
          */
         let options = {
             sources: [sourceInfo],
+            convertToRGB: 'auto',
         };
         const projection = await getProjection(asset);
         if (projection) {
