@@ -1,6 +1,6 @@
 {
   "name": "ol-stac",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An \"automagical\" STAC LayerGroup for OpenLayers",
   "homepage": "https://moregeo.it",
   "license": "Apache-2.0",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "ol-pmtiles": "^2.0.0",
-    "stac-js": "~0.1.5"
+    "stac-js": "~0.1.6"
   },
   "peerDependencies": {
     "ol": "*"
@@ -80,7 +80,7 @@
     "webpack": "^5.27.2",
     "webpack-cli": "^5.0.0",
     "webpack-dev-middleware": "^6.0.0",
-    "webpack-dev-server": "^4.0.0-beta.2",
+    "webpack-dev-server": "^5.0.0",
     "webpack-sources": "^3.2.0",
     "yargs": "^17.0.0"
   },
